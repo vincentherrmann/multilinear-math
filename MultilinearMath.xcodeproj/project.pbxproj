@@ -1,0 +1,463 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
+		BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */ = {isa = PBXBuildFile; fileRef = BAC83E371CAAD61400290119 /* MultilinearMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
+		BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */; };
+		BAC83E4C1CAAD68D00290119 /* MPCA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE781CA87993009906F2 /* MPCA.swift */; };
+		BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE7A1CA879BD009906F2 /* UMPCA.swift */; };
+		BAC83E4F1CAAD68D00290119 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE6B1CA86E8F009906F2 /* Utilities.swift */; };
+		BAC83E501CAAD68D00290119 /* AccelerateFunctionsFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */; };
+		BAC83E511CAAD68D00290119 /* MultidimensionalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */; };
+		BAC83E521CAAD68D00290119 /* SlicingSubscripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE6D1CA86EE5009906F2 /* SlicingSubscripts.swift */; };
+		BAC83E531CAAD68D00290119 /* Tensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE6F1CA86F26009906F2 /* Tensors.swift */; };
+		BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE711CA86F4B009906F2 /* TensorMultiplication.swift */; };
+		BAC83E551CAAD68D00290119 /* TensorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE731CA86F73009906F2 /* TensorOperations.swift */; };
+		BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BAC83E401CAAD61500290119 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA67AE511CA86C3E009906F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BAC83E341CAAD61400290119;
+			remoteInfo = MultilinearMath;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
+		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerateFunctionsFloat.swift; path = Sources/AccelerateFunctionsFloat.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE6B1CA86E8F009906F2 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utilities.swift; path = Sources/Utilities.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE6D1CA86EE5009906F2 /* SlicingSubscripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlicingSubscripts.swift; path = Sources/SlicingSubscripts.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE6F1CA86F26009906F2 /* Tensors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tensors.swift; path = Sources/Tensors.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE711CA86F4B009906F2 /* TensorMultiplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorMultiplication.swift; path = Sources/TensorMultiplication.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE731CA86F73009906F2 /* TensorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorOperations.swift; path = Sources/TensorOperations.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE781CA87993009906F2 /* MPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MPCA.swift; path = Sources/MPCA.swift; sourceTree = SOURCE_ROOT; };
+		BA67AE7A1CA879BD009906F2 /* UMPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UMPCA.swift; path = Sources/UMPCA.swift; sourceTree = SOURCE_ROOT; };
+		BAC83E351CAAD61400290119 /* MultilinearMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MultilinearMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAC83E371CAAD61400290119 /* MultilinearMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultilinearMath.h; sourceTree = "<group>"; };
+		BAC83E391CAAD61500290119 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultilinearMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilinearMathTests.swift; sourceTree = "<group>"; };
+		BAC83E451CAAD61500290119 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSlicingTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BAC83E311CAAD61400290119 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAC83E3B1CAAD61500290119 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BA67AE501CA86C3E009906F2 = {
+			isa = PBXGroup;
+			children = (
+				BA67AE651CA86D4F009906F2 /* Package.swift */,
+				BA67AE5B1CA86C3E009906F2 /* Sources */,
+				BAC83E361CAAD61400290119 /* MultilinearMath */,
+				BAC83E421CAAD61500290119 /* MultilinearMathTests */,
+				BA67AE5A1CA86C3E009906F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BA67AE5A1CA86C3E009906F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BAC83E351CAAD61400290119 /* MultilinearMath.framework */,
+				BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA67AE5B1CA86C3E009906F2 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				BA67AE751CA87902009906F2 /* Applications */,
+				BA67AE6B1CA86E8F009906F2 /* Utilities.swift */,
+				BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */,
+				BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */,
+				BA67AE6D1CA86EE5009906F2 /* SlicingSubscripts.swift */,
+				BA67AE6F1CA86F26009906F2 /* Tensors.swift */,
+				BA67AE711CA86F4B009906F2 /* TensorMultiplication.swift */,
+				BA67AE731CA86F73009906F2 /* TensorOperations.swift */,
+			);
+			name = Sources;
+			path = MultilinearMath;
+			sourceTree = "<group>";
+		};
+		BA67AE751CA87902009906F2 /* Applications */ = {
+			isa = PBXGroup;
+			children = (
+				BA67AE781CA87993009906F2 /* MPCA.swift */,
+				BA67AE7A1CA879BD009906F2 /* UMPCA.swift */,
+			);
+			name = Applications;
+			sourceTree = "<group>";
+		};
+		BAC83E361CAAD61400290119 /* MultilinearMath */ = {
+			isa = PBXGroup;
+			children = (
+				BAC83E371CAAD61400290119 /* MultilinearMath.h */,
+				BAC83E391CAAD61500290119 /* Info.plist */,
+			);
+			path = MultilinearMath;
+			sourceTree = "<group>";
+		};
+		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
+			isa = PBXGroup;
+			children = (
+				BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */,
+				BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */,
+				BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */,
+				BAC83E451CAAD61500290119 /* Info.plist */,
+			);
+			path = MultilinearMathTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		BAC83E321CAAD61400290119 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		BAC83E341CAAD61400290119 /* MultilinearMath */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BAC83E4A1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMath" */;
+			buildPhases = (
+				BAC83E301CAAD61400290119 /* Sources */,
+				BAC83E311CAAD61400290119 /* Frameworks */,
+				BAC83E321CAAD61400290119 /* Headers */,
+				BAC83E331CAAD61400290119 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MultilinearMath;
+			productName = MultilinearMath;
+			productReference = BAC83E351CAAD61400290119 /* MultilinearMath.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		BAC83E3D1CAAD61500290119 /* MultilinearMathTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BAC83E4B1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMathTests" */;
+			buildPhases = (
+				BAC83E3A1CAAD61500290119 /* Sources */,
+				BAC83E3B1CAAD61500290119 /* Frameworks */,
+				BAC83E3C1CAAD61500290119 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BAC83E411CAAD61500290119 /* PBXTargetDependency */,
+			);
+			name = MultilinearMathTests;
+			productName = MultilinearMathTests;
+			productReference = BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA67AE511CA86C3E009906F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Vincent Herrmann";
+				TargetAttributes = {
+					BAC83E341CAAD61400290119 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					BAC83E3D1CAAD61500290119 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+				};
+			};
+			buildConfigurationList = BA67AE541CA86C3E009906F2 /* Build configuration list for PBXProject "MultilinearMath" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = BA67AE501CA86C3E009906F2;
+			productRefGroup = BA67AE5A1CA86C3E009906F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BAC83E341CAAD61400290119 /* MultilinearMath */,
+				BAC83E3D1CAAD61500290119 /* MultilinearMathTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BAC83E331CAAD61400290119 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAC83E3C1CAAD61500290119 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BAC83E301CAAD61400290119 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAC83E4C1CAAD68D00290119 /* MPCA.swift in Sources */,
+				BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */,
+				BAC83E4F1CAAD68D00290119 /* Utilities.swift in Sources */,
+				BAC83E501CAAD68D00290119 /* AccelerateFunctionsFloat.swift in Sources */,
+				BAC83E511CAAD68D00290119 /* MultidimensionalData.swift in Sources */,
+				BAC83E521CAAD68D00290119 /* SlicingSubscripts.swift in Sources */,
+				BAC83E531CAAD68D00290119 /* Tensors.swift in Sources */,
+				BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */,
+				BAC83E551CAAD68D00290119 /* TensorOperations.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAC83E3A1CAAD61500290119 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
+				BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */,
+				BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BAC83E411CAAD61500290119 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BAC83E341CAAD61400290119 /* MultilinearMath */;
+			targetProxy = BAC83E401CAAD61500290119 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BA67AE5E1CA86C3E009906F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BA67AE5F1CA86C3E009906F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BAC83E461CAAD61500290119 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = MultilinearMath/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMath;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		BAC83E471CAAD61500290119 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = MultilinearMath/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMath;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		BAC83E481CAAD61500290119 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = MultilinearMathTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMathTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BAC83E491CAAD61500290119 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = MultilinearMathTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMathTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA67AE541CA86C3E009906F2 /* Build configuration list for PBXProject "MultilinearMath" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA67AE5E1CA86C3E009906F2 /* Debug */,
+				BA67AE5F1CA86C3E009906F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BAC83E4A1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMath" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAC83E461CAAD61500290119 /* Debug */,
+				BAC83E471CAAD61500290119 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BAC83E4B1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMathTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAC83E481CAAD61500290119 /* Debug */,
+				BAC83E491CAAD61500290119 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BA67AE511CA86C3E009906F2 /* Project object */;
+}

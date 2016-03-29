@@ -1,0 +1,14 @@
+version: "Apple Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
+options: "b2375201e0462b7219dbf580d9b392b4"
+build_time: [512471670, 417517000]
+inputs:
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/AccelerateFunctionsFloat.swift": !dirty [512422800, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/main.swift": !dirty [512422395, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/MPCA.swift": !dirty [512425649, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/MultidimensionalData.swift": !dirty [512469549, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/SlicingSubscripts.swift": !dirty [512422951, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/TensorMultiplication.swift": !dirty [512423052, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/TensorOperations.swift": !dirty [512423462, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/Tensors.swift": !dirty [512422994, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/UMPCA.swift": !dirty [512425680, 0]
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/Utilities.swift": !dirty [512431554, 0]

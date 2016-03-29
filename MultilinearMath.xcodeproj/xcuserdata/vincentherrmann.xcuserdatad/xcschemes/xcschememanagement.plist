@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>MultilinearMath 2.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>MultilinearMath.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>MultilinearMathExample.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>MultilinearMathTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>BA275E0E1CAAD3B100B1FEC3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA275E171CAAD3B200B1FEC3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA3EFBC51CAB12FA00F723D4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA5D85DA1CAA7A03002D142F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA67AE581CA86C3E009906F2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA8FD7B31CA91CDC005A9986</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BAC83E341CAAD61400290119</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BAC83E3D1CAAD61500290119</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

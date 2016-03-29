@@ -1,0 +1,65 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/master.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/AccelerateFunctionsFloat.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/AccelerateFunctionsFloat.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/AccelerateFunctionsFloat.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/AccelerateFunctionsFloat~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/AccelerateFunctionsFloat.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/main.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/main.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/main.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/main.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/MPCA.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MPCA.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MPCA.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MPCA~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MPCA.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/MultidimensionalData.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MultidimensionalData.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MultidimensionalData.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MultidimensionalData~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/MultidimensionalData.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/SlicingSubscripts.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/SlicingSubscripts.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/SlicingSubscripts.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/SlicingSubscripts~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/SlicingSubscripts.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/TensorMultiplication.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorMultiplication.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorMultiplication.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorMultiplication~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorMultiplication.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/TensorOperations.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorOperations.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorOperations.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorOperations~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/TensorOperations.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/Tensors.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Tensors.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Tensors.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Tensors~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Tensors.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/UMPCA.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/UMPCA.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/UMPCA.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/UMPCA~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/UMPCA.swiftdeps"
+  },
+  "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/Utilities.swift": {
+    "dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Utilities.d",
+    "object": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Utilities.swift.o",
+    "swiftmodule": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Utilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/.build/debug/MultilinearMath.build/Utilities.swiftdeps"
+  }
+}
