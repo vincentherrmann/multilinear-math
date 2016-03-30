@@ -29,7 +29,7 @@ Extended PCA algorithms to work with tensors with arbitrary mode count
 *(Lu, Plataniotis, Venetsanopoulos)*
 
 ## Installation
-To use this framework in a OSX XCode project:
+To use this framework in an OSX XCode project:
 - clone this repository
 - open your project in XCode
 - drag and drop MultilinearMath.xcodeproj into the project navigator of your project
