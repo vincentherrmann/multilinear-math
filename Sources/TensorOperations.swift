@@ -13,13 +13,13 @@ public func add(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int]
     var sum = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
     
     let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-    var currentIndexSum = sum.modeSizes.map({0..<$0})
+    var currentIndexSum = sum.modeSizes.map({0..<$0}) as [DataSliceSubscript]
     
     combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
         currentIndexSum[indexNumber] = i...i
         }, combineFunction: { (currentIndexA, currentIndexB) -> () in
             let sumVector = vectorAddition(vectorA: a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-            sum[currentIndexSum] = Tensor<Float>(modeSizes: sliceSizes, values: sumVector)
+            sum[slice: currentIndexSum] = Tensor<Float>(modeSizes: sliceSizes, values: sumVector)
     })
     
     return sum
@@ -30,13 +30,13 @@ public func substract(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA:
     var difference = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
     
     let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-    var currentIndexDiff = difference.modeSizes.map({0..<$0})
+    var currentIndexDiff = difference.modeSizes.map({0..<$0}) as [DataSliceSubscript]
     
     combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
         currentIndexDiff[indexNumber] = i...i
         }, combineFunction: { (currentIndexA, currentIndexB) -> () in
             let diffVector = vectorSubtraction(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-            difference[currentIndexDiff] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
+            difference[slice: currentIndexDiff] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
     })
     
     return difference
@@ -47,13 +47,13 @@ public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int] = [], ou
     var product = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
     
     let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-    var currentIndexProduct = product.modeSizes.map({0..<$0})
+    var currentIndexProduct = product.modeSizes.map({0..<$0}) as [DataSliceSubscript]
     
     combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
         currentIndexProduct[indexNumber] = i...i
         }, combineFunction: { (currentIndexA, currentIndexB) -> () in
             let diffVector = vectorSubtraction(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-            product[currentIndexProduct] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
+            product[slice: currentIndexProduct] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
     })
     
     return product

@@ -74,9 +74,9 @@ extension DataSliceSubscript {
             }
         } else { //already last mode (only special cases) -> copy values of this mode
             
-            if let nextArray = sliceSubscripts[currentDataMode+1] as? Array<Int> {
+            if let nextArray = sliceSubscripts[currentDataMode] as? Array<Int> {
                 nextArray.copyValuesFrom(data, to: &slice, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: currentDataMode, currentSliceMode: currentSliceMode)
-            } else if let nextRange = sliceSubscripts[currentDataMode+1] as? Range<Int> {
+            } else if let nextRange = sliceSubscripts[currentDataMode] as? Range<Int> {
                 nextRange.copyValuesFrom(data, to: &slice, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: currentDataMode, currentSliceMode: currentSliceMode)
             }
         }
@@ -125,9 +125,9 @@ extension DataSliceSubscript {
             }
         } else { //already last mode (only special cases) -> copy values of this mode
             
-            if let nextArray = sliceSubscripts[currentDataMode+1] as? Array<Int> {
+            if let nextArray = sliceSubscripts[currentDataMode] as? Array<Int> {
                 nextArray.copyValuesTo(&data, from: slice, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: currentDataMode, currentSliceMode: currentSliceMode)
-            } else if let nextRange = sliceSubscripts[currentDataMode+1] as? Range<Int> {
+            } else if let nextRange = sliceSubscripts[currentDataMode] as? Range<Int> {
                 nextRange.copyValuesTo(&data, from: slice, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: currentDataMode, currentSliceMode: currentSliceMode)
             }
         }

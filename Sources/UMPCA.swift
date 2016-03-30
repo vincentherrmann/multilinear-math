@@ -120,7 +120,6 @@ public func uncorrelatedMPCA(data: Tensor<Float>, featureCount: Int) -> (project
             for n in 0..<sampleModeCount { //calculate the nth vector of the pth EMP
                 let modeSize = data.modeSizes[n+1]
                 
-                
                 let partialProjectionTensor = currentEMP.projectionTensorWithoutModes([n])
                 let partialProjection = multiply(a: data, remainingModesA: [0, n+1], b: partialProjectionTensor, remainingModesB: []) //[m, d_n]
                 
@@ -136,7 +135,8 @@ public func uncorrelatedMPCA(data: Tensor<Float>, featureCount: Int) -> (project
                     let ygPhi = multiply(a: yg, summationModesA: [1], b: phiInverse, summationModesB: [0]) //[d_n, p-1]
                     var product = multiply(a: ygPhi, summationModesA: [1], b: yg, summationModesB: [1]) //[d_n, d_n]
                     var unitTensor = Tensor<Float>(diagonalWithModeSizes: [modeSize, modeSize])
-                    let psi = unitTensor[.a, .b] - product[.a, .b]
+                    let psi = substract(a: unitTensor, commonModesA: [0, 1], b: product, commonModesB: [0, 1])
+                    //let psi = unitTensor[.a, .b] - product[.a, .b]
                     
                     optimizationMatrix = multiply(a: psi, summationModesA: [1], b: scatterMatrix, summationModesB: [0]) //[d_, d_n]
                 } else {

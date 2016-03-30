@@ -21,5 +21,14 @@ class ExampleTests: XCTestCase {
         
         print("a values: \(a.values)")
     }
+    
+    func testUMPCA() {
+        let faces = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/XCode/MultilinearMath/MultilinearMath/Data/Faces100x32x32.txt", modeSizes: [100, 32, 32])
+        
+        let (facesNorm, mean, deviation) = normalize(faces, overModes: [0])
+        
+        let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 25)
+        let reconstructeduFaces = uncorrelatedMPCAReconstruct(uFaces, projections: uEMPs)
+    }
 
 }
