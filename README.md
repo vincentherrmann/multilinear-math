@@ -28,4 +28,14 @@ Extended PCA algorithms to work with tensors with arbitrary mode count
  - uncorrelated multilinear principal component analysis (UMPCA) <br>
 *(Lu, Plataniotis, Venetsanopoulos)*
 
+## Installation
+To use this framework in an OSX XCode project:
+- clone this repository
+- open your project in XCode
+- drag and drop MultilinearMath.xcodeproj into the project navigator of your project
+- select the .xcodeproj file of your project in the navigator
+- go to the "General" tab and add MultilinearMath.framework to the Linked Frameworks and Libraries
+- go to the "Build Settings" tab and set "Embedded Content Contains Swift Code" to YES
+- import MultilinearMath in your Swift files
+
 
