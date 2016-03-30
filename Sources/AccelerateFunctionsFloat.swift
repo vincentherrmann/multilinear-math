@@ -67,6 +67,15 @@ public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.El
     return product
 }
 
+/// Calculate the sum of all elements in the vector
+public func vectorSummation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> Float {
+    var sum: Float = 0
+    vector.withUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vDSP_sve(pointer.baseAddress, 1, &sum, UInt(vector.count))
+    }
+    return sum
+}
+
 /// Normalize the elements of the given vector
 /// - Returns:
 /// `normalizedVector` with mean 0 and standard deviation 1, <br>

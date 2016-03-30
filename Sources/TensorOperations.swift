@@ -71,6 +71,7 @@ public func +(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     
     return sum
 }
+
 public func -(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     
     let commonIndices = lhs.commonIndicesWith(rhs)
@@ -84,31 +85,53 @@ public func -(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     return difference
 }
 
-/// add a given scalar to every element of a tensor
+infix operator °* {}
+public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
+    
+    let commonIndices = lhs.commonIndicesWith(rhs)
+    let commonModesLhs = commonIndices.map({$0.modeA})
+    let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
+    let commonModesRhs = commonIndices.map({$0.modeB})
+    let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
+    
+    let product = multiplyElementwise(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
+    
+    return product
+}
+
+/// add a scalar to every element of a tensor
 public func +(lhs: Tensor<Float>, rhs: Float) -> Tensor<Float> {
-    var sum = Tensor<Float>.init(modeSizes: lhs.modeSizes, values: vectorAddition(vector: lhs.values, add: rhs))
-    sum.indexAs(lhs.indices)
-    sum.variances = lhs.variances
+    let sum = Tensor<Float>.init(withPropertiesOf: lhs, values: vectorAddition(vector: lhs.values, add: rhs))
     return sum
 }
+/// add a scalar to every element of a tensor
 public func +(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
     return rhs+lhs
 }
 
-/// multiply every element of a tensor with a given scalar
+/// multiply every element of a tensor with a scalar
 public func *(lhs: Tensor<Float>, rhs: Float) -> Tensor<Float> {
-    var product = Tensor<Float>.init(modeSizes: lhs.modeSizes, values: vectorMultiplication(lhs.values, factor: rhs))
-    product.indexAs(lhs.indices)
-    product.variances = lhs.variances
+    let product = Tensor<Float>.init(withPropertiesOf: lhs, values: vectorMultiplication(lhs.values, factor: rhs))
     return product
 }
+/// multiply every element of a tensor with a scalar
 public func *(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
     return rhs*lhs
 }
 
-public func sum(tensor: Tensor<Float>, overIndex: TensorIndex) -> Tensor<Float> {
-    //unfinished
-    return tensor
+public func sum(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+    let remainingModes = tensor.modeArray.removeValues(overModes)
+    var summedTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
+    
+    tensor.perform({ (currentIndex) in
+        let summationSlice = tensor[slice: currentIndex]
+        summedTensor[currentRemainingIndex] = vectorSummation(summationSlice.values)
+        }, indexUpdate: { (indexNumber, currentMode, i) in
+            currentRemainingIndex[indexNumber] = i
+        }, forModes: remainingModes)
+    
+    return summedTensor
 }
 
 public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
@@ -118,16 +141,9 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
     let normalizeModeSizes = normalizeModes.map({tensor.modeSizes[$0]})
     let remainingIndices = tensor.isIndexed ? remainingModes.map({tensor.indices[$0]}) : []
     
-    //create normalized tensor
-    var normalizedTensor = Tensor<Float>(modeSizes: tensor.modeSizes, repeatedValue: 0)
-    normalizedTensor.indexAs(tensor.indices)
-    normalizedTensor.variances = tensor.variances
-    
-    var meanTensor = Tensor<Float>(modeSizes: remainingModes.map({tensor.modeSizes[$0]}), repeatedValue: 0)
-    meanTensor.indexAs(remainingIndices)
-    
-    var deviationTensor = Tensor<Float>(modeSizes: remainingModes.map({tensor.modeSizes[$0]}), repeatedValue: 0)
-    deviationTensor.indexAs(remainingIndices)
+    var normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
+    var meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    var deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
     
     var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
     
@@ -154,9 +170,7 @@ public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Ten
     let columns = tensor.modeSizes[columnMode]
     assert(rows == columns, "mode \(rowMode) and \(columnMode) have not the same size")
     
-    var inverseTensor = Tensor<Float>(modeSizes: tensor.modeSizes, repeatedValue: 0)
-    inverseTensor.indexAs(tensor.indices)
-    inverseTensor.variances = tensor.variances
+    var inverseTensor = Tensor<Float>(withPropertiesOf: tensor)
     
     tensor.perform( { (currentIndex: [DataSliceSubscript]) -> () in
         
@@ -167,31 +181,4 @@ public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Ten
         }, forModes: remainingModes)
     
     return(inverseTensor)
-}
-
-infix operator °* {}
-public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
-    if(rhs.modeCount > lhs.modeCount) {
-        return rhs °* lhs
-    }
-    
-    let commonIndices = lhs.commonIndicesWith(rhs)
-    
-    assert(commonIndices.count == rhs.modeCount, "element wise tensor multiplication is only possible if the modes of one factor is a subset of the modes of the other factor")
-    let remainingModes = lhs.modeArray.removeValues(commonIndices.map({$0.modeA}))
-    
-    var product = Tensor<Float>(modeSizes: lhs.modeSizes, repeatedValue: 0)
-    product.indexAs(lhs.indices)
-    product.variances = lhs.variances
-    
-    lhs.perform({ (currentIndex: [DataSliceSubscript]) -> () in
-        
-        let factorSlice = lhs[slice: currentIndex]
-        let productVector = vectorElementWiseMultiplication(factorSlice.values, vectorB: rhs.values)
-        product[slice: currentIndex] = Tensor<Float>(modeSizes: rhs.modeSizes, values: productVector)
-        
-        }, forModes: remainingModes)
-    
-    return product
 }

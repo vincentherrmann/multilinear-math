@@ -140,6 +140,11 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.init(modeSizes: modeSizes, values: diagonalValues)
     }
     
+    public init(scalar: T) {
+        self.init(modeSizes: [], values: [scalar])
+    }
+    
+    ///Init with a CSV file
     public init(valuesFromFileAtPath path: String, modeSizes: [Int]? = nil) {
         guard let data = NSData(contentsOfFile: path) else {
             print("cannot load file at path \(path)")
@@ -166,6 +171,23 @@ public struct Tensor<T: Number>: MultidimensionalData {
         } else {
             self.init(modeSizes: [lines.count, values.count/lines.count], values: values)
         }
+    }
+    
+    /// Initialize this tensor with the properties of another tensor (or some modes of that tensor)
+    public init(withPropertiesOf tensor: Tensor<T>, onlyModes: [Int]? = nil, repeatedValue: T = T(0), values: [T]? = nil) {
+        
+        let modes: [Int] = (onlyModes == nil) ? tensor.modeArray : onlyModes!
+        let sizes = modes.map({tensor.modeSizes[$0]})
+        
+        if(values == nil) {
+            self.init(modeSizes: sizes, repeatedValue: repeatedValue)
+        } else {
+            self.init(modeSizes: sizes, values: values!)
+        }
+        
+        self.indices = modes.map({tensor.indices[$0]})
+        self.variances = modes.map({tensor.variances[$0]})
+        self.isCartesian = tensor.isCartesian
     }
     
     /// Initialize this tensor with the combined properties of tensorA and tensorB. The order of the modes will be outerModesA - outerModesB - innerModesA - innerModesB, with corresponding size, index and variance.
@@ -226,34 +248,6 @@ public struct Tensor<T: Number>: MultidimensionalData {
     //        self.init(modeSizes: modeSizes, values: values)
     //    }
     
-    
-    
-    public init(scalar: T) {
-        self.init(modeSizes: [], values: [scalar])
-    }
-    
-    /// Index this Tensor with the given letters
-    mutating public func indexAs(setIndices: [TensorIndex]) {
-        assert(setIndices.count == modeCount, "wrong number of indices")
-        indices = setIndices
-    }
-    
-    //    /// - Returns: A copy of this tensor with reordered indices (and correspondingly reordered value array)
-    //    public func copyWithReorderedIndices(newIndices: [TensorIndex]) -> Tensor<T> {
-    //
-    //        let orderMapNewToOld = newIndices.map({indices.indexOf($0)!})
-    //
-    //        return copyWithReorderedIndices(orderMapNewToOld)
-    //    }
-    //
-    //    public func copyWithReorderedIndices(newToOld: [Int]) -> Tensor<T> {
-    //        var newTensor = reorderModes(newToOld)
-    //        newTensor.indices = newToOld.map({indices[$0]})
-    //        newTensor.variances = newToOld.map({variances[$0]})
-    //
-    //        return newTensor
-    //    }
-    
     /// - Returns: The number of seperate copy streaks that would be necessary for this reordering of indices
     public func reorderComplexityOf(newIndices: [TensorIndex]) -> Int {
         assert(indices.count == newIndices.count, "Cannot reorder indices \(indices) to \(newIndices)")
@@ -289,6 +283,7 @@ public struct Tensor<T: Number>: MultidimensionalData {
             return (modeArray, modeArray, 0..<0)
         }
         
+        //Example:
         // streak: (3 0 5|2|)
         // modes:  (0 1|2|3 4 5 6)
         // nonStreakModesRight = (3 4 5 6) - (3 0 5 2) = (4 6)
@@ -317,9 +312,10 @@ public struct Tensor<T: Number>: MultidimensionalData {
     
     /// Label the modes with the given TensorIndices and return self
     public subscript(newIndices: TensorIndex...) -> Tensor<T> {
-        mutating get {
-            indexAs(newIndices)
-            return self
+        get {
+            var newTensor = self
+            newTensor.indices = newIndices
+            return newTensor
         }
     }
     
@@ -354,6 +350,12 @@ public struct Tensor<T: Number>: MultidimensionalData {
             result.append((thisIndex, indices.indexOf(thisIndex)!))
         }
         return result
+    }
+}
+
+public extension Array where Element: Number {
+    func tensor(modeSizes: [Int]) -> Tensor<Element> {
+        return Tensor<Element>(modeSizes: modeSizes, values: self)
     }
 }
 
