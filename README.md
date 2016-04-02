@@ -2,25 +2,45 @@
 Swift library for multidimensional data and tensor operations on OS X
 
 ## Tensor reading, writing, slicing
-Create data tensor: <br>
-```var a = Tensor<Float>(modeSizes: [3, 3, 3], repeatedValue: 0)``` <br><br>
+Create data tensor:
+```swift
+var a = Tensor<Float>(modeSizes: [3, 3, 3], repeatedValue: 0)
+``` 
 
-Read a single value: <br>
-```let b: Float = a[1, 2, 0]``` <br>
-Write a single value: <br>
-```a[2, 0, 1] = 3.14``` <br><br>
+Read and write single values:
+```swift
+let b: Float = a[1, 2, 0]
+a[2, 0, 1] = 3.14
+```
 
-Slice a tensor: <br>
-```let c: Tensor<Float> = a[1..<3, all, [0]]``` <br>
-Write multiple values: <br>
-```a[1...1, [0, 2], all] = Tensor<Float>(modeSizes: [2, 3], values: [1, 2, 3, 4, 5, 6])``` <br>
+Read and write a tensor slice <br>
+```swift
+let c: Tensor<Float> = a[1..<3, all, [0]]
+a[1...1, [0, 2], all] = Tensor<Float>(modeSizes: [2, 3], values: [1, 2, 3, 4, 5, 6])
+```
 *modes of size 1 will be trimmed*
 
 ## Einstein notation
-Modes with same symbolic index will be summed over. Simple matrix multiplication: <br>
-```var m = Tensor<Float>(modeSizes: [4, 6], repeatedValue: 1)``` <br> 
-```var n = Tensor<Float>(modeSizes: [6, 5], repeatedValue: 2)``` <br>
-```let matrixProduct = m[.i, .j] * n[.j, .k]```
+Modes with same symbolic index will be summed over. Simple matrix multiplication:
+```swift
+var m = Tensor<Float>(modeSizes: [4, 6], repeatedValue: 1)
+var n = Tensor<Float>(modeSizes: [6, 5], repeatedValue: 2)
+let matrixProduct = m[.i, .j] * n[.j, .k]
+```
+Geodesic devitation:
+```swift
+var tangentVector = Tensor<Float>(modeSizes: [4], values: [0.3, 1.7, 0.2, 0.5])
+tangentVector.isCartesian = false
+
+var deviationVector = Tensor<Float>(modeSizes: [4], values: [0.1, 0.9, 0.4, 1.2])
+deviationVector.isCartesian = false
+
+var riemannianTensor = Tensor<Float>(diagonalWithModeSizes: [4, 4, 4, 4])
+riemannianTensor.isCartesian = false
+riemannianTensor.variances = [.contravariant, .covariant, .covariant, .covariant]
+
+let relativeAcceleration = riemannianTensor[.μ, .ν, .ρ, .σ] * tangentVector[.ν] * tangentVector[.ρ] * deviationTensor[.σ]
+```
 
 ## Multilinear subspace learning
 Extended PCA algorithms to work with tensors with arbitrary mode count
