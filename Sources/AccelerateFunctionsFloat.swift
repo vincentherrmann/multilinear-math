@@ -177,6 +177,7 @@ public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
     
     //vDSP seems to have better performance, at least for matrices with 10,000,000 elements or fewer.
     let (newSizeA, newSizeB) = matrixMultiplyDimensions(sizeA: sizeA, transposeA: transposeA, sizeB: sizeB, transposeB: transposeB)
+    print("matrix multiplication: (\(newSizeA.rows) x \(newSizeA.columns)) * (\(newSizeB.rows) x \(newSizeB.columns))")
     
     var matrixC = [Float](count: newSizeA.rows * newSizeB.columns, repeatedValue: 0)
     
@@ -255,6 +256,7 @@ public func diagonalMatrixMultiplication<A: UnsafeBuffer where A.Generator.Eleme
 /// `eigenvectors:` The corresponding eigenvectors as row vectors in a matrix
 public func eigendecomposition<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> (eigenvalues: [Float], eigenvectors: [Float]) {
     assert(size.rows == size.columns, "eigendecomposition not possible for matrix of dimension \(size.rows)x\(size.columns)")
+    print("eigendecomposition of a \(size.rows) x \(size.columns) matrix")
     
     var inMatrix = matrixTranspose(matrix, size: size) //LAPACK uses Fortran style column-major matrices, hence the transpose
     var jobvl = "N".charValue //options for left eigenvectors, "N" means the left eigenvectors are not computed

@@ -26,9 +26,12 @@ class ExampleTests: XCTestCase {
         let faces = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/XCode/MultilinearMath/MultilinearMath/Data/Faces100x32x32.txt", modeSizes: [100, 32, 32])
         
         let (facesNorm, mean, deviation) = normalize(faces, overModes: [0])
+        let facesWithDeviation = multiplyElementwise(a: facesNorm, commonModesA: [1, 2], outerModesA: [0], b: deviation, commonModesB: [0, 1], outerModesB: [])
+        let facesWithMean = add(a: facesWithDeviation, commonModesA: [1, 2], outerModesA: [0], b: mean, commonModesB: [0, 1], outerModesB: [])
         
-        let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 25)
+        let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 8)
         let reconstructeduFaces = uncorrelatedMPCAReconstruct(uFaces, projections: uEMPs)
+        
     }
 
 }

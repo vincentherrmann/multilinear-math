@@ -166,6 +166,8 @@ public struct Tensor<T: Number>: MultidimensionalData {
             values.appendContentsOf(theseValues.map({T(($0 as NSString).doubleValue)}))
         }
         
+        let lastValue = values.removeLast()
+        
         if let givenModeSizes = modeSizes {
             self.init(modeSizes: givenModeSizes, values: values)
         } else {

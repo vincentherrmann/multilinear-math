@@ -52,8 +52,8 @@ public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int] = [], ou
     combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
         currentIndexProduct[indexNumber] = i...i
         }, combineFunction: { (currentIndexA, currentIndexB) -> () in
-            let diffVector = vectorSubtraction(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-            product[slice: currentIndexProduct] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
+            let productVector = vectorElementWiseMultiplication(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
+            product[slice: currentIndexProduct] = Tensor<Float>(modeSizes: sliceSizes, values: productVector)
     })
     
     return product

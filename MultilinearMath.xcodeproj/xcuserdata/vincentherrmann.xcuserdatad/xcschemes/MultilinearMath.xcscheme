@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BA275E0E1CAAD3B100B1FEC3"
+               BlueprintIdentifier = "BAC83E341CAAD61400290119"
                BuildableName = "MultilinearMath.framework"
                BlueprintName = "MultilinearMath"
                ReferencedContainer = "container:MultilinearMath.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BA275E0E1CAAD3B100B1FEC3"
+            BlueprintIdentifier = "BAC83E341CAAD61400290119"
             BuildableName = "MultilinearMath.framework"
             BlueprintName = "MultilinearMath"
             ReferencedContainer = "container:MultilinearMath.xcodeproj">
@@ -55,7 +55,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BA275E0E1CAAD3B100B1FEC3"
+            BlueprintIdentifier = "BAC83E341CAAD61400290119"
             BuildableName = "MultilinearMath.framework"
             BlueprintName = "MultilinearMath"
             ReferencedContainer = "container:MultilinearMath.xcodeproj">
@@ -74,7 +74,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BA275E0E1CAAD3B100B1FEC3"
+            BlueprintIdentifier = "BAC83E341CAAD61400290119"
             BuildableName = "MultilinearMath.framework"
             BlueprintName = "MultilinearMath"
             ReferencedContainer = "container:MultilinearMath.xcodeproj">

@@ -188,9 +188,8 @@ public func uncorrelatedMPCAReconstruct(projectedData: Tensor<Float>, projection
     var currentReconstruction: Tensor<Float> = Tensor<Float>(modeSizes: [projectedData.modeSizes[0]] + projections[0].modeSizes, repeatedValue: 0)
     
     for p in 0..<featureCount {
-        let pReconstruction = multiply(a: projectedData[all, p...p], remainingModesA: [0], b: projections[p].inverse().projectionTensor, summationModesB: [])
-        currentReconstruction = add(a: currentReconstruction, b: pReconstruction)
-        
+        let pReconstruction = multiply(a: projectedData[all, p...p], remainingModesA: [0], b: projections[p].projectionTensor, summationModesB: [])
+        currentReconstruction = add(a: currentReconstruction, commonModesA: currentReconstruction.modeArray, b: pReconstruction, commonModesB: pReconstruction.modeArray)
     }
     
     return currentReconstruction

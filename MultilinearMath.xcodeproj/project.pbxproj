@@ -398,6 +398,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
