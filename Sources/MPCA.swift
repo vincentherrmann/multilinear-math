@@ -101,6 +101,8 @@ public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrice
             //n=0:  [m, d0, d1, d2] * [p0, d0] = [m, d1, d2, p0]
             //n=1:  [m, d1, d2, p0] * [p1, d1] = [m, d2, p0, p1]
             //n=2:  [m, d2, p0, p1] * [p2, d2] = [m, p0, p1, p2]
+            
+            //n=2:  [d2, p2] * [m, d0, d1, d2] = [p2, m, d0, d1]
             currentData = multiply(a: currentData, summationModesA: [1], b: projectionMatrices[n], summationModesB: [1])
         } else {
             //do not project mode n, just reorder the data (as if the projectionMatrix was the identity matrix)

@@ -158,23 +158,33 @@ public func multiply(a a: Tensor<Float>, summationModesA: [Int]? = nil, remainin
     let productOldToNew = oldToNewRemaining + oldToNewFromMatrix
     
     
-    //recursive approach for calculating values for modes not covered by the multiplication of the two matrices
-    var currentProductIndex = [Int](count: max(productTensor.modeCount, 1), repeatedValue: 0)
     
-    combine(a: tensorA, outerModesA: matrixA.remainingModes, b: tensorB, outerModesB: matrixB.remainingModes, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
-        
-        currentProductIndex[indexNumber] = i
-        
-        }, combineFunction: { (currentIndexA, currentIndexB) -> () in
-            
-            let sliceA = tensorA[slice: currentIndexA]
-            let sliceB = tensorB[slice: currentIndexB]
-            let productVector = matrixMultiplication(matrixA: sliceA.values, sizeA: matrixA.size, transposeA: matrixA.transpose, matrixB: sliceB.values, sizeB: matrixB.size, transposeB: matrixB.transpose, useBLAS: true)
-            
-            let productFlatIndex = productTensor.flatIndex(currentProductIndex)
-            productTensor.values.replaceRange(Range(start: productFlatIndex, distance: productMatrixElements), with: productVector)
-            
-    })
+    //recursive approach for calculating values for modes not covered by the multiplication of the two matrices
+//    var currentProductIndex = [Int](count: max(productTensor.modeCount, 1), repeatedValue: 0)
+    
+    let productSliceSizes = matrixA.productModes.map({tensorA.modeSizes[$0]}) + matrixB.productModes.map({tensorB.modeSizes[$0]})
+    
+    combine(a: tensorA, outerModesA: matrixA.remainingModes, b: tensorB, outerModesB: matrixB.remainingModes) { (indexA, indexB, outerIndex) in
+        let sliceA = tensorA[slice: indexA]
+        let sliceB = tensorB[slice: indexB]
+        let productVector = matrixMultiplication(matrixA: sliceA.values, sizeA: matrixA.size, transposeA: matrixA.transpose, matrixB: sliceB.values, sizeB: matrixB.size, transposeB: matrixB.transpose, useBLAS: true)
+        productTensor[slice: outerIndex] = Tensor<Float>(modeSizes: productSliceSizes, values: productVector)
+    }
+    
+//    combine(a: tensorA, outerModesA: matrixA.remainingModes, b: tensorB, outerModesB: matrixB.remainingModes, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
+//        
+//        currentProductIndex[indexNumber] = i
+//        
+//        }, combineFunction: { (currentIndexA, currentIndexB) -> () in
+//            
+//            let sliceA = tensorA[slice: currentIndexA]
+//            let sliceB = tensorB[slice: currentIndexB]
+//            let productVector = matrixMultiplication(matrixA: sliceA.values, sizeA: matrixA.size, transposeA: matrixA.transpose, matrixB: sliceB.values, sizeB: matrixB.size, transposeB: matrixB.transpose, useBLAS: true)
+//            
+//            let productFlatIndex = productTensor.flatIndex(currentProductIndex)
+//            productTensor.values.replaceRange(Range(start: productFlatIndex, distance: productMatrixElements), with: productVector)
+//            
+//    })
     
     let reorderA = matrixA.remainingModes.map({optimalOrderForA.newToOld.indexOf($0)!})
     let productOrderA = reorderA.combineWith(Array(0..<reorderA.count), combineFunction: {($0, $1)}).sort({$0.0 < $1.0})

@@ -177,7 +177,7 @@ public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
     
     //vDSP seems to have better performance, at least for matrices with 10,000,000 elements or fewer.
     let (newSizeA, newSizeB) = matrixMultiplyDimensions(sizeA: sizeA, transposeA: transposeA, sizeB: sizeB, transposeB: transposeB)
-    print("matrix multiplication: (\(newSizeA.rows) x \(newSizeA.columns)) * (\(newSizeB.rows) x \(newSizeB.columns))")
+    //print("matrix multiplication: (\(newSizeA.rows) x \(newSizeA.columns)) * (\(newSizeB.rows) x \(newSizeB.columns))")
     
     var matrixC = [Float](count: newSizeA.rows * newSizeB.columns, repeatedValue: 0)
     

@@ -166,13 +166,20 @@ public struct Tensor<T: Number>: MultidimensionalData {
             values.appendContentsOf(theseValues.map({T(($0 as NSString).doubleValue)}))
         }
         
-        let lastValue = values.removeLast()
-        
-        if let givenModeSizes = modeSizes {
-            self.init(modeSizes: givenModeSizes, values: values)
+        var actualModeSizes: [Int]
+        if(modeSizes != nil) {
+            actualModeSizes = modeSizes!
         } else {
-            self.init(modeSizes: [lines.count, values.count/lines.count], values: values)
+            actualModeSizes = [lines.count, values.count/lines.count]
         }
+        
+        if(values.count > actualModeSizes.reduce(1, combine: *)) {
+            if(actualModeSizes.last == 0) {
+                actualModeSizes.removeLast()
+            }
+        }
+        
+        self.init(modeSizes: actualModeSizes, values: values)
     }
     
     /// Initialize this tensor with the properties of another tensor (or some modes of that tensor)
