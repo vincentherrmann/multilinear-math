@@ -168,6 +168,8 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
 //    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
     
     tensor.perform(outerModes: remainingModes) { (currentIndex, outerIndex) in
+        print("normalize currentIndex: \(currentIndex)")
+        
         let normalizationSlice = tensor[slice: currentIndex]
         let normalizedVector = vectorNormalization(normalizationSlice.values)
         normalizedTensor[slice: currentIndex] = Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector)

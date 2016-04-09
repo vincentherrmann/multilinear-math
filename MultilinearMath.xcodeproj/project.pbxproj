@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
+		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
 		BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */ = {isa = PBXBuildFile; fileRef = BAC83E371CAAD61400290119 /* MultilinearMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
 		BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */; };
@@ -45,6 +46,7 @@
 		BA67AE731CA86F73009906F2 /* TensorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorOperations.swift; path = Sources/TensorOperations.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE781CA87993009906F2 /* MPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MPCA.swift; path = Sources/MPCA.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE7A1CA879BD009906F2 /* UMPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UMPCA.swift; path = Sources/UMPCA.swift; sourceTree = SOURCE_ROOT; };
+		BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultidimensionalDataTests.swift; sourceTree = "<group>"; };
 		BAC83E351CAAD61400290119 /* MultilinearMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MultilinearMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC83E371CAAD61400290119 /* MultilinearMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultilinearMath.h; sourceTree = "<group>"; };
 		BAC83E391CAAD61500290119 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */,
 				BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */,
 				BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */,
 				BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
+				BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */,
 				BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */,
 				BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */,
 			);

@@ -20,11 +20,6 @@ class DataSlicingTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
     
     func testRangeSlicing() {
         var testData = Tensor<Float>(modeSizes: [3, 4, 5], values: Array(0..<60).map({return Float($0)}))
@@ -51,13 +46,6 @@ class DataSlicingTests: XCTestCase {
         XCTAssertEqual(testData[0, 1, 4], 1, "slice replacement 2")
         XCTAssertEqual(testData[0, 2, 1], 2, "slice replacement 3")
         XCTAssertEqual(testData[1, 3, 4], 11, "slice replacement 4")
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
     }
 
 }

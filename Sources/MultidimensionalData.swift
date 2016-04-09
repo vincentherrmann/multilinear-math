@@ -11,7 +11,7 @@ import Foundation
 /// Multidimensional collection of elements of a certain type. The elements are stored in a flat array but accessed with multidimensional Integer indices.
 public protocol MultidimensionalData {
     /// the kind of value that is stored
-    associatedtype Element
+    typealias Element
     
     /// the size in of mode
     var modeSizes: [Int] {get set}
@@ -118,43 +118,57 @@ public extension MultidimensionalData {
         values[atFlatIndex] = newElement
     }
     
-    func getSlice(modeSubscripts: [DataSliceSubscript]) -> Self {
-        let subscripts = completeDataSliceSubscripts(modeSubscripts)
-        
-        let newSizes = subscripts.map({$0.sliceSize}).filter({$0 > 1})
-        var newData = Self(modeSizes: newSizes, repeatedValue: values[0])
-        
-//        // index in this data object
-//        var currentDataIndex = [Int](count: modeCount, repeatedValue: 0)
-//        // index in newData
-//        var currentSliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
+//    func getSlice(modeSubscripts: [DataSliceSubscript]) -> Self {
+//        let subscripts = completeDataSliceSubscripts(modeSubscripts)
 //        
-//        subscripts[0].recurseCopyFrom(self, to: &newData, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: 0, currentSliceMode: 0, sliceSubscripts: subscripts)
-        
-        let subscriptIndex = [Int](count: modeCount, repeatedValue: 0)
-        let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
-        newData.recurseCopy(from: self, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
-        
-        return newData
-    }
+//        let newSizes = subscripts.map({$0.sliceSize}).filter({$0 > 1})
+//        var newData = Self(modeSizes: newSizes, repeatedValue: values[0])
+//        let selfCopy = self
+//        
+//        
+//        let subscriptIndex = [Int](count: modeCount, repeatedValue: 0)
+//        let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
+//        
+//        let slicePointer: UnsafeMutablePointer<Element> = UnsafeMutablePointer(newData.values)
+//        recurseCopy(target: newData, targetPointer: slicePointer, from: newData, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
+//        
+//        return newData
+//        
+////        newData.values.withUnsafeMutableBufferPointer { (slice) -> () in
+////            
+////            recurseCopy(target: selfCopy, targetPointer: slice, from: newData, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
+//        
+////            self.values.withUnsafeBufferPointer({ (data) -> () in
+////                recurseCopy(target: newData, targetPointer: slice, from: self, fromPointer: data, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
+////            })
+////        }
+//        
+//        
+////        self.values.withUnsafeBufferPointer { (data) -> () in
+////            newData.values.withUnsafeMutableBufferPointer ({ (slice) -> () in
+////                recurseCopy(target: newData, targetPointer: slice, from: self, fromPointer: data, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
+////            })
+////        }
+//        
+////        newData.recurseCopy(from: self, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
+//    
+//    }
     
     mutating func setSlice(slice: Self, modeSubscripts: [DataSliceSubscript]) {
         let subscripts = completeDataSliceSubscripts(modeSubscripts)
         
-//        // index in this data object
-//        var currentDataIndex = [Int](count: modeCount, repeatedValue: 0)
-//        // index in newData
-//        var currentSliceIndex = [Int](count: slice.modeCount, repeatedValue: 0)
-//        
-//        subscripts[0].recurseCopyTo(&self, from: slice, currentDataIndex: &currentDataIndex, currentSliceIndex: &currentSliceIndex, currentDataMode: 0, currentSliceMode: 0, sliceSubscripts: subscripts)
-        
         let subscriptIndex = [Int](count: modeCount, repeatedValue: 0)
         let sliceIndex = [Int](count: slice.modeCount, repeatedValue: 0)
-        recurseCopy(from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
+        
+        values.withUnsafeMutableBufferPointer { (pointer) -> () in
+            recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
+        }
+        
+//        recurseCopy(from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
     }
     
     ///Replace subscripts of type AllIndices with the complete range, same with missing subscripts
-    private func completeDataSliceSubscripts(subscripts: [DataSliceSubscript]) -> [DataSliceSubscript] {
+    internal func completeDataSliceSubscripts(subscripts: [DataSliceSubscript]) -> [DataSliceSubscript] {
         var newSubscripts = subscripts
         for m in 0..<modeCount {
             if(m >= subscripts.count) {
@@ -288,7 +302,7 @@ public extension MultidimensionalData {
     }
     public subscript(slice modeIndices: [DataSliceSubscript]) -> Self {
         get {
-            return getSlice(modeIndices)
+            return getSlice(from: self, modeSubscripts: modeIndices)
         }
         
         set(newData) {
@@ -297,7 +311,7 @@ public extension MultidimensionalData {
     }
     public subscript(modeIndices: DataSliceSubscript...) -> Self {
         get {
-            return getSlice(modeIndices)
+            return getSlice(from: self, modeSubscripts: modeIndices)
         }
         set(newData) {
             setSlice(newData, modeSubscripts: modeIndices)
@@ -305,30 +319,45 @@ public extension MultidimensionalData {
     }
     
     public func perform(outerModes outerModes: [Int], action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ()) {
-        var currentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
-        var outerIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
         
-        let group = dispatch_group_create()
-        let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+//        let group = dispatch_group_create()
+//        let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
         
-        func actionRecurse(thisIndexNumber: Int) {
-            if(thisIndexNumber < outerModes.count) {
-                let currentMode = outerModes[thisIndexNumber]
+        func actionRecurse(indexNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
+            if(indexNumber < outerModes.count) {
+                let currentMode = outerModes[indexNumber]
+//                dispatch_apply(modeSizes[currentMode], queue, {i in
+//                    var newCurrentIndex = currentIndex
+//                    newCurrentIndex[currentMode] = i...i
+//                    var newOuterIndex = outerIndex
+//                    newOuterIndex[indexNumber] = i...i
+//                    actionRecurse(indexNumber+1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
+//                })
+                
                 for i in 0..<modeSizes[currentMode] {
-                    currentIndex[currentMode] = i...i
-                    outerIndex[thisIndexNumber] = i...i
-                    actionRecurse(thisIndexNumber + 1)
+                    var newCurrentIndex = currentIndex
+                    newCurrentIndex[currentMode] = i...i
+                    var newOuterIndex = outerIndex
+                    newOuterIndex[indexNumber] = i...i
+                    actionRecurse(indexNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
                 }
             } else {
                 let thisCurrentIndex = currentIndex
                 let thisOuterIndex = outerIndex
-                dispatch_group_async(group, queue, {
+//                dispatch_group_async(group, queue, {
                     action(currentIndex: thisCurrentIndex, outerIndex: thisOuterIndex)
-                })
+//                })
             }
         }
         
-        actionRecurse(0)
+        let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
+        let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
+        
+//        dispatch_group_async(group, queue, {
+            actionRecurse(0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
+//        })
+//        
+//        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
     }
     
     /// Perform a given action for each index of a given subset of modes. The updating of the indices is done by another given function.
@@ -376,111 +405,76 @@ public extension MultidimensionalData {
         return indexPositions//.map({return $0 + ranges.last!.first!})
     }
     
-//    internal mutating func recurseCopy(from slice: Self, subscripts: [DataSliceSubscript], dataMode: Int, dataIndex: [Int], sliceMode: Int, sliceIndex: [Int]) {
-//
-//        if(dataMode < modeCount-1) {
+//    internal mutating func recurseCopy(from fromData: Self, subscripts: [DataSliceSubscript], subscriptMode: Int, subscriptIndex: [Int], sliceMode: Int, sliceIndex: [Int], copyFromSlice: Bool) {
+//        
+//        if(subscriptMode < subscripts.count - 1) {
 //            var indices: [Int] = []
-//            if let arraySubscript = subscripts[dataMode] as? Array<Int> {
+//            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
 //                indices = arraySubscript.sliceIndices()
-//            } else if let rangeSubscript = subscripts[dataMode] as? Range<Int> {
+//            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
 //                indices = rangeSubscript.sliceIndices()
 //            }
 //            
-//            for i in indices.indices {
-//                var newDataIndex = dataIndex
-//                newDataIndex[dataMode] = indices[i]
-//                var newSliceIndex = sliceIndex
-//                newSliceIndex[sliceMode] = i
-//                
-//                recurseCopy(from: slice, subscripts: subscripts, dataMode: dataMode+1, dataIndex: newDataIndex, sliceMode: sliceMode+1, sliceIndex: newSliceIndex)
+//            if(indices.count == 1) { //only one index, the slice will not have this mode
+//                for i in indices.indices {
+//                    var newSubscriptIndex = subscriptIndex
+//                    newSubscriptIndex[subscriptMode] = indices[i]
+//                    
+//                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode, sliceIndex: sliceIndex, copyFromSlice: copyFromSlice)
+//                }
+//            } else {
+//                for i in indices.indices {
+//                    var newSubscriptIndex = subscriptIndex
+//                    newSubscriptIndex[subscriptMode] = indices[i]
+//                    var newSliceIndex = sliceIndex
+//                    newSliceIndex[sliceMode] = i
+//                    
+//                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode+1, sliceIndex: newSliceIndex, copyFromSlice: copyFromSlice)
+//                }
 //            }
 //        } else {
-//            
-//            if let arraySubscript = subscripts[dataMode] as? Array<Int> {
-//                var currentDataIndex = dataIndex
+//            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
+//                var currentSubscriptIndex = subscriptIndex
 //                var currentSliceIndex = sliceIndex
-//                for thisIndex in arraySubscript {
-//                    currentDataIndex[dataMode] = arraySubscript[thisIndex]
-//                    currentSliceIndex[sliceMode] = thisIndex
-//                    values[flatIndex(currentDataIndex)] = slice.values[slice.flatIndex(currentSliceIndex)]
-//                }
-//            } else if let rangeSubscript = subscripts[dataMode] as? Range<Int> {
-//                var currentDataIndex = dataIndex
-//                currentDataIndex[dataMode] = rangeSubscript.startIndex
 //                
-//                let flatDataIndex = flatIndex(currentDataIndex)
-//                let flatSliceIndex = slice.flatIndex(sliceIndex)
+//                if(copyFromSlice) {
+//                    for i in arraySubscript.indices {
+//                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
+//                        currentSliceIndex[sliceMode] = i
+//                        values[flatIndex(currentSubscriptIndex)] = fromData.values[fromData.flatIndex(currentSliceIndex)]
+//                    }
+//                } else { //copy to slice
+//                    for i in arraySubscript.indices {
+//                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
+//                        currentSliceIndex[sliceMode] = i
+//                        values[flatIndex(currentSliceIndex)] = fromData.values[fromData.flatIndex(currentSubscriptIndex)]
+//                    }
+//                }
+//                
+//            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
+//                var currentSubscriptIndex = subscriptIndex
+//                currentSubscriptIndex[subscriptMode] = rangeSubscript.startIndex
+//                
 //                let length = rangeSubscript.count
 //                
-//                values[Range(start: flatDataIndex, distance: length)] = slice.values[Range(start: flatSliceIndex, distance: length)]
+//                if(copyFromSlice) {
+//                    let flatSubscriptIndex = flatIndex(currentSubscriptIndex)
+//                    let flatSliceIndex = fromData.flatIndex(sliceIndex)
+//                    let subscriptRange = flatSubscriptIndex..<flatSubscriptIndex+length
+//                    let sliceRange = flatSliceIndex..<flatSliceIndex+length
+//                    let sliceValues = fromData.values[sliceRange]
+//                    print("subscriptRange: \(subscriptRange), sliceRange: \(sliceRange)")
+//                    self.values[subscriptRange] = sliceValues
+//                } else { //copy to slice
+//                    let flatSubscriptIndex = fromData.flatIndex(currentSubscriptIndex)
+//                    let flatSliceIndex = flatIndex(sliceIndex)
+//                    let subscriptRange = Range(start: flatSubscriptIndex, distance: length)
+//                    let sliceRange = Range(start: flatSliceIndex, distance: length)
+//                    values[sliceRange] = fromData.values[subscriptRange]
+//                }
 //            }
 //        }
 //    }
-    
-    internal mutating func recurseCopy(from fromData: Self, subscripts: [DataSliceSubscript], subscriptMode: Int, subscriptIndex: [Int], sliceMode: Int, sliceIndex: [Int], copyFromSlice: Bool) {
-        
-        if(subscriptMode < subscripts.count - 1) {
-            var indices: [Int] = []
-            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
-                indices = arraySubscript.sliceIndices()
-            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
-                indices = rangeSubscript.sliceIndices()
-            }
-            
-            if(indices.count == 1) { //only one index, the slice will not have this mode
-                for i in indices.indices {
-                    var newSubscriptIndex = subscriptIndex
-                    newSubscriptIndex[subscriptMode] = indices[i]
-                    
-                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode, sliceIndex: sliceIndex, copyFromSlice: copyFromSlice)
-                }
-            } else {
-                for i in indices.indices {
-                    var newSubscriptIndex = subscriptIndex
-                    newSubscriptIndex[subscriptMode] = indices[i]
-                    var newSliceIndex = sliceIndex
-                    newSliceIndex[sliceMode] = i
-                    
-                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode+1, sliceIndex: newSliceIndex, copyFromSlice: copyFromSlice)
-                }
-            }
-        } else {
-            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
-                var currentSubscriptIndex = subscriptIndex
-                var currentSliceIndex = sliceIndex
-                
-                if(copyFromSlice) {
-                    for i in arraySubscript.indices {
-                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
-                        currentSliceIndex[sliceMode] = i
-                        values[flatIndex(currentSubscriptIndex)] = fromData.values[fromData.flatIndex(currentSliceIndex)]
-                    }
-                } else { //copy to slice
-                    for i in arraySubscript.indices {
-                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
-                        currentSliceIndex[sliceMode] = i
-                        values[flatIndex(currentSliceIndex)] = fromData.values[fromData.flatIndex(currentSubscriptIndex)]
-                    }
-                }
-                
-            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
-                var currentSubscriptIndex = subscriptIndex
-                currentSubscriptIndex[subscriptMode] = rangeSubscript.startIndex
-                
-                let length = rangeSubscript.count
-                
-                if(copyFromSlice) {
-                    let flatSubscriptIndex = flatIndex(currentSubscriptIndex)
-                    let flatSliceIndex = fromData.flatIndex(sliceIndex)
-                    values[Range(start: flatSubscriptIndex, distance: length)] = fromData.values[Range(start: flatSliceIndex, distance: length)]
-                } else { //copy to slice
-                    let flatSubscriptIndex = fromData.flatIndex(currentSubscriptIndex)
-                    let flatSliceIndex = flatIndex(sliceIndex)
-                    values[Range(start: flatSliceIndex, distance: length)] = fromData.values[Range(start: flatSubscriptIndex, distance: length)]
-                }
-            }
-        }
-    }
 }
 
 public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, outerModesB: [Int], combineFunction: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ()) {
@@ -490,8 +484,8 @@ public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, o
     var currentIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
     var currentOuterIndex: [DataSliceSubscript] = (outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]})).map({0..<$0})
     
-    let group = dispatch_group_create()
-    let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+//    let group = dispatch_group_create()
+//    let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
 
     func actionRecurse(indexNumber: Int) {
         if(indexNumber < outerModeCount) {
@@ -514,11 +508,14 @@ public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, o
             let aIndex = currentIndexA
             let bIndex = currentIndexB
             let outerIndex = currentOuterIndex
-            dispatch_group_async(group, queue, {
+            //dispatch_group_async(group, queue, {
                 combineFunction(indexA: aIndex, indexB: bIndex, outerIndex: outerIndex)
-            })
+            //})
         }
     }
+//    
+//    actionRecurse(0)
+//    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
 }
 
 /// Combine two `MultidimensionalData` items with the given `combineFunction`

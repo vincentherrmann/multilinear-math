@@ -91,12 +91,12 @@ public struct Tensor<T: Number>: MultidimensionalData {
     
     //Tensor properties:
     ///Symbolic indices of the modes
-    var indices: [TensorIndex] = []
+    public var indices: [TensorIndex] = []
     ///Variances of the modes
-    var variances: [TensorVariance]
+    public var variances: [TensorVariance]
     ///If true, this tensor is in Euclidian space and variances are indifferent
-    var isCartesian: Bool = true
-    var isIndexed: Bool {
+    public var isCartesian: Bool = true
+    public var isIndexed: Bool {
         get {
             return indices.count == modeCount
         }
