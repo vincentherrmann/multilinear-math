@@ -152,12 +152,9 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                 let flatSliceIndex = from.flatIndex(sliceIndex)
                 
                 from.values.withUnsafeBufferPointer({ (fromBuffer) -> () in
-                    //let oldTargetArray = Array(targetPointer)
-                    //let fromArray = Array(fromBuffer)
                     let targetAdress = targetPointer.baseAddress.advancedBy(flatSubscriptIndex)
                     let fromAdress = fromBuffer.baseAddress.advancedBy(flatSliceIndex)
                     memcpy(targetAdress, fromAdress, sizeof(T.Element.self) * length)
-                    //let newTargetArray = Array(targetPointer)
                 })
             } else { //copy to slice
                 let flatSliceIndex = target.flatIndex(sliceIndex)
@@ -168,7 +165,6 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                     let fromAdress = fromBuffer.baseAddress.advancedBy(flatSubscriptIndex)
                     memcpy(targetAdress, fromAdress, sizeof(T.Element.self) * length)
                 })
-                
             }
         }
     }
@@ -184,6 +180,7 @@ public func getSlice<T: MultidimensionalData>(from from: T, modeSubscripts: [Dat
     let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
     
     newData.values.withUnsafeMutableBufferPointer { (slice) -> () in
+        print("slice array pointer: \(slice)")
         recurseCopy(target: newData, targetPointer: slice, from: from, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
     }
     

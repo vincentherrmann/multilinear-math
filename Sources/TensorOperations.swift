@@ -167,15 +167,15 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
     
 //    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
     
-    tensor.perform(outerModes: remainingModes) { (currentIndex, outerIndex) in
+    tensor.perform(outerModes: remainingModes, action: { (currentIndex, outerIndex) in
         print("normalize currentIndex: \(currentIndex)")
         
         let normalizationSlice = tensor[slice: currentIndex]
         let normalizedVector = vectorNormalization(normalizationSlice.values)
         normalizedTensor[slice: currentIndex] = Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector)
-        meanTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.mean)
         deviationTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.standardDeviation)
-    }
+        meanTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.mean)
+    })
     
 //    tensor.perform( { (currentIndex: [DataSliceSubscript]) -> () in
 //        

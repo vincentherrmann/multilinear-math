@@ -161,6 +161,7 @@ public extension MultidimensionalData {
         let sliceIndex = [Int](count: slice.modeCount, repeatedValue: 0)
         
         values.withUnsafeMutableBufferPointer { (pointer) -> () in
+            print("value array pointer: \(pointer)")
             recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
         }
         
@@ -318,21 +319,19 @@ public extension MultidimensionalData {
         }
     }
     
+    /// Perform a given action for each index of a given subset of modes. The updating of the indices is done by another given function.
+    ///
+    /// - Parameter action: The action to perform for each index combination of the given modes.
+    /// - Parameter indexUpdate: Function that will be called every time the index changes with the following arguments: <br>
+    /// `indexNumber:` Index of `currentMode` in the `forModes` array. <br>
+    /// `currentMode:`  The mode from the `forModes` where the index changed. <br>
+    /// `i:` The updated index of the `currentMode`.
+    ///- Parameter forModes: The subset of modes on which the `action` will be performed.
     public func perform(outerModes outerModes: [Int], action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ()) {
-        
-//        let group = dispatch_group_create()
-//        let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
         
         func actionRecurse(indexNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
             if(indexNumber < outerModes.count) {
                 let currentMode = outerModes[indexNumber]
-//                dispatch_apply(modeSizes[currentMode], queue, {i in
-//                    var newCurrentIndex = currentIndex
-//                    newCurrentIndex[currentMode] = i...i
-//                    var newOuterIndex = outerIndex
-//                    newOuterIndex[indexNumber] = i...i
-//                    actionRecurse(indexNumber+1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
-//                })
                 
                 for i in 0..<modeSizes[currentMode] {
                     var newCurrentIndex = currentIndex
@@ -344,55 +343,17 @@ public extension MultidimensionalData {
             } else {
                 let thisCurrentIndex = currentIndex
                 let thisOuterIndex = outerIndex
-//                dispatch_group_async(group, queue, {
-                    action(currentIndex: thisCurrentIndex, outerIndex: thisOuterIndex)
-//                })
+                action(currentIndex: thisCurrentIndex, outerIndex: thisOuterIndex)
             }
         }
         
         let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
         let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
         
-//        dispatch_group_async(group, queue, {
-            actionRecurse(0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
-//        })
-//        
-//        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+        actionRecurse(0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
     }
     
-    /// Perform a given action for each index of a given subset of modes. The updating of the indices is done by another given function.
-    ///
-    /// - Parameter action: The action to perform for each index combination of the given modes.
-    /// - Parameter indexUpdate: Function that will be called every time the index changes with the following arguments: <br>
-    /// `indexNumber:` Index of `currentMode` in the `forModes` array. <br>
-    /// `currentMode:`  The mode from the `forModes` where the index changed. <br>
-    /// `i:` The updated index of the `currentMode`.
-    ///- Parameter forModes: The subset of modes on which the `action` will be performed.
-//    public func perform(action: (currentIndex: [DataSliceSubscript]) -> (), indexUpdate: (indexNumber: Int, currentMode: Int, i: Int) -> () = {_,_,_ in}, forModes: [Int]) {
-//        
-//        var currentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
-//        
-//        let group = dispatch_group_create()
-//        let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-//        
-//        func actionRecurse(thisIndexNumber: Int) {
-//            if(thisIndexNumber < forModes.count) {
-//                let thisCurrentMode = forModes[thisIndexNumber]
-//                for i in 0..<modeSizes[thisCurrentMode] {
-//                    currentIndex[thisCurrentMode] = i...i
-//                    indexUpdate(indexNumber: thisIndexNumber, currentMode: thisCurrentMode, i: i)
-//                    actionRecurse(thisIndexNumber + 1)
-//                }
-//            } else {
-//                let thisIndex = currentIndex
-//                dispatch_group_async(group, queue, {
-//                    action(currentIndex: thisIndex)
-//                })
-//            }
-//        }
-//        
-//        actionRecurse(0)
-//    }
+    public func perform(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ())
     
     /// - Returns: The flat start indices in the value array of all continuous vectors (in the last mode) that constitute the given multidimensional range
     private func startIndicesOfContinuousVectorsForRange(ranges: [Range<Int>]) -> [Int] {
@@ -405,87 +366,30 @@ public extension MultidimensionalData {
         return indexPositions//.map({return $0 + ranges.last!.first!})
     }
     
-//    internal mutating func recurseCopy(from fromData: Self, subscripts: [DataSliceSubscript], subscriptMode: Int, subscriptIndex: [Int], sliceMode: Int, sliceIndex: [Int], copyFromSlice: Bool) {
-//        
-//        if(subscriptMode < subscripts.count - 1) {
-//            var indices: [Int] = []
-//            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
-//                indices = arraySubscript.sliceIndices()
-//            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
-//                indices = rangeSubscript.sliceIndices()
-//            }
-//            
-//            if(indices.count == 1) { //only one index, the slice will not have this mode
-//                for i in indices.indices {
-//                    var newSubscriptIndex = subscriptIndex
-//                    newSubscriptIndex[subscriptMode] = indices[i]
-//                    
-//                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode, sliceIndex: sliceIndex, copyFromSlice: copyFromSlice)
-//                }
-//            } else {
-//                for i in indices.indices {
-//                    var newSubscriptIndex = subscriptIndex
-//                    newSubscriptIndex[subscriptMode] = indices[i]
-//                    var newSliceIndex = sliceIndex
-//                    newSliceIndex[sliceMode] = i
-//                    
-//                    recurseCopy(from: fromData, subscripts: subscripts, subscriptMode: subscriptMode+1, subscriptIndex: newSubscriptIndex, sliceMode: sliceMode+1, sliceIndex: newSliceIndex, copyFromSlice: copyFromSlice)
-//                }
-//            }
-//        } else {
-//            if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
-//                var currentSubscriptIndex = subscriptIndex
-//                var currentSliceIndex = sliceIndex
-//                
-//                if(copyFromSlice) {
-//                    for i in arraySubscript.indices {
-//                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
-//                        currentSliceIndex[sliceMode] = i
-//                        values[flatIndex(currentSubscriptIndex)] = fromData.values[fromData.flatIndex(currentSliceIndex)]
-//                    }
-//                } else { //copy to slice
-//                    for i in arraySubscript.indices {
-//                        currentSubscriptIndex[subscriptMode] = arraySubscript[i]
-//                        currentSliceIndex[sliceMode] = i
-//                        values[flatIndex(currentSliceIndex)] = fromData.values[fromData.flatIndex(currentSubscriptIndex)]
-//                    }
-//                }
-//                
-//            } else if let rangeSubscript = subscripts[subscriptMode] as? Range<Int> {
-//                var currentSubscriptIndex = subscriptIndex
-//                currentSubscriptIndex[subscriptMode] = rangeSubscript.startIndex
-//                
-//                let length = rangeSubscript.count
-//                
-//                if(copyFromSlice) {
-//                    let flatSubscriptIndex = flatIndex(currentSubscriptIndex)
-//                    let flatSliceIndex = fromData.flatIndex(sliceIndex)
-//                    let subscriptRange = flatSubscriptIndex..<flatSubscriptIndex+length
-//                    let sliceRange = flatSliceIndex..<flatSliceIndex+length
-//                    let sliceValues = fromData.values[sliceRange]
-//                    print("subscriptRange: \(subscriptRange), sliceRange: \(sliceRange)")
-//                    self.values[subscriptRange] = sliceValues
-//                } else { //copy to slice
-//                    let flatSubscriptIndex = fromData.flatIndex(currentSubscriptIndex)
-//                    let flatSliceIndex = flatIndex(sliceIndex)
-//                    let subscriptRange = Range(start: flatSubscriptIndex, distance: length)
-//                    let sliceRange = Range(start: flatSliceIndex, distance: length)
-//                    values[sliceRange] = fromData.values[subscriptRange]
-//                }
-//            }
-//        }
-//    }
+
 }
 
+
+/// Combine two `MultidimensionalData` items with the given `combineFunction`
+///
+/// - Parameter a: The first `MultidimensionalData` item
+/// - Parameter outerModesA: The modes of `a` for which the `combineFunction` will be called
+/// - Parameter b: The second `MultidimensionalData` item
+/// - Parameter outerModesA: The modes of `b` for which the `combineFunction` will be called
+/// - Parameter indexUpdate: This function will be called before each `combineFunction` call. Default is an empty function. <br> *Parameters*: <br>
+/// `indexNumber:` The number of the `currentMode`, considering only the outerModes of both `a` and `b` together. <br>
+/// `currentMode:` The index of the `currentMode` in the `modeArray` of either `a` or `b`. <br>
+/// `currentModeIsA:` If true, the `currentMode` is from `a`, else from `b` <br>
+/// `i`: The new index of the `currentMode`
+/// - Parameter combineFunction: The action to combine `a` and `b`. <br> *Parateters*: <br>
+/// `currentIndexA:` The index for `a` that gives the relevant slice for this particular call. <br>
+/// `currentIndexB:` The index for `b` that gives the relevant slice for this particular call.
 public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, outerModesB: [Int], combineFunction: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ()) {
     
     let outerModeCount = outerModesA.count + outerModesB.count
     var currentIndexA: [DataSliceSubscript] = a.modeSizes.map({0..<$0})
     var currentIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
     var currentOuterIndex: [DataSliceSubscript] = (outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]})).map({0..<$0})
-    
-//    let group = dispatch_group_create()
-//    let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
 
     func actionRecurse(indexNumber: Int) {
         if(indexNumber < outerModeCount) {
@@ -508,68 +412,10 @@ public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, o
             let aIndex = currentIndexA
             let bIndex = currentIndexB
             let outerIndex = currentOuterIndex
-            //dispatch_group_async(group, queue, {
-                combineFunction(indexA: aIndex, indexB: bIndex, outerIndex: outerIndex)
-            //})
+            combineFunction(indexA: aIndex, indexB: bIndex, outerIndex: outerIndex)
         }
     }
-//    
-//    actionRecurse(0)
-//    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+    
+    actionRecurse(0)
 }
 
-/// Combine two `MultidimensionalData` items with the given `combineFunction`
-///
-/// - Parameter a: The first `MultidimensionalData` item
-/// - Parameter outerModesA: The modes of `a` for which the `combineFunction` will be called
-/// - Parameter b: The second `MultidimensionalData` item
-/// - Parameter outerModesA: The modes of `b` for which the `combineFunction` will be called
-/// - Parameter indexUpdate: This function will be called before each `combineFunction` call. Default is an empty function. <br> *Parameters*: <br>
-/// `indexNumber:` The number of the `currentMode`, considering only the outerModes of both `a` and `b` together. <br>
-/// `currentMode:` The index of the `currentMode` in the `modeArray` of either `a` or `b`. <br>
-/// `currentModeIsA:` If true, the `currentMode` is from `a`, else from `b` <br>
-/// `i`: The new index of the `currentMode`
-/// - Parameter combineFunction: The action to combine `a` and `b`. <br> *Parateters*: <br>
-/// `currentIndexA:` The index for `a` that gives the relevant slice for this particular call. <br>
-/// `currentIndexB:` The index for `b` that gives the relevant slice for this particular call.
-//public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, outerModesB: [Int], indexUpdate: (indexNumber: Int, currentMode: Int, currentModeIsA: Bool, i: Int) -> () = {_,_,_,_ in}, combineFunction: (currentIndexA: [DataSliceSubscript], currentIndexB: [DataSliceSubscript]) -> ()) {
-//    
-//    let outerModeCount = outerModesA.count + outerModesB.count
-//    var currentIndexA: [DataSliceSubscript] = a.modeSizes.map({0..<$0})
-//    var currentIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
-//    
-//    let group = dispatch_group_create()
-//    let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-//    
-//    func actionRecurse(indexNumber: Int) {
-//        if(indexNumber < outerModeCount) {
-//            if(indexNumber < outerModesA.count) {
-//                let currentMode = outerModesA[indexNumber]
-//                for i in 0..<a.modeSizes[currentMode] {
-//                    currentIndexA[currentMode] = i...i
-//                    indexUpdate(indexNumber: indexNumber, currentMode: currentMode, currentModeIsA: true, i: i)
-//                    actionRecurse(indexNumber + 1)
-//                }
-//            } else {
-//                let currentMode = outerModesB[indexNumber - outerModesA.count]
-//                for i in 0..<b.modeSizes[currentMode] {
-//                    currentIndexB[currentMode] = i...i
-//                    indexUpdate(indexNumber: indexNumber, currentMode: currentMode, currentModeIsA: false, i: i)
-//                    actionRecurse(indexNumber + 1)
-//                }
-//            }
-//        } else {
-//            let aIndex = currentIndexA
-//            let bIndex = currentIndexB
-//            dispatch_group_async(group, queue, {
-//                combineFunction(currentIndexA: aIndex, currentIndexB: bIndex)
-//            })
-//        }
-//    }
-//    
-//    if(outerModeCount == 0) {
-//        combineFunction(currentIndexA: currentIndexA, currentIndexB: currentIndexB)
-//    } else {
-//        actionRecurse(0)
-//    }
-//}

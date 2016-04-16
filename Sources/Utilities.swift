@@ -57,6 +57,11 @@ public typealias UnsafeBuffer = Unsafeable
 
 extension Array : Unsafeable {}
 extension ArraySlice : Unsafeable {}
+extension UnsafeBufferPointer: Unsafeable {
+    func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+        return body(self)
+    }
+}
 
 
 /// combine two arrays (preferably of same size, else smaller size is used) with the combineFunction

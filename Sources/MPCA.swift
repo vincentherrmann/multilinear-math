@@ -28,7 +28,8 @@ public func multilinearPCA(data: Tensor<Float>, projectionModeSizes: [Int]) -> (
     var projectionMatrices: [Tensor<Float>] = [] // U_n
     for n in 0..<sampleModeCount {
         //initialize as diagonal matrices
-        projectionMatrices.append(Tensor<Float>(diagonalWithModeSizes: [projectionModeSizes[n], data.modeSizes[n+1]]))
+        let modeSizes = [projectionModeSizes[n], data.modeSizes[n+1]]
+        projectionMatrices.append(Tensor<Float>(diagonalWithModeSizes: modeSizes, repeatedValue: 1.0))
     }
     var projectedData: Tensor<Float> = multilinearPCAProjection(data: data, projectionMatrices: projectionMatrices)
     var projectionScatter: Float = 0

@@ -24,6 +24,14 @@ class MultilinearMathTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        var testArray: [Float] = []
+        let reduceTest1 = testArray.reduce(1, combine: {$0*$1})
+        testArray = [1.0]
+        let reduceTest2 = testArray.reduce(1, combine: {$0*$1})
+        testArray = [2.0, 1.0, 0.0]
+        let reduceTest3 = testArray.reduce(1, combine: {$0*$1})
+        
     }
     
 }

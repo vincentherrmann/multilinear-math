@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
+		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
 		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
 		BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */ = {isa = PBXBuildFile; fileRef = BAC83E371CAAD61400290119 /* MultilinearMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
+		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerateFunctionsFloat.swift; path = Sources/AccelerateFunctionsFloat.swift; sourceTree = SOURCE_ROOT; };
@@ -132,6 +134,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */,
 				BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */,
 				BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */,
 				BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */,
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
+				BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */,
 				BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */,
 				BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */,
 				BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */,

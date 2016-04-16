@@ -119,14 +119,22 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.values = [T](count: elementCount, repeatedValue: repeatedValue)
         self.indices = [TensorIndex](count: modeSizes.count, repeatedValue: .notIndexed)
         self.variances = [TensorVariance](count: modeSizes.count, repeatedValue: .contravariant)
+        
+        if(values.count == 0) {
+            print("ERROR: value.count = 0!!!")
+        }
     }
     
-    public init(diagonalWithModeSizes modeSizes: [Int]) {
+    public init(diagonalWithModeSizes modeSizes: [Int], diagonalValues: [T]? = nil, repeatedValue: T = T(1)) {
+        guard modeSizes.count > 0 else {
+            self.init(scalar: T(1))
+            return
+        }
         
         let elementCount = modeSizes.reduce(1, combine: {$0*$1})
         let modeCount = modeSizes.count
-        let diagonalLength = modeSizes.minElement()!
-        var diagonalValues = [T](count: elementCount, repeatedValue:T(0))
+        var diagonalLength: Int = modeSizes.count > 0 ? modeSizes.minElement()! : 1
+        var values = [T](count: elementCount, repeatedValue:T(0))
         
         for i in 0..<diagonalLength {
             let index = [Int](count: modeCount, repeatedValue: i)
@@ -134,10 +142,14 @@ public struct Tensor<T: Number>: MultidimensionalData {
             for d in 0..<modeCount {
                 thisFlatIndex = thisFlatIndex * modeSizes[d] + index[d]
             }
-            diagonalValues[thisFlatIndex] = T(1)
+            if(diagonalValues != nil) {
+                values[thisFlatIndex] = diagonalValues![i]
+            } else {
+                values[thisFlatIndex] = repeatedValue
+            }
         }
         
-        self.init(modeSizes: modeSizes, values: diagonalValues)
+        self.init(modeSizes: modeSizes, values: values)
     }
     
     public init(scalar: T) {
