@@ -15,7 +15,7 @@ import Accelerate
 public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector vector: A, add: Float) -> [Float] {
     var sum = [Float](count: vector.count, repeatedValue: 0)
     var addScalar = add
-    vector.withUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
+    vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_vsadd(pointer.baseAddress, 1, &addScalar, &sum, 1, UInt(vector.count))
     }
     return sum
@@ -25,8 +25,8 @@ public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A
 /// - Returns: The sum vector
 public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA vectorA: A, vectorB: A) -> [Float] {
     var sum = [Float](count: vectorA.count, repeatedValue: 0)
-    vectorA.withUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
-        vectorB.withUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
+        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
             vDSP_vadd(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &sum, 1, UInt(vectorA.count))
         }
     }
@@ -37,8 +37,8 @@ public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A
 /// - Returns: The difference vector
 public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
     var difference = [Float](count: vectorA.count, repeatedValue: 0)
-    vectorA.withUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
-        vectorB.withUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
+        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
             vDSP_vsub(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &difference, 1, UInt(vectorA.count))
         }
     }
@@ -49,7 +49,7 @@ public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float
 public func vectorMultiplication<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A, factor: Float) -> [Float] {
     var product = [Float](count: vector.count, repeatedValue: 0)
     var factorScalar = factor
-    vector.withUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
+    vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_vsmul(pointer.baseAddress, 1, &factorScalar, &product, 1, UInt(vector.count))
     }
     return product
@@ -59,8 +59,8 @@ public func vectorMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
 /// - Returns: The product vector
 public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
     var product = [Float](count: vectorA.count, repeatedValue: 0)
-    vectorA.withUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
-        vectorB.withUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
+        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
             vDSP_vmul(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &product, 1, UInt(vectorA.count))
         }
     }
@@ -70,7 +70,7 @@ public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.El
 /// Calculate the sum of all elements in the vector
 public func vectorSummation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> Float {
     var sum: Float = 0
-    vector.withUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+    vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_sve(pointer.baseAddress, 1, &sum, UInt(vector.count))
     }
     return sum
@@ -85,7 +85,7 @@ public func vectorNormalization<A: UnsafeBuffer where A.Generator.Element == Flo
     var norm = [Float](count: vector.count, repeatedValue: 0)
     var mean: Float = 0
     var deviation: Float = 0
-    vector.withUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
+    vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_normalize(pointer.baseAddress, 1, &norm, 1, &mean, &deviation, UInt(vector.count))
     }
     return (norm, mean, deviation)
@@ -124,7 +124,7 @@ public struct MatrixSize {
 /// Matrix transpose
 public func matrixTranspose<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> [Float] {
     var result = [Float](count: size.columns*size.rows, repeatedValue: 0)
-    matrix.withUnsafeBufferPointer { (matrixPointer: UnsafeBufferPointer<Float>) -> Void in
+    matrix.performWithUnsafeBufferPointer { (matrixPointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_mtrans(matrixPointer.baseAddress, 1, &result, 1, UInt(size.columns), UInt(size.rows))
     }
     return result
@@ -181,8 +181,8 @@ public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
     
     var matrixC = [Float](count: newSizeA.rows * newSizeB.columns, repeatedValue: 0)
     
-    matrixA.withUnsafeBufferPointer { (matrixABuffer: UnsafeBufferPointer<Float>) -> Void in
-        matrixB.withUnsafeBufferPointer { (matrixBBuffer: UnsafeBufferPointer<Float>) -> Void in
+    matrixA.performWithUnsafeBufferPointer { (matrixABuffer: UnsafeBufferPointer<Float>) -> Void in
+        matrixB.performWithUnsafeBufferPointer { (matrixBBuffer: UnsafeBufferPointer<Float>) -> Void in
             let matrixAPointer = matrixABuffer.baseAddress
             let matrixBPointer = matrixBBuffer.baseAddress
             if useBLAS {

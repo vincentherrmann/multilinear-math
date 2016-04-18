@@ -36,30 +36,57 @@ extension Int: IntegerType {
     }
 }
 
-// credit for the Unsafeable protocol to Chris Liscio https://github.com/liscio
+// credit for the UnsafeBzffer protocol to Chris Liscio https://github.com/liscio
 /// A CollectionType that can perfom functions on its Unsafe(Mutable)BufferPointer
-public protocol Unsafeable: CollectionType {
+public protocol UnsafeBuffer: CollectionType {
     /// Perform the a function with a UnsafeBufferPointer to this collection
-    func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) rethrows -> R
+    func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Self.Generator.Element>) throws -> R) -> R?
+}
+
+public protocol UnsafeMutableBuffer: UnsafeBuffer, MutableCollectionType {
     /// Perform the a function with a UnsafeMutableBufferPointer to this collection
-    mutating func withUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) rethrows -> R
-}
-public extension Unsafeable {
-    func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
-        return withUnsafeBufferPointer(body)
-    }
-    mutating func withUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
-        return withUnsafeMutableBufferPointer(body)
-    }
+    mutating func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Self.Generator.Element>) throws -> R) -> R?
 }
 
-public typealias UnsafeBuffer = Unsafeable
 
-extension Array : Unsafeable {}
-extension ArraySlice : Unsafeable {}
-extension UnsafeBufferPointer: Unsafeable {
-    func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
-        return body(self)
+extension Array : UnsafeMutableBuffer {
+    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let value = try? withUnsafeBufferPointer(body)
+        return value
+    }
+    
+    mutating public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let value = try? withUnsafeMutableBufferPointer(body)
+        return value
+    }
+}
+extension ArraySlice : UnsafeMutableBuffer {
+    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let value = try? withUnsafeBufferPointer(body)
+        return value
+    }
+    
+    mutating public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let value = try? withUnsafeMutableBufferPointer(body)
+        return value
+    }
+}
+extension UnsafeBufferPointer: UnsafeBuffer {
+    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let value = try? body(self)
+        return value
+    }
+}
+extension UnsafeMutableBufferPointer: UnsafeMutableBuffer {
+    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+        let thisPointer = UnsafeBufferPointer(start: baseAddress, count: count)
+        let value = try? body(thisPointer)
+        return value
+    }
+    public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+        var thisPointer = self
+        let value = try? body(&thisPointer)
+        return value
     }
 }
 
@@ -85,7 +112,7 @@ public extension Array {
     }
 }
 
-public extension Unsafeable where Generator.Element: Equatable, Index == Int {
+public extension UnsafeBuffer where Generator.Element: Equatable, Index == Int {
     ///remove the given values from this array
     func removeValues(values: [Generator.Element]) -> [Generator.Element] {
         var returnArray = Array(self)
@@ -101,6 +128,14 @@ public extension Unsafeable where Generator.Element: Equatable, Index == Int {
 
 public func squaredDistance(a: [Float], b: [Float]) -> Float {
     return a.combineWith(b, combineFunction: {($0-$1)*($0-$1)}).reduce(0, combine: {$0+$1})
+}
+
+public func memoryAddress(o: UnsafePointer<Void>) -> Int {
+    return unsafeBitCast(o, Int.self)
+}
+
+public func printArrayAddress<T>(inout array: [T]) {
+    print("array memory address: \(memoryAddress(&array))")
 }
 
 public extension String {

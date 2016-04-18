@@ -34,4 +34,21 @@ class MultilinearMathTests: XCTestCase {
         
     }
     
+    func testPerform() {
+        
+        print("")
+        let tensor = Tensor<Float>(modeSizes: [2, 3, 2], values: Array(0..<12).map({return Float($0)}))
+        let sum1 = sumTest(tensor, overModes: [0])
+        XCTAssertEqual(sum1.values, [3.0, 5.0, 7.0], "sum over mode 0")
+        print("")
+        let sum2 = sumTest(tensor, overModes: [1])
+        XCTAssertEqual(sum2.values, [3.0, 12.0], "sum over mode 1")
+        print("")
+        let sum3 = sumTest(tensor, overModes: [0, 1])
+        XCTAssertEqual(sum3.values, [15.0], "sum over mode 0 and 1")
+        print("")
+        let sum4 = sumTest(tensor, overModes: [0, 1, 2])
+        XCTAssertEqual(sum4.values, [3.0, 5.0, 7.0], "sum over mode 0")
+    }
+    
 }

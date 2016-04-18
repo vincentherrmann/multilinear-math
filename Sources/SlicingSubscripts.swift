@@ -75,6 +75,8 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                           sliceIndex: [Int],
                           copyFromSlice: Bool) {
     
+    //print("write to address: \(targetPointer), in thread: \(NSThread.currentThread())")
+    
     if(subscriptMode < subscripts.count - 1) {
         var indices: [Int] = []
         if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
@@ -116,6 +118,14 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                             copyFromSlice: copyFromSlice)
             }
         }
+    } else if(subscripts.count == 0) {
+        if(copyFromSlice) {
+            let fromIndex = from.flatIndex(sliceIndex)
+            targetPointer[0] = from.values[fromIndex]
+        } else {
+            let targetIndex = target.flatIndex(sliceIndex)
+            targetPointer[targetIndex] = from.values[0]
+        }
     } else {
         if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
             var currentSubscriptIndex = subscriptIndex
@@ -151,7 +161,7 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                 let flatSubscriptIndex = target.flatIndex(currentSubscriptIndex)
                 let flatSliceIndex = from.flatIndex(sliceIndex)
                 
-                from.values.withUnsafeBufferPointer({ (fromBuffer) -> () in
+                from.values.performWithUnsafeBufferPointer({ (fromBuffer) -> () in
                     let targetAdress = targetPointer.baseAddress.advancedBy(flatSubscriptIndex)
                     let fromAdress = fromBuffer.baseAddress.advancedBy(flatSliceIndex)
                     memcpy(targetAdress, fromAdress, sizeof(T.Element.self) * length)
@@ -160,7 +170,7 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
                 let flatSliceIndex = target.flatIndex(sliceIndex)
                 let flatSubscriptIndex = from.flatIndex(currentSubscriptIndex)
                 
-                from.values.withUnsafeBufferPointer({ (fromBuffer) -> () in
+                from.values.performWithUnsafeBufferPointer({ (fromBuffer) -> () in
                     let targetAdress = targetPointer.baseAddress.advancedBy(flatSliceIndex)
                     let fromAdress = fromBuffer.baseAddress.advancedBy(flatSubscriptIndex)
                     memcpy(targetAdress, fromAdress, sizeof(T.Element.self) * length)
@@ -179,8 +189,8 @@ public func getSlice<T: MultidimensionalData>(from from: T, modeSubscripts: [Dat
     let subscriptIndex = [Int](count: from.modeCount, repeatedValue: 0)
     let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
     
-    newData.values.withUnsafeMutableBufferPointer { (slice) -> () in
-        print("slice array pointer: \(slice)")
+    newData.values.performWithUnsafeMutableBufferPointer { (slice) -> () in
+        print("get slice array pointer: \(slice), in thread: \(NSThread.currentThread())")
         recurseCopy(target: newData, targetPointer: slice, from: from, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
     }
     

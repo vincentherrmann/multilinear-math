@@ -8,6 +8,19 @@
 
 import Foundation
 
+public func sumTest(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+    let remainingModes = tensor.modeArray.removeValues(overModes)
+    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    
+    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
+        let sum = vectorSummation(thisData[slice: currentIndex].values)
+        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
+        print("current sum values: \(outputData.values)")
+        }, outerModes: remainingModes, outputData: &outputData)
+    
+    return outputData
+}
+
 public func add(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
     
     var sum = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
