@@ -8,40 +8,51 @@
 
 import Foundation
 
-public func sumTest(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
-    let remainingModes = tensor.modeArray.removeValues(overModes)
-    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-    
+//public func sumTest(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+//    let remainingModes = tensor.modeArray.removeValues(overModes)
+//    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+//    
+////    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
+////        let sum = vectorSummation(thisData[slice: currentIndex].values)
+////        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
+////        //outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+////        print("current sum values: \(outputData.values)")
+////        }, outerModes: remainingModes, outputData: &outputData)
+//    
 //    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
-//        let sum = vectorSummation(thisData[slice: currentIndex].values)
-//        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
-//        //outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+//        outputData[slice: outerIndex] = Tensor<Float>(scalar: 1.0)
+//        outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
 //        print("current sum values: \(outputData.values)")
 //        }, outerModes: remainingModes, outputData: &outputData)
-    
-    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
-        outputData[slice: outerIndex] = Tensor<Float>(scalar: 1.0)
-        outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
-        print("current sum values: \(outputData.values)")
-        }, outerModes: remainingModes, outputData: &outputData)
-    
-    return outputData
-}
+//    
+//    return outputData
+//}
 
 public func sumTest2(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
     let remainingModes = tensor.modeArray.removeValues(overModes)
-    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    var outputData = [Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)]
     
-    tensor.perform({ (currentIndex, outerIndex, sourceData) -> (Tensor<Float>) in
-        let sum = vectorSummation(sourceData[slice: currentIndex].values)
-        return Tensor<Float>(scalar: sum)
-        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
-            outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
-            outputData[slice: outerIndex] = inputData
-            print("current sum values: \(outputData.values)")
-        }, outerModes: remainingModes, outputData: &outputData)
+    tensor.performForOuterModes(remainingModes, outputData: &outputData,
+                                calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
+                                    let sum = vectorSummation(sourceData[slice: currentIndex].values)
+                                    return [Tensor<Float>(scalar: sum)]
+    }),
+                                writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+                                    outputData[0].printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+                                    outputData[0][slice: outerIndex] = inputData[0]
+                                    print("current sum values: \(outputData.first!.values)")
+    }))
     
-    return outputData
+//    tensor.perform({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
+//        let sum = vectorSummation(sourceData[slice: currentIndex].values)
+//        return [Tensor<Float>(scalar: sum)]
+//        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
+//            outputData[0].printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+//            outputData[0][slice: outerIndex] = inputData[0]
+//            print("current sum values: \(outputData.first!.values)")
+//        }, outerModes: remainingModes, outputData: &outputData)
+    
+    return outputData.first!
 }
 
 public func add(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
@@ -204,7 +215,7 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
 //    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
     
     tensor.perform(outerModes: remainingModes, action: { (currentIndex, outerIndex) in
-        print("normalize currentIndex: \(currentIndex)")
+//        print("normalize currentIndex: \(currentIndex)")
         
         let normalizationSlice = tensor[slice: currentIndex]
         let normalizedVector = vectorNormalization(normalizationSlice.values)
@@ -226,6 +237,46 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
 //        }, forModes: remainingModes)
     
     return (normalizedTensor, meanTensor, deviationTensor)
+}
+
+public func normalizeConcurrent(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
+    
+    let remainingModes = tensor.modeArray.removeValues(normalizeModes)
+    
+    let normalizeModeSizes = normalizeModes.map({tensor.modeSizes[$0]})
+    
+    var normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
+    var meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    var deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    var outputData = [normalizedTensor, meanTensor, deviationTensor]
+    
+    tensor.performForOuterModes(remainingModes, outputData: &outputData,
+                                calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
+            let normalizationSlice = sourceData[slice: currentIndex]
+            let normalizedVector = vectorNormalization(normalizationSlice.values)
+            return [Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector),
+                Tensor<Float>(scalar: normalizedVector.mean),
+                Tensor<Float>(scalar: normalizedVector.standardDeviation)]
+    }),
+                                writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+            outputData[0][slice: currentIndex] = inputData[0]
+            outputData[1][slice: outerIndex] = inputData[1]
+            outputData[2][slice: outerIndex] = inputData[2]
+    }))
+    
+//    tensor.perform({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
+//            let normalizationSlice = sourceData[slice: currentIndex]
+//            let normalizedVector = vectorNormalization(normalizationSlice.values)
+//            return [Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector),
+//                    Tensor<Float>(scalar: normalizedVector.mean),
+//                    Tensor<Float>(scalar: normalizedVector.standardDeviation)]
+//        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
+//            outputData[0][slice: currentIndex] = inputData[0]
+//            outputData[1][slice: outerIndex] = inputData[1]
+//            outputData[2][slice: outerIndex] = inputData[2]
+//        }, outerModes: remainingModes, outputData: &outputData)
+    
+    return (outputData[0], outputData[1], outputData[2])
 }
 
 public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Tensor<Float> {

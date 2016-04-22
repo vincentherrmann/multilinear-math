@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA0BE4681CCAA81D0024F368 /* DispatchPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */; };
+		BA0BE46A1CCAA81D0024F368 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
+		BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
 		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
@@ -26,6 +29,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BA0BE46B1CCAA81D0024F368 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA67AE511CA86C3E009906F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BAC83E341CAAD61400290119;
+			remoteInfo = MultilinearMath;
+		};
 		BAC83E401CAAD61500290119 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BA67AE511CA86C3E009906F2 /* Project object */;
@@ -36,6 +46,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DispatchPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchPerformanceTests.swift; sourceTree = "<group>"; };
+		BA0BE4691CCAA81D0024F368 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchPerformaceTests.swift; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
@@ -59,6 +73,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BA0BE4621CCAA81D0024F368 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA0BE46A1CCAA81D0024F368 /* MultilinearMath.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAC83E311CAAD61400290119 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,6 +99,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA0BE4661CCAA81D0024F368 /* DispatchPerformanceTests */ = {
+			isa = PBXGroup;
+			children = (
+				BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */,
+				BA0BE4691CCAA81D0024F368 /* Info.plist */,
+			);
+			path = DispatchPerformanceTests;
+			sourceTree = "<group>";
+		};
 		BA67AE501CA86C3E009906F2 = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +115,7 @@
 				BA67AE5B1CA86C3E009906F2 /* Sources */,
 				BAC83E361CAAD61400290119 /* MultilinearMath */,
 				BAC83E421CAAD61500290119 /* MultilinearMathTests */,
+				BA0BE4661CCAA81D0024F368 /* DispatchPerformanceTests */,
 				BA67AE5A1CA86C3E009906F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,6 +125,7 @@
 			children = (
 				BAC83E351CAAD61400290119 /* MultilinearMath.framework */,
 				BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */,
+				BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,6 +167,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */,
 				BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */,
 				BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */,
 				BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */,
@@ -158,6 +192,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		BA0BE4641CCAA81D0024F368 /* DispatchPerformanceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA0BE46F1CCAA81D0024F368 /* Build configuration list for PBXNativeTarget "DispatchPerformanceTests" */;
+			buildPhases = (
+				BA0BE4611CCAA81D0024F368 /* Sources */,
+				BA0BE4621CCAA81D0024F368 /* Frameworks */,
+				BA0BE4631CCAA81D0024F368 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA0BE46C1CCAA81D0024F368 /* PBXTargetDependency */,
+			);
+			name = DispatchPerformanceTests;
+			productName = DispatchPerformanceTests;
+			productReference = BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		BAC83E341CAAD61400290119 /* MultilinearMath */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BAC83E4A1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMath" */;
@@ -204,6 +256,9 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Vincent Herrmann";
 				TargetAttributes = {
+					BA0BE4641CCAA81D0024F368 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					BAC83E341CAAD61400290119 = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -226,11 +281,19 @@
 			targets = (
 				BAC83E341CAAD61400290119 /* MultilinearMath */,
 				BAC83E3D1CAAD61500290119 /* MultilinearMathTests */,
+				BA0BE4641CCAA81D0024F368 /* DispatchPerformanceTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BA0BE4631CCAA81D0024F368 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAC83E331CAAD61400290119 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -248,6 +311,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BA0BE4611CCAA81D0024F368 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA0BE4681CCAA81D0024F368 /* DispatchPerformanceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAC83E301CAAD61400290119 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
+				BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */,
 				BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */,
 				BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */,
 				BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */,
@@ -279,6 +351,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		BA0BE46C1CCAA81D0024F368 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BAC83E341CAAD61400290119 /* MultilinearMath */;
+			targetProxy = BA0BE46B1CCAA81D0024F368 /* PBXContainerItemProxy */;
+		};
 		BAC83E411CAAD61500290119 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BAC83E341CAAD61400290119 /* MultilinearMath */;
@@ -287,6 +364,28 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		BA0BE46D1CCAA81D0024F368 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DispatchPerformanceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.DispatchPerformanceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BA0BE46E1CCAA81D0024F368 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DispatchPerformanceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.DispatchPerformanceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		BA67AE5E1CA86C3E009906F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -439,6 +538,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BA0BE46F1CCAA81D0024F368 /* Build configuration list for PBXNativeTarget "DispatchPerformanceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA0BE46D1CCAA81D0024F368 /* Debug */,
+				BA0BE46E1CCAA81D0024F368 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		BA67AE541CA86C3E009906F2 /* Build configuration list for PBXProject "MultilinearMath" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -190,12 +190,19 @@ class TensorOperationsTests: XCTestCase {
         
         tensor = Tensor<Float>(modeSizes: [3, 4, 5], values: originalValues)
         tensor.indices = [.a, .b, .c]
-        var normalized2 = normalize(tensor, overModes: [0, 1, 2])
+        let normalized = normalize(tensor, overModes: [0, 1, 2])
         
-        tensor = normalized2.normalizedTensor °* normalized2.standardDeviation
-        tensor = tensor + normalized2.mean
+        tensor = normalized.normalizedTensor °* normalized.standardDeviation
+        tensor = tensor + normalized.mean
         XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "normalization over modes 0, 1 and 2")
-        print("\(tensor.values)")
+        print("normalized: \(tensor.values)")
+        
+        let normalizedConcurrent = normalizeConcurrent(tensor, overModes: [0, 1, 2])
+        
+        tensor = normalizedConcurrent.normalizedTensor °* normalizedConcurrent.standardDeviation
+        tensor = tensor + normalized.mean
+        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "concurrent normalization over modes 0, 1 and 2")
+        print("normalizedConcurrent: \(tensor.values)")
     }
 
 }

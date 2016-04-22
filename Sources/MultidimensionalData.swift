@@ -128,7 +128,7 @@ public extension MultidimensionalData {
             print("error: no values to write in thread: \(NSThread.currentThread())")
         }
         
-        printMemoryAdresses(printTitle: "--set slice \(subscripts)--", printThread: true)
+//        printMemoryAdresses(printTitle: "--set slice \(subscripts)--", printThread: true)
         values.performWithUnsafeMutableBufferPointer { (pointer) -> () in
             //print("set slice array pointer: \(pointer), in thread: \(NSThread.currentThread())")
             recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
@@ -322,24 +322,64 @@ public extension MultidimensionalData {
         actionRecurse(0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
     }
     
-    public func perform(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: Self, thisData: Self) -> (), outerModes: [Int], inout outputData: Self) {
-        
-        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-        let group = dispatch_group_create()
-        
-        outputData.printMemoryAdresses(printTitle: "--start output--")
-        
-        let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
-        let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
-        actionRecurse(action, outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex, outputData: &outputData, inputData: self, group: group, queue: queue)
-        
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
-        
-    }
+//    public func perform(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: Self, thisData: Self) -> (), outerModes: [Int], inout outputData: Self) {
+//        
+//        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+//        let group = dispatch_group_create()
+//        
+//        outputData.printMemoryAdresses(printTitle: "--start output--")
+//        
+//        let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
+//        let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
+//        actionRecurse(action, outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex, outputData: &outputData, inputData: self, group: group, queue: queue)
+//        
+//        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+//        
+//    }
     
-    public func perform(asyncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> (Self),
-                        syncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: Self, inout outputData: Self) -> (),
-                        outerModes: [Int], inout outputData: Self) {
+//    public func perform(asyncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> ([Self]),
+//                        syncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [Self], inout outputData: [Self]) -> (),
+//                        outerModes: [Int], inout outputData: [Self]) {
+//        
+//        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+//        let group = dispatch_group_create()
+//        let sync = NSObject()
+//        
+//        func actionRecurse(outerModes outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
+//            if(modeNumber < outerModes.count) {
+//                let currentMode = outerModes[modeNumber]
+//                
+//                for i in 0..<self.modeSizes[currentMode] {
+//                    var newCurrentIndex = currentIndex
+//                    newCurrentIndex[currentMode] = i...i
+//                    var newOuterIndex = outerIndex
+//                    newOuterIndex[modeNumber] = i...i
+//                    
+//                    actionRecurse(outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
+//                }
+//            } else {
+//                dispatch_group_async(group, queue, { 
+//                    let result = asyncAction(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: self)
+//                    objc_sync_enter(sync)
+//                    syncAction(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
+//                    objc_sync_exit(sync)
+//                })
+//            }
+//        }
+//        
+//        outputData[0].printMemoryAdresses(printTitle: "--start output--")
+//        
+//        let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
+//        let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
+//        
+//        actionRecurse(outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
+//        
+//        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+//    }
+    
+    public func performForOuterModes(outerModes: [Int], inout outputData: [Self],
+                                     calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> [Self],
+                                     writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [Self], inout outputData: [Self]) -> ()) {
         
         let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
         let group = dispatch_group_create()
@@ -358,16 +398,16 @@ public extension MultidimensionalData {
                     actionRecurse(outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
                 }
             } else {
-                dispatch_group_async(group, queue, { 
-                    let result = asyncAction(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: self)
+                dispatch_group_async(group, queue, {
+                    let result = calculate(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: self)
                     objc_sync_enter(sync)
-                    syncAction(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
+                    writeOutput(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
                     objc_sync_exit(sync)
                 })
             }
         }
         
-        outputData.printMemoryAdresses(printTitle: "--start output--")
+//        outputData[0].printMemoryAdresses(printTitle: "--start output--")
         
         let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
         let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
@@ -456,46 +496,97 @@ public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, o
     actionRecurse(0)
 }
 
-internal func actionRecurse<T: MultidimensionalData>(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> (),
-                            outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T, group: dispatch_group_t, queue: dispatch_queue_t) {
-    if(modeNumber < outerModes.count) {
-        let currentMode = outerModes[modeNumber]
-        
-        for i in 0..<inputData.modeSizes[currentMode] {
-            var newCurrentIndex = currentIndex
-            newCurrentIndex[currentMode] = i...i
-            var newOuterIndex = outerIndex
-            newOuterIndex[modeNumber] = i...i
-            
-            //outputData.printMemoryAdresses(printTitle: "----recurse--")
-            
-            actionRecurse(action, outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
+public func combine<T: MultidimensionalData>(a: T, forOuterModes outerModesA: [Int], with b: T, forOuterModes outerModesB: [Int], inout outputData: [T],
+                    calculate: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceA: T, sourceB: T) -> [T],
+                    writeOutput: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [T], inout outputData: [T]) -> ()) {
+    
+    let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+    let group = dispatch_group_create()
+    let sync = NSObject()
+    
+    let outerModeCount = outerModesA.count + outerModesB.count
+    
+    func actionRecurse(modeNumber: Int, currentIndexA: [DataSliceSubscript], currentIndexB: [DataSliceSubscript], currentOuterIndex: [DataSliceSubscript]) {
+        if(modeNumber < outerModeCount) {
+            if(modeNumber < outerModesA.count) {
+                let currentModeA = outerModesA[modeNumber]
+                for i in 0..<a.modeSizes[currentModeA] {
+                    var newCurrentIndexA = currentIndexA
+                    newCurrentIndexA[currentModeA] = i...i
+                    var newOuterIndex = currentOuterIndex
+                    newOuterIndex[modeNumber] = i...i
+                    actionRecurse(modeNumber + 1, currentIndexA: newCurrentIndexA, currentIndexB: currentIndexB, currentOuterIndex: newOuterIndex)
+                }
+            } else {
+                let currentModeB = outerModesB[modeNumber - outerModesA.count]
+                for i in 0..<b.modeSizes[currentModeB] {
+                    var newCurrentIndexB = currentIndexB
+                    newCurrentIndexB[currentModeB] = i...i
+                    var newOuterIndex = currentOuterIndex
+                    newOuterIndex[modeNumber] = i...i
+                    actionRecurse(modeNumber + 1, currentIndexA: currentIndexA, currentIndexB: newCurrentIndexB, currentOuterIndex: newOuterIndex)
+                }
+                
+            }
+        } else {
+            dispatch_group_async(group, queue, {
+                let result = calculate(indexA: currentIndexA, indexB: currentIndexB, outerIndex: currentOuterIndex, sourceA: a, sourceB: b)
+                objc_sync_enter(sync)
+                writeOutput(indexA: currentIndexA, indexB: currentIndexB, outerIndex: currentOuterIndex, inputData: result, outputData: &outputData)
+                objc_sync_exit(sync)
+            })
         }
-    } else {
-        
-        //outputData.printMemoryAdresses(printTitle: "----recurse--")
-        
-        dispatchedAction(action, currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
-    }
-}
-
-internal func dispatchedAction<T: MultidimensionalData>(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> (),
-                               currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T, group: dispatch_group_t, queue: dispatch_queue_t) {
-    
-    
-    outputData.printMemoryAdresses(printTitle: "---before dispatch--")
-    dispatch_group_async(group, queue) {
-        outputData.printMemoryAdresses(printTitle: "--dispatch--", printThread: true)
-        action(currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
-//        testAction(currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
     }
     
+    let startIndexA: [DataSliceSubscript] = a.modeSizes.map({0..<$0})
+    let startIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
+    let startOuterIndex: [DataSliceSubscript] = (outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]})).map({0..<$0})
+    
+    actionRecurse(0, currentIndexA: startIndexA, currentIndexB: startIndexB, currentOuterIndex: startOuterIndex)
+    
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
 }
 
-internal func testAction<T: MultidimensionalData>(currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> () {
-    
-    outputData.printMemoryAdresses(printThread: true)
-    outputData.values[0] = outputData.values[0]
-    
-}
+//internal func actionRecurse<T: MultidimensionalData>(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> (),
+//                            outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T, group: dispatch_group_t, queue: dispatch_queue_t) {
+//    if(modeNumber < outerModes.count) {
+//        let currentMode = outerModes[modeNumber]
+//        
+//        for i in 0..<inputData.modeSizes[currentMode] {
+//            var newCurrentIndex = currentIndex
+//            newCurrentIndex[currentMode] = i...i
+//            var newOuterIndex = outerIndex
+//            newOuterIndex[modeNumber] = i...i
+//            
+//            //outputData.printMemoryAdresses(printTitle: "----recurse--")
+//            
+//            actionRecurse(action, outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
+//        }
+//    } else {
+//        
+//        //outputData.printMemoryAdresses(printTitle: "----recurse--")
+//        
+//        dispatchedAction(action, currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
+//    }
+//}
+//
+//internal func dispatchedAction<T: MultidimensionalData>(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> (),
+//                               currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T, group: dispatch_group_t, queue: dispatch_queue_t) {
+//    
+//    
+//    outputData.printMemoryAdresses(printTitle: "---before dispatch--")
+//    dispatch_group_async(group, queue) {
+//        outputData.printMemoryAdresses(printTitle: "--dispatch--", printThread: true)
+//        action(currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
+////        testAction(currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
+//    }
+//    
+//}
+//
+//internal func testAction<T: MultidimensionalData>(currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> () {
+//    
+//    outputData.printMemoryAdresses(printThread: true)
+//    outputData.values[0] = outputData.values[0]
+//    
+//}
 
