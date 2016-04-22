@@ -128,8 +128,7 @@ public extension MultidimensionalData {
             print("error: no values to write in thread: \(NSThread.currentThread())")
         }
         
-        print("write to data at address: \(memoryAddress(&self))")
-        print("write to value array at address: \(memoryAddress(&values))")
+        printMemoryAdresses(printTitle: "--set slice \(subscripts)--", printThread: true)
         values.performWithUnsafeMutableBufferPointer { (pointer) -> () in
             //print("set slice array pointer: \(pointer), in thread: \(NSThread.currentThread())")
             recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
@@ -328,51 +327,54 @@ public extension MultidimensionalData {
         let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
         let group = dispatch_group_create()
         
-//        func actionRecurse(modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
-//            if(modeNumber < outerModes.count) {
-//                let currentMode = outerModes[modeNumber]
-//                
-//                for i in 0..<modeSizes[currentMode] {
-//                    var newCurrentIndex = currentIndex
-//                    newCurrentIndex[currentMode] = i...i
-//                    var newOuterIndex = outerIndex
-//                    newOuterIndex[modeNumber] = i...i
-//                    actionRecurse(modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
-//                }
-//            } else {
-//                outputData.values.performWithUnsafeMutableBufferPointer({ (pointer) -> () in
-//                    print("outputData adress before dispatch: \(pointer)")
-//                })
-//                dispatchedAction(action, currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: self, group: group, queue: queue)
-////                dispatchedAction(currentIndex, _outerIndex: outerIndex, _outputData: &outputData, _thisData: self)
-//            }
-//            
-//        }
-        
-//        func dispatchedAction(_currentIndex: [DataSliceSubscript], _outerIndex: [DataSliceSubscript], inout _outputData: Self, _thisData: Self) {
-//            
-//            dispatch_group_async(group, queue) {
-//                
-//                _thisData.values.performWithUnsafeBufferPointer({ (pointer) -> () in
-//                    print("thisData adress: \(pointer), in thread: \(NSThread.currentThread())")
-//                })
-//                
-//                
-//                _outputData.values.performWithUnsafeMutableBufferPointer({ (pointer) -> () in
-//                    print("outputData adress: \(pointer), in thread: \(NSThread.currentThread())")
-//                })
-//                
-//                action(currentIndex: _currentIndex, outerIndex: _outerIndex, outputData: &_outputData, thisData: _thisData)
-//            }
-//        }
+        outputData.printMemoryAdresses(printTitle: "--start output--")
         
         let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
         let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
         actionRecurse(action, outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex, outputData: &outputData, inputData: self, group: group, queue: queue)
-//        actionRecurse(0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
         
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
         
+    }
+    
+    public func perform(asyncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> (Self),
+                        syncAction: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: Self, inout outputData: Self) -> (),
+                        outerModes: [Int], inout outputData: Self) {
+        
+        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        let group = dispatch_group_create()
+        let sync = NSObject()
+        
+        func actionRecurse(outerModes outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
+            if(modeNumber < outerModes.count) {
+                let currentMode = outerModes[modeNumber]
+                
+                for i in 0..<self.modeSizes[currentMode] {
+                    var newCurrentIndex = currentIndex
+                    newCurrentIndex[currentMode] = i...i
+                    var newOuterIndex = outerIndex
+                    newOuterIndex[modeNumber] = i...i
+                    
+                    actionRecurse(outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
+                }
+            } else {
+                dispatch_group_async(group, queue, { 
+                    let result = asyncAction(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: self)
+                    objc_sync_enter(sync)
+                    syncAction(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
+                    objc_sync_exit(sync)
+                })
+            }
+        }
+        
+        outputData.printMemoryAdresses(printTitle: "--start output--")
+        
+        let startCurrentIndex: [DataSliceSubscript] = modeSizes.map({0..<$0})
+        let startOuterIndex: [DataSliceSubscript] = outerModes.map({modeSizes[$0]}).map({0..<$0})
+        
+        actionRecurse(outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
+        
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
     }
     
     
@@ -385,6 +387,20 @@ public extension MultidimensionalData {
         let indexPositions = indicesInRange(Array(firstModesRanges))
         //add the start offset of the last mode to each index
         return indexPositions//.map({return $0 + ranges.last!.first!})
+    }
+    
+    internal mutating func printMemoryAdresses(printTitle printTitle: String? = nil, printThread: Bool = false) {
+        var infoString: String = ""
+        if let title = printTitle {
+            infoString = title + "\n"
+        }
+        infoString = infoString + "MultidimensionalData with type <\(Element.self)> and \(elementCount) elements: "
+        infoString = infoString + "\n memory address: \(memoryAddress(&self))"
+        infoString = infoString + "\n array address: \(memoryAddress(values))"
+        if(printThread) {
+            infoString = infoString + "\n in thread: \(NSThread.currentThread())"
+        }
+        print(infoString)
     }
     
 
@@ -450,12 +466,14 @@ internal func actionRecurse<T: MultidimensionalData>(action: (currentIndex: [Dat
             newCurrentIndex[currentMode] = i...i
             var newOuterIndex = outerIndex
             newOuterIndex[modeNumber] = i...i
-            printArrayAddress(&outputData.values)
+            
+            //outputData.printMemoryAdresses(printTitle: "----recurse--")
+            
             actionRecurse(action, outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
         }
     } else {
-        print("outputData adress before dispatch: \(memoryAddress(&outputData))")
-        printArrayAddress(&outputData.values)
+        
+        //outputData.printMemoryAdresses(printTitle: "----recurse--")
         
         dispatchedAction(action, currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData, group: group, queue: queue)
     }
@@ -464,20 +482,20 @@ internal func actionRecurse<T: MultidimensionalData>(action: (currentIndex: [Dat
 internal func dispatchedAction<T: MultidimensionalData>(action: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> (),
                                currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T, group: dispatch_group_t, queue: dispatch_queue_t) {
     
+    
+    outputData.printMemoryAdresses(printTitle: "---before dispatch--")
     dispatch_group_async(group, queue) {
-        
-        inputData.values.performWithUnsafeBufferPointer({ (pointer) -> () in
-            print("inputData address: \(pointer), in thread: \(NSThread.currentThread())")
-        })
-        print("outputData address: \(memoryAddress(&outputData)), in thread: \(NSThread.currentThread())")
-        print("output array address: \(memoryAddress(&outputData.values)), in thread: \(NSThread.currentThread())")
-        
-        
-//        outputData.values.performWithUnsafeMutableBufferPointer({ (pointer) -> () in
-//            print("outputData array adress: \(pointer), in thread: \(NSThread.currentThread())")
-//        })
-        
+        outputData.printMemoryAdresses(printTitle: "--dispatch--", printThread: true)
         action(currentIndex: currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
+//        testAction(currentIndex, outerIndex: outerIndex, outputData: &outputData, inputData: inputData)
     }
+    
+}
+
+internal func testAction<T: MultidimensionalData>(currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inout outputData: T, inputData: T) -> () {
+    
+    outputData.printMemoryAdresses(printThread: true)
+    outputData.values[0] = outputData.values[0]
+    
 }
 

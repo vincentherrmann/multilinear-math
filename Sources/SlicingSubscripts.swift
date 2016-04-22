@@ -190,7 +190,7 @@ public func getSlice<T: MultidimensionalData>(from from: T, modeSubscripts: [Dat
     let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)
     
     newData.values.performWithUnsafeMutableBufferPointer { (slice) -> () in
-        print("get slice array pointer: \(slice), in thread: \(NSThread.currentThread())")
+        newData.printMemoryAdresses(printTitle: "--get slice--", printThread: true)
         recurseCopy(target: newData, targetPointer: slice, from: from, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
     }
     

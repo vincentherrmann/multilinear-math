@@ -130,13 +130,23 @@ public func squaredDistance(a: [Float], b: [Float]) -> Float {
     return a.combineWith(b, combineFunction: {($0-$1)*($0-$1)}).reduce(0, combine: {$0+$1})
 }
 
-public func memoryAddress(o: UnsafePointer<Void>) -> Int {
-    return unsafeBitCast(o, Int.self)
+public func memoryAddress(o: UnsafePointer<Void>) -> UnsafePointer<Void> {
+    return UnsafePointer<Void>(bitPattern: unsafeBitCast(o, Int.self))
 }
 
 public func printArrayAddress<T>(inout array: [T]) {
     print("array memory address: \(memoryAddress(&array))")
 }
+
+//extension NSThread {
+//    func sequenceNumber() -> Int {
+//        if let value = self.valueForKey("private.seqNum")?.integerValue {
+//            return value
+//        } else {
+//            return 0
+//        }
+//    }
+//}
 
 public extension String {
     

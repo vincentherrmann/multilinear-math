@@ -12,10 +12,33 @@ public func sumTest(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
     let remainingModes = tensor.modeArray.removeValues(overModes)
     var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
     
+//    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
+//        let sum = vectorSummation(thisData[slice: currentIndex].values)
+//        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
+//        //outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+//        print("current sum values: \(outputData.values)")
+//        }, outerModes: remainingModes, outputData: &outputData)
+    
     tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
-        let sum = vectorSummation(thisData[slice: currentIndex].values)
-        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
+        outputData[slice: outerIndex] = Tensor<Float>(scalar: 1.0)
+        outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
         print("current sum values: \(outputData.values)")
+        }, outerModes: remainingModes, outputData: &outputData)
+    
+    return outputData
+}
+
+public func sumTest2(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+    let remainingModes = tensor.modeArray.removeValues(overModes)
+    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    
+    tensor.perform({ (currentIndex, outerIndex, sourceData) -> (Tensor<Float>) in
+        let sum = vectorSummation(sourceData[slice: currentIndex].values)
+        return Tensor<Float>(scalar: sum)
+        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
+            outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
+            outputData[slice: outerIndex] = inputData
+            print("current sum values: \(outputData.values)")
         }, outerModes: remainingModes, outputData: &outputData)
     
     return outputData

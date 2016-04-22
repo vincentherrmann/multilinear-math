@@ -23,6 +23,8 @@ class MultidimensionalDataTests: XCTestCase {
     
     func testModeReordering() {
         var t = Tensor<Float>(modeSizes: [2, 3, 4], values: Array(0..<24).map({return Float($0)}))
+        //var b = Tensor<Float>(scalar: 1.0)
+        
         var indices: [TensorIndex] = [.a, .b, .c]
         t.indices = indices
         
