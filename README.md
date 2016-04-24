@@ -27,7 +27,7 @@ var m = Tensor<Float>(modeSizes: [4, 6], repeatedValue: 1)
 var n = Tensor<Float>(modeSizes: [6, 5], repeatedValue: 2)
 let matrixProduct = m[.i, .j] * n[.j, .k]
 ```
-Geodesic devitation:
+Geodesic deviation:
 ```swift
 var tangentVector = Tensor<Float>(modeSizes: [4], values: [0.3, 1.7, 0.2, 0.5])
 tangentVector.isCartesian = false
