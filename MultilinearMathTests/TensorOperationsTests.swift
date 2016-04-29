@@ -10,10 +10,19 @@ import XCTest
 import MultilinearMath
 
 class TensorOperationsTests: XCTestCase {
+    
+    var tensor1: Tensor<Float> = Tensor<Float>(scalar: 0)
+    var tensor2: Tensor<Float> = Tensor<Float>(scalar: 0)
 
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        //  0  1  2  3      12 13 14 15
+        //  4  5  6  7      16 17 18 19
+        //  8  9 10 11      20 21 22 23
+        tensor1 = Tensor<Float>(modeSizes: [2, 3, 4], values: Array(0..<24).map({return Float($0)}))
+        tensor2 = Tensor<Float>(modeSizes: [4, 5, 3], values: Array(0..<60).map({return Float($0)}))
     }
     
     override func tearDown() {
@@ -178,31 +187,51 @@ class TensorOperationsTests: XCTestCase {
         XCTAssertEqual(product.values, expectedProduct, "product 3x3x3x3 * 3x3")
     }
 
+//    func testTensorNormalization() {
+//        let originalValues = Array(0..<60).map({return Float($0)})
+//        var tensor = Tensor<Float>(modeSizes: [3, 4, 5], values: originalValues)
+//        tensor.indices = [.a, .b, .c]
+////        let normalized1 = normalize(tensor, overModes: [1])
+////
+////        tensor = normalized1.normalizedTensor °* normalized1.standardDeviation
+////        tensor = tensor + normalized1.mean
+////        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "normalization over mode 1")
+//        
+//        tensor = Tensor<Float>(modeSizes: [3, 4, 5], values: originalValues)
+//        tensor.indices = [.a, .b, .c]
+//        let normalized = normalize(tensor, overModes: [0, 1, 2])
+//        
+//        tensor = normalized.normalizedTensor °* normalized.standardDeviation
+//        tensor = tensor + normalized.mean
+//        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "normalization over modes 0, 1 and 2")
+//        print("normalized: \(tensor.values)")
+//        
+////        let normalizedConcurrent = normalizeConcurrent(tensor, overModes: [0, 1, 2])
+////        
+////        tensor = normalizedConcurrent.normalizedTensor °* normalizedConcurrent.standardDeviation
+////        tensor = tensor + normalized.mean
+////        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "concurrent normalization over modes 0, 1 and 2")
+////        print("normalizedConcurrent: \(tensor.values)")
+//    }
+    
+    func testTensorSum() {
+        let sum1 = sum(tensor1, overModes: [0, 1, 2])
+        XCTAssertEqual(sum1.values, [276.0], "sum tensor1 over all modes")
+        
+        let sum2 = sum(tensor1, overModes: [0, 2])
+        XCTAssertEqual(sum2.values, [60.0, 92.0, 124.0], "sum tensor1 over modes 0 and 2")
+        
+        let sum3 = sum(tensor1, overModes: [1])
+        XCTAssertEqual(sum3.values, [12.0, 15.0, 18.0, 21.0, 48.0, 51.0, 54.0, 57.0], "sum tensor1 over mode 1")
+    }
+    
     func testTensorNormalization() {
-        let originalValues = Array(0..<60).map({return Float($0)})
-        var tensor = Tensor<Float>(modeSizes: [3, 4, 5], values: originalValues)
-        tensor.indices = [.a, .b, .c]
-//        let normalized1 = normalize(tensor, overModes: [1])
-//
-//        tensor = normalized1.normalizedTensor °* normalized1.standardDeviation
-//        tensor = tensor + normalized1.mean
-//        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "normalization over mode 1")
-        
-        tensor = Tensor<Float>(modeSizes: [3, 4, 5], values: originalValues)
-        tensor.indices = [.a, .b, .c]
-        let normalized = normalize(tensor, overModes: [0, 1, 2])
-        
-        tensor = normalized.normalizedTensor °* normalized.standardDeviation
-        tensor = tensor + normalized.mean
-        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "normalization over modes 0, 1 and 2")
-        print("normalized: \(tensor.values)")
-        
-        let normalizedConcurrent = normalizeConcurrent(tensor, overModes: [0, 1, 2])
-        
-        tensor = normalizedConcurrent.normalizedTensor °* normalizedConcurrent.standardDeviation
-        tensor = tensor + normalized.mean
-        XCTAssert(squaredDistance(tensor.values, b: originalValues) < 50*0.001, "concurrent normalization over modes 0, 1 and 2")
-        print("normalizedConcurrent: \(tensor.values)")
+        let normalization1 = normalize(tensor1, overModes: [0, 1, 2])
+        let sum1 = sum(normalization1.normalizedTensor, overModes: [0, 1, 2])
+        XCTAssert(abs(sum1.values[0]) < 0.001, "normalize tensor1 over all modes")
+    }
+    
+    func testTensorInverse() {
     }
 
 }

@@ -41,7 +41,64 @@ class ExampleTests: XCTestCase {
         
         let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 8)
         let reconstructeduFaces = uncorrelatedMPCAReconstruct(uFaces, projections: uEMPs)
+    }
+    
+    func testMPCAwithLargeDataset() {
+        print("load data... \(NSDate())")
+        let faces = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/MachineLearningMOOC/machine-learning-ex7/ex7/ex7faces.csv", modeSizes: [5000, 32, 32])
         
+        print("normalize data... \(NSDate())")
+        let (facesNorm, mean, deviation) = normalize(faces, overModes: [0])
+        print("denormalize data... \(NSDate())")
+        let facesWithDeviation = multiplyElementwise(a: facesNorm, commonModesA: [1, 2], outerModesA: [0], b: deviation, commonModesB: [0, 1], outerModesB: [])
+        let facesWithMean = add(a: facesWithDeviation, commonModesA: [1, 2], outerModesA: [0], b: mean, commonModesB: [0, 1], outerModesB: [])
+        
+        print("calculate UMPCA... \(NSDate())")
+        let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 8)
+        print("reconstruct data... \(NSDate())")
+        let reconstructeduFaces = uncorrelatedMPCAReconstruct(uFaces, projections: uEMPs)
+        
+        
+        print("calculate MPCA... \(NSData())")
+        let mFaces = multilinearPCA(facesNorm, projectionModeSizes: [10, 10])
+        
+        //debug: 345 seconds
+        //release(whole module optimization): 55 seconds
+        //six-fold performance increase
+    }
+    
+    func testLinearRegression() {
+        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/Data3D.txt")
+        let x = data[all, 0...1]
+        let y = data[all, 2...2]
+        let testTensor = Tensor<Float>(modeSizes: [2], values: [2100.0, 3.0])
+        
+        let parameters = linearRegression(x: x, y: y)
+        print("parameters linear regression closed form: \(parameters.values)")
+        let test = parameters[TensorIndex.a] * (Tensor<Float>(modeSizes: [3], values: [1] + testTensor.values))[TensorIndex.a]
+        print("test result: \(test.values)")
+        
+        
+        let (parametersGD, meanGD, deviationGD) = linearRegressionGD(x: x, y: y)
+        print("parameters linear regression gradient descent: \(parametersGD.values)")
+        let normalizedTestTensor = normalize(testTensor, overModes: [], withMean: meanGD, deviation: deviationGD)
+        let testGD = parametersGD[TensorIndex.a] * concatenate(a: ones(1), b: normalizedTestTensor, alongMode: 0)[TensorIndex.a]
+//        let testGD = parametersGD[TensorIndex.a] * (Tensor<Float>(modeSizes: [3], values: [1] + normalizedTestTensor.values))[TensorIndex.a]
+        print("GD test result: \(testGD.values)")
+    }
+    
+    func testLogisticRegression() {
+        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
+        let x = data[all, 0...1]
+        let y = data[all, 2...2]
+        
+        let (parameters, mean, deviation) = logisticRegression(x: x, y: y)
+        print("parameters logistic regression: \(parameters)")
+        
+        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+        let tVwithOnes = concatenate(a: ones(3), b: testValues, alongMode: 1)
+        let test = sigmoid(parameters[TensorIndex.b] * tVwithOnes[.a, .b])
+        print("logistic regression result: \(test.values)")
     }
 
 }

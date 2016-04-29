@@ -33,13 +33,14 @@ public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A
     return sum
 }
 
+
 /// Substract `vectorB` from `vectorA` of the same size
 /// - Returns: The difference vector
 public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
     var difference = [Float](count: vectorA.count, repeatedValue: 0)
     vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
         vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
-            vDSP_vsub(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &difference, 1, UInt(vectorA.count))
+            vDSP_vsub(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &difference, 1, UInt(vectorA.count))
         }
     }
     return difference
@@ -67,6 +68,37 @@ public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.El
     return product
 }
 
+/// Divide `vectorA` by `vectorB` element wise
+/// - Returns: The difference vector
+public func vectorDivision<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
+    var quotient = [Float](count: vectorA.count, repeatedValue: 0)
+    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
+        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+            vDSP_vdiv(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &quotient, 1, UInt(vectorA.count))
+        }
+    }
+    return quotient
+}
+
+/// Divide a scalar by every element of a vector
+public func vectorDivision<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(numerator numerator: Float, vector: A) -> [Float] {
+    var quotient = [Float](count: vector.count, repeatedValue: 0)
+    var numScalar = numerator
+    vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vDSP_svdiv(&numScalar, pointer.baseAddress, 1, &quotient, 1, UInt(vector.count))
+    }
+    return quotient
+}
+
+/// Calculate the negative of every element of a vector
+public func vectorNegation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
+    var neg = [Float](count: vector.count, repeatedValue: 0)
+    vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vDSP_vneg(pointer.baseAddress, 1, &neg, 1, UInt(vector.count))
+    }
+    return neg
+}
+
 /// Calculate the sum of all elements in the vector
 public func vectorSummation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> Float {
     var sum: Float = 0
@@ -74,6 +106,35 @@ public func vectorSummation<A: UnsafeBuffer where A.Generator.Element == Float, 
         vDSP_sve(pointer.baseAddress, 1, &sum, UInt(vector.count))
     }
     return sum
+}
+
+/// Square every element of the vector
+public func vectorSquaring<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
+    var squares = [Float](count: vector.count, repeatedValue: 0)
+    vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vDSP_vsq(pointer.baseAddress, 1, &squares, 1, UInt(vector.count))
+    }
+    return squares
+}
+
+/// Calculate the exponential (e^v[n]) of every element of the vector
+public func vectorExponential<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
+    var exp = [Float](count: vector.count, repeatedValue: 0)
+    var count = Int32(vector.count)
+    vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vvexpf(&exp, pointer.baseAddress, &count)
+    }
+    return exp
+}
+
+/// Calculate the (natural) logarithm of every element of the vector
+public func vectorLogarithm<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
+    var log = [Float](count: vector.count, repeatedValue: 0)
+    var count = Int32(vector.count)
+    vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
+        vvlogf(&log, pointer.baseAddress, &count)
+    }
+    return log
 }
 
 /// Normalize the elements of the given vector
@@ -87,6 +148,9 @@ public func vectorNormalization<A: UnsafeBuffer where A.Generator.Element == Flo
     var deviation: Float = 0
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_normalize(pointer.baseAddress, 1, &norm, 1, &mean, &deviation, UInt(vector.count))
+    }
+    if(mean == 0 && deviation == 0) {
+        norm = [Float](count: vector.count, repeatedValue: 0)
     }
     return (norm, mean, deviation)
 }

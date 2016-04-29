@@ -157,19 +157,7 @@ public func multiply(a a: Tensor<Float>, summationModesA: [Int]? = nil, remainin
     let oldToNewFromMatrix = matrixA.productModes.map({modesFromA.indexOf($0)!}) + matrixB.productModes.map({modesFromB.indexOf($0)! + modesFromA.count})
     let productOldToNew = oldToNewRemaining + oldToNewFromMatrix
     
-    
-    
-    //recursive approach for calculating values for modes not covered by the multiplication of the two matrices
-//    var currentProductIndex = [Int](count: max(productTensor.modeCount, 1), repeatedValue: 0)
-    
     let productSliceSizes = matrixA.productModes.map({tensorA.modeSizes[$0]}) + matrixB.productModes.map({tensorB.modeSizes[$0]})
-    
-//    combine(a: tensorA, outerModesA: matrixA.remainingModes, b: tensorB, outerModesB: matrixB.remainingModes) { (indexA, indexB, outerIndex) in
-//        let sliceA = tensorA[slice: indexA]
-//        let sliceB = tensorB[slice: indexB]
-//        let productVector = matrixMultiplication(matrixA: sliceA.values, sizeA: matrixA.size, transposeA: matrixA.transpose, matrixB: sliceB.values, sizeB: matrixB.size, transposeB: matrixB.transpose, useBLAS: true)
-//        productTensor[slice: outerIndex] = Tensor<Float>(modeSizes: productSliceSizes, values: productVector)
-//    }
     
     combine(tensorA, forOuterModes: matrixA.remainingModes, with: tensorB, forOuterModes: matrixB.remainingModes, outputData: &productTensor,
             calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
@@ -182,13 +170,6 @@ public func multiply(a a: Tensor<Float>, summationModesA: [Int]? = nil, remainin
                 outputData[0][slice: outerIndex] = inputData[0]
     }))
     
-    let reorderA = matrixA.remainingModes.map({optimalOrderForA.newToOld.indexOf($0)!})
-    let productOrderA = reorderA.combineWith(Array(0..<reorderA.count), combineFunction: {($0, $1)}).sort({$0.0 < $1.0})
-    let reorderB = matrixB.remainingModes.map({optimalOrderForB.newToOld.indexOf($0)})
-    let productOrderB = reorderB.combineWith(Array(reorderA.count..<productTensor[0].modeCount), combineFunction: {($0, $1)}).sort({$0.0 < $1.0})
-    
-    productTensor[0] = productTensor[0].reorderModes(productOldToNew)
-    
-    return productTensor[0]
+    return productTensor[0].reorderModes(productOldToNew)
 }
 

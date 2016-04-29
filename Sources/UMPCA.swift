@@ -84,7 +84,7 @@ public struct EMP {
 /// - Parameter data: Sample tensor. The first mode enumerates the different samples. The remaining modes constitute the specific sample. All sample elements should be centered, i.e. have mean 0.
 /// - Parameter featureCount: The number of uncorrelated features to extract. Has to be equal to or smaller than the smallest mode size of the data tensor (including the sample mode).
 ///
-/// - Returns:
+/// :
 /// `projectedData`: <br> Each sample projected to a vector of uncorrelated features. <br>
 /// `projections`: <br> Array of elementary multilinear projections, one for each resulting feature.
 public func uncorrelatedMPCA(data: Tensor<Float>, featureCount: Int) -> (projectedData: Tensor<Float>, projections: [EMP]) {

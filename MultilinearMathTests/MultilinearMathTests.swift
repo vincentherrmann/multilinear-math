@@ -38,16 +38,16 @@ class MultilinearMathTests: XCTestCase {
         
         print("")
         let tensor = Tensor<Float>(modeSizes: [2, 3, 2], values: Array(0..<12).map({return Float($0)}))
-        let sum1 = sumTest2(tensor, overModes: [0])
+        let sum1 = sum(tensor, overModes: [0])
         XCTAssertEqual(sum1.values, [6.0, 8.0, 10.0, 12.0, 14.0, 16.0], "sum over mode 0")
         print("")
-        let sum2 = sumTest2(tensor, overModes: [1])
+        let sum2 = sum(tensor, overModes: [1])
         XCTAssertEqual(sum2.values, [6.0, 9.0, 24.0, 27.0], "sum over mode 1")
         print("")
-        let sum3 = sumTest2(tensor, overModes: [0, 1])
+        let sum3 = sum(tensor, overModes: [0, 1])
         XCTAssertEqual(sum3.values, [30.0, 36.0], "sum over mode 0 and 1")
         print("")
-        let sum4 = sumTest2(tensor, overModes: [0, 1, 2])
+        let sum4 = sum(tensor, overModes: [0, 1, 2])
         XCTAssertEqual(sum4.values, [66.0], "sum over mode 0")
     }
     

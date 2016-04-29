@@ -8,27 +8,12 @@
 
 import Foundation
 
-//public func sumTest(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
-//    let remainingModes = tensor.modeArray.removeValues(overModes)
-//    var outputData = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-//    
-////    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
-////        let sum = vectorSummation(thisData[slice: currentIndex].values)
-////        outputData[slice: outerIndex] = Tensor<Float>(scalar: sum)
-////        //outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
-////        print("current sum values: \(outputData.values)")
-////        }, outerModes: remainingModes, outputData: &outputData)
-//    
-//    tensor.perform({ (currentIndex, outerIndex, outputData, thisData) in
-//        outputData[slice: outerIndex] = Tensor<Float>(scalar: 1.0)
-//        outputData.printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
-//        print("current sum values: \(outputData.values)")
-//        }, outerModes: remainingModes, outputData: &outputData)
-//    
-//    return outputData
-//}
 
-public func sumTest2(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+// Operations on a single tensor
+
+/// sum tensor over the given modes
+/// - Returns: a tensor with only the modes that were not summed over
+public func sum(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
     let remainingModes = tensor.modeArray.removeValues(overModes)
     var outputData = [Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)]
     
@@ -36,249 +21,102 @@ public func sumTest2(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
                                 calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
                                     let sum = vectorSummation(sourceData[slice: currentIndex].values)
                                     return [Tensor<Float>(scalar: sum)]
-    }),
+                                }),
                                 writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
-                                    outputData[0].printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
                                     outputData[0][slice: outerIndex] = inputData[0]
-                                    print("current sum values: \(outputData.first!.values)")
-    }))
+                                }))
     
-//    tensor.perform({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
-//        let sum = vectorSummation(sourceData[slice: currentIndex].values)
-//        return [Tensor<Float>(scalar: sum)]
-//        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
-//            outputData[0].printMemoryAdresses(printTitle: "--sum action output--", printThread: true)
-//            outputData[0][slice: outerIndex] = inputData[0]
-//            print("current sum values: \(outputData.first!.values)")
-//        }, outerModes: remainingModes, outputData: &outputData)
-    
-    return outputData.first!
+    return outputData[0]
 }
 
-public func add(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
-    
-    var sum = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
-    
-    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-//    var currentIndexSum = sum.modeSizes.map({0..<$0}) as [DataSliceSubscript]
-    
-    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB) { (indexA, indexB, outerIndex) in
-        let sumVector = vectorAddition(vectorA: a[slice: indexA].values, vectorB: b[slice: indexB].values)
-        sum[slice: outerIndex] = Tensor<Float>(modeSizes: sliceSizes, values: sumVector)
-    }
-    
-//    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
-//        currentIndexSum[indexNumber] = i...i
-//        }, combineFunction: { (currentIndexA, currentIndexB) -> () in
-//            let sumVector = vectorAddition(vectorA: a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-//            sum[slice: currentIndexSum] = Tensor<Float>(modeSizes: sliceSizes, values: sumVector)
+/// Normalize the elements of a tensor over the given modes.
+/// - Returns:
+/// `normalizedTensor`: <br> Normalized version of the given tensor, the elements along the given modes together have mean zero and a standard devation of one <br>
+/// `meanTensor`: <br> Mean of the given tensor, itself a tensor with only the modes that were not normalized over <br>
+/// `deviationTensor`: <br> Standard deviation of the given tensor, itself a tensor with only the modes that were not normalized over
+//public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
+//    
+//    let remainingModes = tensor.modeArray.removeValues(normalizeModes)
+//    
+//    let normalizeModeSizes = normalizeModes.map({tensor.modeSizes[$0]})
+//    
+//    var normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
+//    var meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+//    var deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+//    
+//    tensor.perform(outerModes: remainingModes, action: { (currentIndex, outerIndex) in
+//        let normalizationSlice = tensor[slice: currentIndex]
+//        let normalizedVector = vectorNormalization(normalizationSlice.values)
+//        normalizedTensor[slice: currentIndex] = Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector)
+//        deviationTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.standardDeviation)
+//        meanTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.mean)
 //    })
-    
-    return sum
-}
+//    
+//    return (normalizedTensor, meanTensor, deviationTensor)
+//}
 
-public func substract(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
-    
-    var difference = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
-    
-    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-//    var currentIndexDiff = difference.modeSizes.map({0..<$0}) as [DataSliceSubscript]
-    
-    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB) { (indexA, indexB, outerIndex) in
-        let diffVector = vectorSubtraction(a[slice: indexA].values, vectorB: b[slice: indexB].values)
-        difference[slice: outerIndex] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
-    }
-    
-//    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
-//        currentIndexDiff[indexNumber] = i...i
-//        }, combineFunction: { (currentIndexA, currentIndexB) -> () in
-//            let diffVector = vectorSubtraction(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-//            difference[slice: currentIndexDiff] = Tensor<Float>(modeSizes: sliceSizes, values: diffVector)
-//    })
-    
-    return difference
-}
-
-public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
-    
-    var product = Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)
-    
-    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
-//    var currentIndexProduct = product.modeSizes.map({0..<$0}) as [DataSliceSubscript]
-    
-    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB) { (indexA, indexB, outerIndex) in
-        let productVector = vectorElementWiseMultiplication(a[slice: indexA].values, vectorB: b[slice: indexB].values)
-        product[slice: outerIndex] = Tensor<Float>(modeSizes: sliceSizes, values: productVector)
-    }
-    
-//    combine(a: a, outerModesA: outerModesA, b: b, outerModesB: outerModesB, indexUpdate: { (indexNumber, currentMode, currentModeIsA, i) -> () in
-//        currentIndexProduct[indexNumber] = i...i
-//        }, combineFunction: { (currentIndexA, currentIndexB) -> () in
-//            let productVector = vectorElementWiseMultiplication(a[slice: currentIndexA].values, vectorB: b[slice: currentIndexB].values)
-//            product[slice: currentIndexProduct] = Tensor<Float>(modeSizes: sliceSizes, values: productVector)
-//    })
-    
-    return product
-}
-
-public func +(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
-    let commonIndices = lhs.commonIndicesWith(rhs)
-    let commonModesLhs = commonIndices.map({$0.modeA})
-    let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
-    let commonModesRhs = commonIndices.map({$0.modeB})
-    let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
-    let sum = add(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
-    return sum
-}
-
-public func -(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
-    let commonIndices = lhs.commonIndicesWith(rhs)
-    let commonModesLhs = commonIndices.map({$0.modeA})
-    let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
-    let commonModesRhs = commonIndices.map({$0.modeB})
-    let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
-    let difference = substract(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
-    return difference
-}
-
-infix operator °* {}
-public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
-    let commonIndices = lhs.commonIndicesWith(rhs)
-    let commonModesLhs = commonIndices.map({$0.modeA})
-    let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
-    let commonModesRhs = commonIndices.map({$0.modeB})
-    let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
-    let product = multiplyElementwise(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
-    return product
-}
-
-/// add a scalar to every element of a tensor
-public func +(lhs: Tensor<Float>, rhs: Float) -> Tensor<Float> {
-    let sum = Tensor<Float>.init(withPropertiesOf: lhs, values: vectorAddition(vector: lhs.values, add: rhs))
-    return sum
-}
-/// add a scalar to every element of a tensor
-public func +(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
-    return rhs+lhs
-}
-
-/// multiply every element of a tensor with a scalar
-public func *(lhs: Tensor<Float>, rhs: Float) -> Tensor<Float> {
-    let product = Tensor<Float>.init(withPropertiesOf: lhs, values: vectorMultiplication(lhs.values, factor: rhs))
-    return product
-}
-/// multiply every element of a tensor with a scalar
-public func *(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
-    return rhs*lhs
-}
-
-public func sum(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
-    let remainingModes = tensor.modeArray.removeValues(overModes)
-    var summedTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-//    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
-    
-    tensor.perform(outerModes: remainingModes) { (currentIndex, outerIndex) in
-        let sum = vectorSummation(tensor[slice: currentIndex].values)
-        summedTensor[slice: outerIndex] = Tensor<Float>(scalar: sum)
-    }
-    
-//    tensor.perform({ (currentIndex) in
-//        let summationSlice = tensor[slice: currentIndex]
-//        summedTensor[currentRemainingIndex] = vectorSummation(summationSlice.values)
-//        }, indexUpdate: { (indexNumber, currentMode, i) in
-//            currentRemainingIndex[indexNumber] = i
-//        }, forModes: remainingModes)
-    
-    return summedTensor
-}
-
+/// Normalize the elements of a tensor over the given modes.
+/// - Returns:
+/// `normalizedTensor`: <br> Normalized version of the given tensor, the elements along the given modes together have mean zero and a standard devation of one <br>
+/// `meanTensor`: <br> Mean of the given tensor, itself a tensor with only the modes that were not normalized over <br>
+/// `deviationTensor`: <br> Standard deviation of the given tensor, itself a tensor with only the modes that were not normalized over
 public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
     
     let remainingModes = tensor.modeArray.removeValues(normalizeModes)
     
     let normalizeModeSizes = normalizeModes.map({tensor.modeSizes[$0]})
-    let remainingIndices = tensor.isIndexed ? remainingModes.map({tensor.indices[$0]}) : []
     
-    var normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
-    var meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-    var deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-    
-//    var currentRemainingIndex = [Int](count: remainingModes.count, repeatedValue: 0)
-    
-    tensor.perform(outerModes: remainingModes, action: { (currentIndex, outerIndex) in
-//        print("normalize currentIndex: \(currentIndex)")
-        
-        let normalizationSlice = tensor[slice: currentIndex]
-        let normalizedVector = vectorNormalization(normalizationSlice.values)
-        normalizedTensor[slice: currentIndex] = Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector)
-        deviationTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.standardDeviation)
-        meanTensor[slice: outerIndex] = Tensor<Float>(scalar: normalizedVector.mean)
-    })
-    
-//    tensor.perform( { (currentIndex: [DataSliceSubscript]) -> () in
-//        
-//        let normalizationSlice = tensor[slice: currentIndex]
-//        let normalizedVector = vectorNormalization(normalizationSlice.values)
-//        normalizedTensor[slice: currentIndex] = Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector)
-//        meanTensor[currentRemainingIndex] = normalizedVector.mean
-//        deviationTensor[currentRemainingIndex] = normalizedVector.standardDeviation
-//        
-//        }, indexUpdate: {(indexNumber: Int, currentMode: Int, i: Int) -> () in
-//            currentRemainingIndex[indexNumber] = i
-//        }, forModes: remainingModes)
-    
-    return (normalizedTensor, meanTensor, deviationTensor)
-}
-
-public func normalizeConcurrent(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
-    
-    let remainingModes = tensor.modeArray.removeValues(normalizeModes)
-    
-    let normalizeModeSizes = normalizeModes.map({tensor.modeSizes[$0]})
-    
-    var normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
-    var meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
-    var deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    let normalizedTensor = Tensor<Float>(withPropertiesOf: tensor)
+    let meanTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
+    let deviationTensor = Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)
     var outputData = [normalizedTensor, meanTensor, deviationTensor]
     
     tensor.performForOuterModes(remainingModes, outputData: &outputData,
                                 calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
-            let normalizationSlice = sourceData[slice: currentIndex]
-            let normalizedVector = vectorNormalization(normalizationSlice.values)
-            return [Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector),
-                Tensor<Float>(scalar: normalizedVector.mean),
-                Tensor<Float>(scalar: normalizedVector.standardDeviation)]
-    }),
+                                    let normalizationSlice = sourceData[slice: currentIndex]
+                                    let normalizedVector = vectorNormalization(normalizationSlice.values)
+                                    return [Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector),
+                                        Tensor<Float>(scalar: normalizedVector.mean),
+                                        Tensor<Float>(scalar: normalizedVector.standardDeviation)]
+                                }),
                                 writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
-            outputData[0][slice: currentIndex] = inputData[0]
-            outputData[1][slice: outerIndex] = inputData[1]
-            outputData[2][slice: outerIndex] = inputData[2]
-    }))
-    
-//    tensor.perform({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
-//            let normalizationSlice = sourceData[slice: currentIndex]
-//            let normalizedVector = vectorNormalization(normalizationSlice.values)
-//            return [Tensor<Float>(modeSizes: normalizeModeSizes, values: normalizedVector.normalizedVector),
-//                    Tensor<Float>(scalar: normalizedVector.mean),
-//                    Tensor<Float>(scalar: normalizedVector.standardDeviation)]
-//        }, syncAction: { (currentIndex, outerIndex, inputData, outputData) in
-//            outputData[0][slice: currentIndex] = inputData[0]
-//            outputData[1][slice: outerIndex] = inputData[1]
-//            outputData[2][slice: outerIndex] = inputData[2]
-//        }, outerModes: remainingModes, outputData: &outputData)
+                                    outputData[0][slice: currentIndex] = inputData[0]
+                                    outputData[1][slice: outerIndex] = inputData[1]
+                                    outputData[2][slice: outerIndex] = inputData[2]
+                                }))
     
     return (outputData[0], outputData[1], outputData[2])
 }
 
+/// Normalize the elements of a tensor over the given modes with fixed mean and standard deviation
+
+public func normalize(tensor: Tensor<Float>, overModes: [Int], withMean mean: Tensor<Float>, deviation: Tensor<Float>) -> Tensor<Float> {
+    
+    let commonModes = tensor.modeArray.removeValues(overModes)
+    let deviationInverse = 1/deviation
+    
+    let offsetTensor = substract(a: tensor, commonModesA: commonModes, outerModesA: overModes, b: mean, commonModesB: mean.modeArray, outerModesB: [])
+    let scaledTensor = multiplyElementwise(a: offsetTensor, commonModesA: commonModes, outerModesA: overModes, b: deviationInverse, commonModesB: deviationInverse.modeArray, outerModesB: [])
+    
+    return scaledTensor
+}
+
+/// Transform a tensor by scaling it and then adding an offset
+/// - Parameter tensor: The tensor to be transformed
+/// - Parameter overModes: These modes will be transformed
+/// - Parameter scale: A tensor with all the scale factors, itself a tensor with only the modes that will not be transformed over
+/// - Parameter offset: A tensor with all the offsets, itself a tensor with only the modes that will not be transformed over
+//public func transform(tensor: Tensor<Float>, overModes: [Int], scale: Tensor<Float>, offset: Tensor<Float>) -> Tensor<Float> {
+//    
+//    let commonModes = tensor.modeArray.removeValues(overModes)
+//    
+//    let scaledTensor = multiplyElementwise(a: tensor, commonModesA: commonModes, outerModesA: overModes, b: scale, commonModesB: scale.modeArray)
+//    let offsetTensor = substract(a: scaledTensor, commonModesA: commonModes, outerModesA: overModes, b: offset, commonModesB: offset.modeArray)
+//    
+//    return offsetTensor
+//}
+
+/// Inverse two modes with same size of a tensor
 public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Tensor<Float> {
     assert(rowMode != columnMode, "rowMode and columnMode cannot be the same")
     let remainingModes = tensor.modeArray.filter({$0 != rowMode && $0 != columnMode})
@@ -287,21 +125,141 @@ public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Ten
     let columns = tensor.modeSizes[columnMode]
     assert(rows == columns, "mode \(rowMode) and \(columnMode) have not the same size")
     
-    var inverseTensor = Tensor<Float>(withPropertiesOf: tensor)
+    var inverseTensor = [Tensor<Float>(withPropertiesOf: tensor)]
     
-    tensor.perform(outerModes: remainingModes) { (currentIndex, outerIndex) in
-        let inverseSlice = tensor[slice: currentIndex]
+    tensor.performForOuterModes(remainingModes, outputData: &inverseTensor, calculate: ({ (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
+        let inverseSlice = sourceData[slice: currentIndex]
         let inverseVector = matrixInverse(inverseSlice.values, size: MatrixSize(rows: rows, columns: columns))
-        inverseTensor[slice: currentIndex] = Tensor<Float>(modeSizes: [rows, columns], values: inverseVector)
+        return [Tensor<Float>(modeSizes: [rows, columns], values: inverseVector)]
+    }), writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+        outputData[0][slice: currentIndex] = inputData[0]
+    }))
+    
+    return inverseTensor[0]
+}
+
+/// Exponential of every element of the tensor
+public func exp(tensor: Tensor<Float>) -> Tensor<Float> {
+    let exp = Tensor<Float>(withPropertiesOf: tensor, values: vectorExponential(tensor.values))
+    return exp
+}
+
+/// Natural logarithm of every element of the tensor
+public func log(tensor: Tensor<Float>) -> Tensor<Float> {
+    let log = Tensor<Float>(withPropertiesOf: tensor, values: vectorLogarithm(tensor.values))
+    return log
+}
+
+
+// Operations combining two tensors
+
+public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) -> Tensor<Float> {
+    var newModeSizes: [Int]
+    var sliceA: [DataSliceSubscript]
+    var sliceB: [DataSliceSubscript]
+    
+    if(a.modeCount == b.modeCount) {
+        sliceA = a.modeSizes.map({0..<$0})
+        sliceB = sliceA
+        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: b.modeSizes[alongMode])
+        
+        newModeSizes = a.modeSizes
+        newModeSizes[alongMode] = newModeSizes[alongMode] + b.modeSizes[alongMode]
+    } else if(a.modeCount == b.modeCount+1) {
+        sliceA = a.modeSizes.map({0..<$0})
+        sliceB = sliceA
+        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: 1)
+        
+        newModeSizes = a.modeSizes
+        newModeSizes[alongMode] = newModeSizes[alongMode] + 1
+    } else if(a.modeCount == b.modeCount-1) {
+        var aModeSizes = a.modeSizes
+        aModeSizes.insert(1, atIndex: alongMode)
+        sliceA = aModeSizes.map({0..<$0})
+        sliceB = sliceA
+        sliceB[alongMode] = Range(start: 1, distance: b.modeSizes[alongMode])
+        newModeSizes = b.modeSizes
+        newModeSizes[alongMode] = newModeSizes[alongMode] + 1
+    } else {
+        print("tensors with mode sizes \(a.modeSizes) and \(b.modeSizes) cannot be concatenated along mode \(alongMode)")
+        return a
     }
     
-//    tensor.perform( { (currentIndex: [DataSliceSubscript]) -> () in
-//        
-//        let inverseSlice = tensor[slice: currentIndex]
-//        let inverseVector = matrixInverse(inverseSlice.values, size: MatrixSize(rows: rows, columns: columns))
-//        inverseTensor[slice: currentIndex] = Tensor<Float>(modeSizes: [rows, columns], values: inverseVector)
-//        
-//        }, forModes: remainingModes)
+    var concatTensor = Tensor<Float>(modeSizes: newModeSizes, repeatedValue: 0)
+    concatTensor[slice: sliceA] = a
+    concatTensor[slice: sliceB] = b
     
-    return(inverseTensor)
+    return concatTensor
+}
+
+public func add(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
+    
+    var sum = [Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)]
+    
+    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
+    
+    combine(a, forOuterModes: outerModesA, with: b, forOuterModes: outerModesB, outputData: &sum,
+            calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
+                let sumVector = vectorAddition(vectorA: a[slice: indexA].values, vectorB: b[slice: indexB].values)
+                return [Tensor<Float>(modeSizes: sliceSizes, values: sumVector)]
+    }),
+            writeOutput: ({ (indexA, indexB, outerIndex, inputData, outputData) in
+                outputData[0][slice: outerIndex] = inputData[0]
+    }))
+
+    return sum[0]
+}
+
+public func substract(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
+    
+    var difference = [Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)]
+    
+    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
+    
+    combine(a, forOuterModes: outerModesA, with: b, forOuterModes: outerModesB, outputData: &difference,
+            calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
+                let differenceVector = vectorSubtraction(a[slice: indexA].values, vectorB: b[slice: indexB].values)
+                return [Tensor<Float>(modeSizes: sliceSizes, values: differenceVector)]
+            }),
+            writeOutput: ({ (indexA, indexB, outerIndex, inputData, outputData) in
+                outputData[0][slice: outerIndex] = inputData[0]
+            }))
+    
+    return difference[0]
+}
+
+public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
+    
+    var product = [Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)]
+    
+    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
+    
+    combine(a, forOuterModes: outerModesA, with: b, forOuterModes: outerModesB, outputData: &product,
+            calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
+                let productVector = vectorElementWiseMultiplication(a[slice: indexA].values, vectorB: b[slice: indexB].values)
+                return [Tensor<Float>(modeSizes: sliceSizes, values: productVector)]
+            }),
+            writeOutput: ({ (indexA, indexB, outerIndex, inputData, outputData) in
+                outputData[0][slice: outerIndex] = inputData[0]
+            }))
+    
+    return product[0]
+}
+
+public func divide(a a: Tensor<Float>, commonModesA: [Int] = [], outerModesA: [Int] = [], b: Tensor<Float>, commonModesB: [Int] = [], outerModesB: [Int] = []) -> Tensor<Float> {
+    
+    var quotient = [Tensor<Float>(combinationOfTensorA: a, tensorB: b, outerModesA: outerModesA, outerModesB: outerModesB, innerModesA: commonModesA, innerModesB: [], repeatedValue: 0)]
+    
+    let sliceSizes = commonModesA.map({a.modeSizes[$0]})
+    
+    combine(a, forOuterModes: outerModesA, with: b, forOuterModes: outerModesB, outputData: &quotient,
+            calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
+                let quotientVector = vectorDivision(a[slice: indexA].values, vectorB: b[slice: indexB].values)
+                return [Tensor<Float>(modeSizes: sliceSizes, values: quotientVector)]
+            }),
+            writeOutput: ({ (indexA, indexB, outerIndex, inputData, outputData) in
+                outputData[0][slice: outerIndex] = inputData[0]
+            }))
+    
+    return quotient[0]
 }

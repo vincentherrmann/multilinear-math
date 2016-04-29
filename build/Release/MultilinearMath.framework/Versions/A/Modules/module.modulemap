@@ -1,0 +1,10 @@
+framework module MultilinearMath {
+  umbrella header "MultilinearMath.h"
+
+  export *
+  module * { export * }
+}
+
+module MultilinearMath.Swift {
+    header "MultilinearMath-Swift.h"
+}

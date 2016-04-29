@@ -36,7 +36,7 @@ extension Int: IntegerType {
     }
 }
 
-// credit for the UnsafeBzffer protocol to Chris Liscio https://github.com/liscio
+// credit for the UnsafeBuffer protocol to Chris Liscio https://github.com/liscio
 /// A CollectionType that can perfom functions on its Unsafe(Mutable)BufferPointer
 public protocol UnsafeBuffer: CollectionType {
     /// Perform the a function with a UnsafeBufferPointer to this collection
@@ -138,15 +138,6 @@ public func printArrayAddress<T>(inout array: [T]) {
     print("array memory address: \(memoryAddress(&array))")
 }
 
-//extension NSThread {
-//    func sequenceNumber() -> Int {
-//        if let value = self.valueForKey("private.seqNum")?.integerValue {
-//            return value
-//        } else {
-//            return 0
-//        }
-//    }
-//}
 
 public extension String {
     

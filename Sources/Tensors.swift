@@ -186,8 +186,8 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
         
         if(values.count > actualModeSizes.reduce(1, combine: *)) {
-            if(actualModeSizes.last == 0) {
-                actualModeSizes.removeLast()
+            if(values.last == T(0)) {
+                values.removeLast()
             }
         }
         
@@ -372,6 +372,14 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
         return result
     }
+}
+
+public func zeros(modeSizes: Int...) -> Tensor<Float> {
+    return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 0)
+}
+
+public func ones(modeSizes: Int...) -> Tensor<Float> {
+    return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 1)
 }
 
 public extension Array where Element: Number {

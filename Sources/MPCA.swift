@@ -89,7 +89,7 @@ private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProject
 ///
 /// - Parameter data: Sample tensor. The first mode enumerates the different samples. The remaining modes constitute the specific sample.
 /// - Parameter projectionMatrices: One projection matrix for each sample mode (either the MPCA projection matrices or the reconstruction matrices)
-/// - Parameter doNotProjectModes: The projection of these modes will be skipped. Althoug the content does not matter, a projection matrix is required nonetheless for these modes. The default value is an empty array.
+/// - Parameter doNotProjectModes: The projection of these modes will be skipped. Although the content does not matter, a projection matrix is required nonetheless for these modes. The default value is an empty array.
 ///
 /// - Returns: The data projected with the given projection matrices.
 public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrices: [Tensor<Float>], doNotProjectModes: [Int] = []) -> Tensor<Float> {

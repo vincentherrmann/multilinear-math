@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BA0BE4681CCAA81D0024F368 /* DispatchPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */; };
-		BA0BE46A1CCAA81D0024F368 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
 		BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */; };
+		BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
+		BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */; };
+		BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BEB1CD160BD00FDF14A /* LogisticRegression.swift */; };
 		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
 		BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */ = {isa = PBXBuildFile; fileRef = BAC83E371CAAD61400290119 /* MultilinearMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
@@ -29,13 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		BA0BE46B1CCAA81D0024F368 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BA67AE511CA86C3E009906F2 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BAC83E341CAAD61400290119;
-			remoteInfo = MultilinearMath;
-		};
 		BAC83E401CAAD61500290119 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BA67AE511CA86C3E009906F2 /* Project object */;
@@ -46,10 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DispatchPerformanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchPerformanceTests.swift; sourceTree = "<group>"; };
-		BA0BE4691CCAA81D0024F368 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchPerformaceTests.swift; sourceTree = "<group>"; };
+		BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorSyntacticOperators.swift; path = Sources/TensorSyntacticOperators.swift; sourceTree = SOURCE_ROOT; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
@@ -62,6 +54,8 @@
 		BA67AE731CA86F73009906F2 /* TensorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorOperations.swift; path = Sources/TensorOperations.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE781CA87993009906F2 /* MPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MPCA.swift; path = Sources/MPCA.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE7A1CA879BD009906F2 /* UMPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UMPCA.swift; path = Sources/UMPCA.swift; sourceTree = SOURCE_ROOT; };
+		BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinearRegression.swift; path = Sources/LinearRegression.swift; sourceTree = SOURCE_ROOT; };
+		BA9C0BEB1CD160BD00FDF14A /* LogisticRegression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogisticRegression.swift; path = Sources/LogisticRegression.swift; sourceTree = SOURCE_ROOT; };
 		BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultidimensionalDataTests.swift; sourceTree = "<group>"; };
 		BAC83E351CAAD61400290119 /* MultilinearMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MultilinearMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC83E371CAAD61400290119 /* MultilinearMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultilinearMath.h; sourceTree = "<group>"; };
@@ -73,14 +67,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BA0BE4621CCAA81D0024F368 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BA0BE46A1CCAA81D0024F368 /* MultilinearMath.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BAC83E311CAAD61400290119 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -99,15 +85,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BA0BE4661CCAA81D0024F368 /* DispatchPerformanceTests */ = {
-			isa = PBXGroup;
-			children = (
-				BA0BE4671CCAA81D0024F368 /* DispatchPerformanceTests.swift */,
-				BA0BE4691CCAA81D0024F368 /* Info.plist */,
-			);
-			path = DispatchPerformanceTests;
-			sourceTree = "<group>";
-		};
 		BA67AE501CA86C3E009906F2 = {
 			isa = PBXGroup;
 			children = (
@@ -115,7 +92,6 @@
 				BA67AE5B1CA86C3E009906F2 /* Sources */,
 				BAC83E361CAAD61400290119 /* MultilinearMath */,
 				BAC83E421CAAD61500290119 /* MultilinearMathTests */,
-				BA0BE4661CCAA81D0024F368 /* DispatchPerformanceTests */,
 				BA67AE5A1CA86C3E009906F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -125,7 +101,6 @@
 			children = (
 				BAC83E351CAAD61400290119 /* MultilinearMath.framework */,
 				BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */,
-				BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +116,7 @@
 				BA67AE6F1CA86F26009906F2 /* Tensors.swift */,
 				BA67AE711CA86F4B009906F2 /* TensorMultiplication.swift */,
 				BA67AE731CA86F73009906F2 /* TensorOperations.swift */,
+				BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */,
 			);
 			name = Sources;
 			path = MultilinearMath;
@@ -151,6 +127,8 @@
 			children = (
 				BA67AE781CA87993009906F2 /* MPCA.swift */,
 				BA67AE7A1CA879BD009906F2 /* UMPCA.swift */,
+				BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */,
+				BA9C0BEB1CD160BD00FDF14A /* LogisticRegression.swift */,
 			);
 			name = Applications;
 			sourceTree = "<group>";
@@ -192,24 +170,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		BA0BE4641CCAA81D0024F368 /* DispatchPerformanceTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BA0BE46F1CCAA81D0024F368 /* Build configuration list for PBXNativeTarget "DispatchPerformanceTests" */;
-			buildPhases = (
-				BA0BE4611CCAA81D0024F368 /* Sources */,
-				BA0BE4621CCAA81D0024F368 /* Frameworks */,
-				BA0BE4631CCAA81D0024F368 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BA0BE46C1CCAA81D0024F368 /* PBXTargetDependency */,
-			);
-			name = DispatchPerformanceTests;
-			productName = DispatchPerformanceTests;
-			productReference = BA0BE4651CCAA81D0024F368 /* DispatchPerformanceTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		BAC83E341CAAD61400290119 /* MultilinearMath */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BAC83E4A1CAAD61500290119 /* Build configuration list for PBXNativeTarget "MultilinearMath" */;
@@ -256,9 +216,6 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Vincent Herrmann";
 				TargetAttributes = {
-					BA0BE4641CCAA81D0024F368 = {
-						CreatedOnToolsVersion = 7.3;
-					};
 					BAC83E341CAAD61400290119 = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -281,19 +238,11 @@
 			targets = (
 				BAC83E341CAAD61400290119 /* MultilinearMath */,
 				BAC83E3D1CAAD61500290119 /* MultilinearMathTests */,
-				BA0BE4641CCAA81D0024F368 /* DispatchPerformanceTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		BA0BE4631CCAA81D0024F368 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BAC83E331CAAD61400290119 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -311,14 +260,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BA0BE4611CCAA81D0024F368 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BA0BE4681CCAA81D0024F368 /* DispatchPerformanceTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		BAC83E301CAAD61400290119 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -326,11 +267,14 @@
 				BAC83E4C1CAAD68D00290119 /* MPCA.swift in Sources */,
 				BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */,
 				BAC83E4F1CAAD68D00290119 /* Utilities.swift in Sources */,
+				BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */,
 				BAC83E501CAAD68D00290119 /* AccelerateFunctionsFloat.swift in Sources */,
 				BAC83E511CAAD68D00290119 /* MultidimensionalData.swift in Sources */,
+				BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */,
 				BAC83E521CAAD68D00290119 /* SlicingSubscripts.swift in Sources */,
 				BAC83E531CAAD68D00290119 /* Tensors.swift in Sources */,
 				BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */,
+				BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */,
 				BAC83E551CAAD68D00290119 /* TensorOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,11 +295,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		BA0BE46C1CCAA81D0024F368 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BAC83E341CAAD61400290119 /* MultilinearMath */;
-			targetProxy = BA0BE46B1CCAA81D0024F368 /* PBXContainerItemProxy */;
-		};
 		BAC83E411CAAD61500290119 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BAC83E341CAAD61400290119 /* MultilinearMath */;
@@ -364,28 +303,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		BA0BE46D1CCAA81D0024F368 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = DispatchPerformanceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.DispatchPerformanceTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		BA0BE46E1CCAA81D0024F368 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = DispatchPerformanceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.DispatchPerformanceTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		BA67AE5E1CA86C3E009906F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -502,6 +419,7 @@
 				INFOPLIST_FILE = MultilinearMath/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -532,20 +450,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMathTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BA0BE46F1CCAA81D0024F368 /* Build configuration list for PBXNativeTarget "DispatchPerformanceTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BA0BE46D1CCAA81D0024F368 /* Debug */,
-				BA0BE46E1CCAA81D0024F368 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
 		BA67AE541CA86C3E009906F2 /* Build configuration list for PBXProject "MultilinearMath" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
