@@ -92,13 +92,34 @@ class ExampleTests: XCTestCase {
         let x = data[all, 0...1]
         let y = data[all, 2...2]
         
-        let (parameters, mean, deviation) = logisticRegression(x: x, y: y)
+        let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+        
+        let parameters = logisticRegression(x: xNorm, y: y)
         print("parameters logistic regression: \(parameters)")
         
         let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
         let tVwithOnes = concatenate(a: ones(3), b: testValues, alongMode: 1)
         let test = sigmoid(parameters[TensorIndex.b] * tVwithOnes[.a, .b])
         print("logistic regression result: \(test.values)")
+    }
+    
+    func testOneVsAllClassification() {
+        let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
+        let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)
+        let mnistLabels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
+        
+        print("normalize...")
+        let (mnistNorm, mean, deviation) = normalize(mnistData, overModes: [0])
+        let y = Tensor<Float>(modeSizes: [mnistLabels.count], values: mnistLabels.map({Float($0)}))
+        
+        print("one vs all logistic regression...")
+        let parameters = oneVsAllClassification(x: mnistNorm, y: y, classCount: 10)
+    }
+    
+    func testFeedforwardNeuralNet() {
+        let net = FeedforwardNeuralNet(withLayerSizes: [3, 5, 4, 2])
+        let test = net.feedforward(ones(3))
+        
     }
 
 }

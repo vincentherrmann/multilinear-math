@@ -110,6 +110,12 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.values = values
         self.indices = [TensorIndex](count: modeSizes.count, repeatedValue: .notIndexed)
         self.variances = [TensorVariance](count: modeSizes.count, repeatedValue: .contravariant)
+        
+//        print("new tensor with modeSized \(modeSizes)")
+        
+        if(modeSizes.count < 1) {
+            
+        }
     }
     
     public init(modeSizes: [Int], repeatedValue: T) {
@@ -123,6 +129,8 @@ public struct Tensor<T: Number>: MultidimensionalData {
         if(values.count == 0) {
             print("ERROR: value.count = 0!!!")
         }
+        
+//        print("new tensor with modeSized \(modeSizes)")
     }
     
     public init(diagonalWithModeSizes modeSizes: [Int], diagonalValues: [T]? = nil, repeatedValue: T = T(1)) {
@@ -214,10 +222,27 @@ public struct Tensor<T: Number>: MultidimensionalData {
     /// Initialize this tensor with the combined properties of tensorA and tensorB. The order of the modes will be outerModesA - outerModesB - innerModesA - innerModesB, with corresponding size, index and variance.
     public init(combinationOfTensorA a: Tensor<T>, tensorB b: Tensor<T>, outerModesA: [Int], outerModesB: [Int], innerModesA: [Int], innerModesB: [Int], repeatedValue: T) {
         
-        self.modeSizes = outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]}) + innerModesA.map({a.modeSizes[$0]}) + innerModesB.map({b.modeSizes[$0]})
-        self.indices = outerModesA.map({a.indices[$0]}) + outerModesB.map({b.indices[$0]}) + innerModesA.map({a.indices[$0]}) + innerModesB.map({b.indices[$0]})
-        self.variances = outerModesA.map({a.variances[$0]}) + outerModesB.map({b.variances[$0]}) + innerModesA.map({a.variances[$0]}) + innerModesB.map({b.variances[$0]})
+        // concatenating these arrays with "+" seems to provoke long compile times
+        var combinedModeSizes: [Int] = []
+        combinedModeSizes.appendContentsOf(outerModesA.map({a.modeSizes[$0]}))
+        combinedModeSizes.appendContentsOf(outerModesB.map({b.modeSizes[$0]}))
+        combinedModeSizes.appendContentsOf(innerModesA.map({a.modeSizes[$0]}))
+        combinedModeSizes.appendContentsOf(innerModesB.map({b.modeSizes[$0]}))
+        self.modeSizes = combinedModeSizes
         
+        var combinedIndices: [TensorIndex] = []
+        combinedIndices.appendContentsOf(outerModesA.map({a.indices[$0]}))
+        combinedIndices.appendContentsOf(outerModesB.map({b.indices[$0]}))
+        combinedIndices.appendContentsOf(innerModesA.map({a.indices[$0]}))
+        combinedIndices.appendContentsOf(innerModesB.map({b.indices[$0]}))
+        self.indices = combinedIndices
+        
+        var combinedVariances: [TensorVariance] = []
+        combinedVariances.appendContentsOf(outerModesA.map({a.variances[$0]}))
+        combinedVariances.appendContentsOf(outerModesB.map({b.variances[$0]}))
+        combinedVariances.appendContentsOf(innerModesA.map({a.variances[$0]}))
+        combinedVariances.appendContentsOf(innerModesB.map({b.variances[$0]}))
+        self.variances = combinedVariances
         if(a.isCartesian && b.isCartesian) {
             self.isCartesian = true
         } else {
@@ -227,47 +252,6 @@ public struct Tensor<T: Number>: MultidimensionalData {
         let elementCount = modeSizes.reduce(1, combine: {$0*$1})
         self.values = [T](count: elementCount, repeatedValue: repeatedValue)
     }
-    
-    //    public init(valuesFromMatFile path: String, modeSizes: [Int]) {
-    //        guard let data = NSData(contentsOfFile: path) else {
-    //            print("cannot load file at path \(path)")
-    //            self.init(modeSizes: [], values: [T(0)])
-    //            return
-    //        }
-    //
-    //        var firstBytes = [UInt8](count: 4, repeatedValue: 0)
-    //        data.getBytes(&firstBytes, length: 4)
-    //        if(firstBytes.reduce(1, combine: {Int($0)*Int($1)}) == 0) {
-    //            "\(path) is a Level 4 .mat file, cannot read"
-    //        }
-    //
-    //        var values: [T] = []
-    //
-    //        var position = 128
-    //        let length = data.length
-    //        while(position < length) {
-    //
-    //            var dataType: UInt32 = 0
-    //            data.getBytes(&dataType, range: NSRange(Range(start: position, distance: 4)))
-    //            position += 4
-    //
-    //            var byteCount: UInt32 = 0
-    //            data.getBytes(&byteCount, range: NSRange(Range(start: position, distance: 4)))
-    //            position += 4
-    //
-    //            if(Int(byteCount) == sizeofValue(T)) {
-    //                var value: T = T(0)
-    //                data.getBytes(&value, range: NSRange(Range(start: position, distance: Int(byteCount))))
-    //                values.append(value)
-    //            } else {
-    //                print("found value with \(byteCount) byte, could not read it")
-    //            }
-    //
-    //            position += Int(byteCount)
-    //        }
-    //
-    //        self.init(modeSizes: modeSizes, values: values)
-    //    }
     
     /// - Returns: The number of seperate copy streaks that would be necessary for this reordering of indices
     public func reorderComplexityOf(newIndices: [TensorIndex]) -> Int {
@@ -380,6 +364,12 @@ public func zeros(modeSizes: Int...) -> Tensor<Float> {
 
 public func ones(modeSizes: Int...) -> Tensor<Float> {
     return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 1)
+}
+
+public func randomTensor(modeSizes: Int...) -> Tensor<Float> {
+    let elementCount = modeSizes.reduce(1, combine: {$0*$1})
+    let values = (0..<elementCount).map({_ in Float(arc4random()) / Float(UINT32_MAX)})
+    return Tensor<Float>(modeSizes: modeSizes, values: values)
 }
 
 public extension Array where Element: Number {

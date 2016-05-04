@@ -148,8 +148,27 @@ public extension MultidimensionalData {
             if newSubscripts[m] is AllIndices {
                 newSubscripts[m] = 0..<modeSizes[m]
             }
+            
+            //replace a range of size 1 with the corresponding array, this is faster in most cases
+            if(subscripts[m].sliceSize == 1) {
+                newSubscripts[m] = subscripts[m].sliceIndices()
+            }
         }
         return newSubscripts
+    }
+    
+    ///Infer the common and outer modes for a combining function using the optional arguments
+    /// - Returns:
+    /// `common:` <br> The common modes, if neither common nor outer modes are defined, the whole `modeArray` is used. <br>
+    /// `outer:` <br> The outer modes.
+    internal func inferModes(commonModes commonModes: [Int]?, outerModes: [Int]?) -> (common: [Int], outer: [Int]) {
+        if(commonModes != nil) {
+            return (commonModes!, modeArray.removeValues(commonModes!))
+        } else if(outerModes != nil) {
+            return (modeArray.removeValues(outerModes!), outerModes!)
+        } else {
+            return (modeArray, [])
+        }
     }
     
     ///Reorder the modes of this item
