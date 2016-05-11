@@ -21,6 +21,19 @@ class DataSlicingTests: XCTestCase {
         super.tearDown()
     }
     
+    func testArrayBasedFastSlicing() {
+        var originalTensor = zeros(5, 5, 5)
+        var sliceTensor = ones(2, 3, 2)
+        let subscripts: [DataSliceSubscript] = [[2, 4], [0, 1, 3], [1, 4]]
+        
+        copyIndices(subscripts, modeSizes: [5, 5, 5])
+        originalTensor.values.withUnsafeMutableBufferPointer { (pointer) -> () in
+            //
+            copySliceFrom(sliceTensor, to: originalTensor, targetPointer: pointer, subscripts: subscripts, copyFromSlice: true)
+        }
+        
+    }
+    
     func testRangeSlicing() {
         var testData = Tensor<Float>(modeSizes: [3, 4, 5], values: Array(0..<60).map({return Float($0)}))
         

@@ -59,6 +59,44 @@ public func linearRegressionGD(x x: Tensor<Float>, y: Tensor<Float>) -> (paramet
     return (parameters, xNorm.mean, xNorm.standardDeviation)
 }
 
+public class LinearRegression: GradientOptimizable {
+    private let example = TensorIndex.a
+    private let feature = TensorIndex.b
+    
+    public var parameters: [Tensor<Float>]
+    public var mean: Tensor<Float>
+    public var standardDeviation: Tensor<Float>
+    
+    public init(x: Tensor<Float>, y: Tensor<Float>) {
+        self.parameters = [zeros(x.modeSizes[1] + 1)[feature]]
+        
+        let xNorm = normalize(x, overModes: [0])
+        self.mean = xNorm.mean
+        self.standardDeviation = xNorm.standardDeviation
+        
+        var batch = ones(x.modeSizes[0], x.modeSizes[1]+1)
+        batch[all, 1...x.modeSizes[1]] = xNorm.normalizedTensor
+        
+        train(x: batch, y: y)
+    }
+    
+    public func cost(x x: Tensor<Float>, y: Tensor<Float>) -> Float {
+        let hypothesis = parameters[0] * x
+        let distance = hypothesis - y
+        let cost = (0.5/Float(x.modeSizes[0])) * (distance * distance)
+        return cost.values[0]
+    }
+    
+    public func gradient(x x: Tensor<Float>, y: Tensor<Float>) -> [Tensor<Float>] {
+        let gradient = (1/Float(x.modeSizes[0])) * ((parameters[0] * x) - y) * x
+        return [gradient]
+    }
+    
+    public func train(x x: Tensor<Float>, y: Tensor<Float>) {
+        batchGradientDescent(self, input: x[example, feature], output: y[example], updateRate: 0.1)
+    }
+}
+
 public func gradientDescent(inout parameters: Tensor<Float>, costFunction: (Tensor<Float> -> Float), gradientFunction: Tensor<Float> -> Tensor<Float>, updateRate: Float) {
     
     var cost = FLT_MAX

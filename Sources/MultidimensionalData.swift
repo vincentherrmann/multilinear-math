@@ -131,7 +131,8 @@ public extension MultidimensionalData {
 //        printMemoryAdresses(printTitle: "--set slice \(subscripts)--", printThread: true)
         values.performWithUnsafeMutableBufferPointer { (pointer) -> () in
             //print("set slice array pointer: \(pointer), in thread: \(NSThread.currentThread())")
-            recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
+//            recurseCopy(target: self, targetPointer: pointer, from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)
+            copySliceFrom(slice, to: self, targetPointer: pointer, subscripts: subscripts, copyFromSlice: true)
         }
         
 //        recurseCopy(from: slice, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: true)

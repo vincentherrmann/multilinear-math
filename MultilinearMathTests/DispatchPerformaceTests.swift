@@ -68,6 +68,7 @@ class DispatchPerformaceTests: XCTestCase {
         
         self.measureBlock { //0.07 sec //0.039 sec //0.019 sec //0.023 sec
             let slice = tensor[all, 7...7]
+            
         }
     }
     
