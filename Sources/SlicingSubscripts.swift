@@ -65,12 +65,19 @@ public extension Range where Element: IntegerType {
     }
 }
 
+/// Copy values from one multidimensional data object to another.
+/// - Parameter from: The source multidimensional data object
+/// - Parameter to: The target object
+/// - Parameter targetPointer: A pointer to the value array of the target object
+/// - Parameter subscripts: An array of data slice subscripts defining the indices of the slice
+/// - Parameter copyFromSlice: If true, the subscripts refer to the target object, the source object is the slice, if wrong vice versa
 public func copySliceFrom<T: MultidimensionalData>(from: T,
                           to target: T,
                              targetPointer: UnsafeMutableBufferPointer<T.Element>,
                              subscripts: [DataSliceSubscript],
                              copyFromSlice: Bool) {
     
+    //cast all subscripts as Int arrays
     var arraySubscripts: [DataSliceSubscript] = []
     for thisSubscript in subscripts {
         if let array = thisSubscript as? [Int] {
@@ -80,25 +87,27 @@ public func copySliceFrom<T: MultidimensionalData>(from: T,
         }
     }
     
+    //get flat indices
     let modeSizes = (copyFromSlice ? target : from).modeSizes
     let indicesToCopy = copyIndices(arraySubscripts, modeSizes: modeSizes)
-//    print("copyIndices: \(indicesToCopy)")
     
-    if(copyFromSlice) {
+    //copy
+    if(copyFromSlice) { //all values from the source to the defined indices in the target
         for i in 0..<indicesToCopy.count {
             targetPointer[indicesToCopy[i]] = from.values[i]
         }
-    } else {
+    } else { //the defined values in the source to the target
         for i in 0..<indicesToCopy.count {
             targetPointer[i] = from.values[indicesToCopy[i]]
         }
     }
 }
 
-/// Calculate the indices of a slice defined by the given subscripts in a tensor with the given mode sizes
-public func copyIndices(subscripts: [DataSliceSubscript], modeSizes: [Int]) -> [Int] {
-    
+/// Calculate the flat indices of a slice defined by the given subscripts in a tensor with the given mode sizes
+private func copyIndices(subscripts: [DataSliceSubscript], modeSizes: [Int]) -> [Int] {
+    ///cycle lenghts of the modes in the value array of the embedding data object
     var cycleLengths: [Int] = [Int](count: subscripts.count, repeatedValue: 0)
+    ///cycle lengths of the modes in the value array of the slice
     var sliceCycleLengths: [Int] = cycleLengths
     var currentCycleLength: Int = 1
     var currentSliceCycleLength: Int = 1

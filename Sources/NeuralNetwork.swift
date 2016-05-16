@@ -8,9 +8,12 @@
 
 import Foundation
 
-public class FeedforwardNeuralNet {
+public class FeedforwardNeuralNet: GradientOptimizable {
+    ///weights of each layer
     var weights: [Tensor<Float>]
+    ///biases of each layer
     var bias: [Tensor<Float>]
+    var currentActivations: [Tensor<Float>]
     var activationFunction: Tensor<Float> -> Tensor<Float>
     var regularize: Float = 0
     
@@ -66,5 +69,56 @@ public class FeedforwardNeuralNet {
         
         let cost = (vectorSummation(difference.values) + regularizationCost) / Float(y.modeSizes[0])
         return cost
+    }
+}
+
+public protocol NeuralNetLayer {
+    var currentPreactivations: Tensor<Float> {get}
+    var currentActivations: Tensor<Float> {get}
+    
+    var activationFunction: ActivationFunction {get}
+    
+    var previousLayer: NeuralNetLayer? {get}
+    var nextLayer: NeuralNetLayer? {get}
+    
+    func propagateForward(input: Tensor<Float>) -> Tensor<Float>
+    func propagateBackward(gradient: Tensor<Float>) -> Tensor<Float>
+}
+
+public struct FeedforwardLayer: NeuralNetLayer {
+    public var currentPreactivations: Tensor<Float> = zeros(0)
+    public var currentActivations: Tensor<Float> = zeros(0)
+    
+    public var activationFunction: ActivationFunction.Type = Sigmoid.self
+    
+    public var previousLayer: NeuralNetLayer? = nil
+    public var nextLayer: NeuralNetLayer? = nil
+    
+    var weights: Tensor<Float> = zeros(0)
+    var bias: Float = 0
+    
+    mutating func propagateForward(input: Tensor<Float>) -> Tensor<Float> {
+        currentPreactivations = bias + multiply(a: input, summationModesA: [input.modeCount-1], b: weights, summationModesB: [0])
+        currentActivations = activationFunction.output(currentPreactivations)
+        return currentActivations
+    }
+    
+    /// Calculate the gradients via backpropagation
+    /// - Parameter gradientWrtOutput: The gradient of the target function, with respect to the output of this layer, i.e. the input of the following layer.
+    /// - Returns: 
+    /// `wrtWeights`: <br> The gradient of the target function with respect to the weights of this layer <br>
+    /// `wrtBias`: <br> The gradient of the target function with respect to the bias of this layer <br>
+    /// `wrtInput`: <br> The gradient of the target function with respect to the input of this layer. Should be used as input to this function of the preceding layer during backpropagation. <br>
+    func gradient(gradientWrtOutput: Tensor<Float>) -> (wrtWeights: Tensor<Float>, wrtBias: Tensor<Float>, wrtInput: Tensor<Float>) {
+    }
+    
+    func propagateBackward(gradient: Tensor<Float>) -> (weightGradient: Tensor<Float>, biasGradient: Tensor<Float>, activationGradient: Tensor<Float>) {
+        let preactivationGradient = activationFunction.derivative(currentPreactivations) °* gradient
+        
+        let weightGradient = preactivationGradient * previousLayer!.currentActivations
+        let biasGradient = preactivationGradient
+        let activationGradient = preactivationGradient * weights
+        
+        return (weightGradient, biasGradient, activationGradient)
     }
 }

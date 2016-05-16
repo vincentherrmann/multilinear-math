@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */; };
 		BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */; };
+		BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */; };
+		BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
 		BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */; };
@@ -45,6 +47,8 @@
 /* Begin PBXFileReference section */
 		BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchPerformaceTests.swift; sourceTree = "<group>"; };
 		BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorSyntacticOperators.swift; path = Sources/TensorSyntacticOperators.swift; sourceTree = SOURCE_ROOT; };
+		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
+		BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = BackpropGraph.jpg; path = Resources/BackpropGraph.jpg; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
@@ -91,10 +95,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA2E8AC91CE9EFE10062B59D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */,
+				BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		BA67AE501CA86C3E009906F2 = {
 			isa = PBXGroup;
 			children = (
 				BA67AE651CA86D4F009906F2 /* Package.swift */,
+				BA2E8AC91CE9EFE10062B59D /* Resources */,
 				BA67AE5B1CA86C3E009906F2 /* Sources */,
 				BAC83E361CAAD61400290119 /* MultilinearMath */,
 				BAC83E421CAAD61500290119 /* MultilinearMathTests */,
@@ -256,6 +270,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */,
+				BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
