@@ -149,6 +149,15 @@ public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) ->
     return concatTensor
 }
 
+public func randomizeOrder(tensor: Tensor<Float>, inModes: [Int]) -> Tensor<Float> {
+    var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
+    tensor.performForOuterModes(inModes, outputData: &outputData, calculate: { (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
+        <#code#>
+        }, writeOutput: { (currentIndex, outerIndex, inputData, outputData) in
+            <#code#>
+            })
+}
+
 public func add(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     
     let (commonA, outerA) = a.inferModes(commonModes: commonModesA, outerModes: outerModesA)

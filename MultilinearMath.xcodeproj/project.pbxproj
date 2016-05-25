@@ -18,6 +18,7 @@
 		BA9C0BEF1CD54F7500FDF14A /* DataSetLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */; };
 		BA9C0BF11CD5587C00FDF14A /* NeuralNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BF01CD5587C00FDF14A /* NeuralNetwork.swift */; };
 		BA9C0BF31CDA611600FDF14A /* Optimization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BF21CDA611500FDF14A /* Optimization.swift */; };
+		BAA6767C1CF63C050071526C /* MultilinearDataUnfolding.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */; };
 		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
 		BAC83E381CAAD61400290119 /* MultilinearMath.h in Headers */ = {isa = PBXBuildFile; fileRef = BAC83E371CAAD61400290119 /* MultilinearMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BAC83E3F1CAAD61500290119 /* MultilinearMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC83E351CAAD61400290119 /* MultilinearMath.framework */; };
@@ -66,6 +67,7 @@
 		BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetLoading.swift; path = Sources/DataSetLoading.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BF01CD5587C00FDF14A /* NeuralNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NeuralNetwork.swift; path = Sources/NeuralNetwork.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BF21CDA611500FDF14A /* Optimization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Optimization.swift; path = Sources/Optimization.swift; sourceTree = SOURCE_ROOT; };
+		BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MultilinearDataUnfolding.jpg; path = Resources/MultilinearDataUnfolding.jpg; sourceTree = "<group>"; };
 		BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultidimensionalDataTests.swift; sourceTree = "<group>"; };
 		BAC83E351CAAD61400290119 /* MultilinearMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MultilinearMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC83E371CAAD61400290119 /* MultilinearMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultilinearMath.h; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 		BA2E8AC91CE9EFE10062B59D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */,
 				BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */,
 				BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */,
 			);
@@ -271,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */,
+				BAA6767C1CF63C050071526C /* MultilinearDataUnfolding.jpg in Resources */,
 				BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

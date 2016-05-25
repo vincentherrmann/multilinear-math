@@ -31,3 +31,23 @@ public func batchGradientDescent(objective: GradientOptimizable, input: Tensor<F
         }
     }
 }
+
+public func stochasticGradientDescent(inout objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.001, maxLoops: Int = 1000, minibatchSize: Int = 16) {
+    
+    var cost = FLT_MAX
+    var currentBatch = inputs
+    var currentIndex = 0
+    
+    for _ in 0..<maxLoops {
+        var minibatch: Tensor<Float>
+        if(currentIndex + minibatchSize < currentBatch.modeSizes[0]) {
+            minibatch = currentBatch[Range(start: currentIndex, distance: minibatchSize), all]
+            currentIndex += minibatchSize
+        } else {
+            minibatch = currentBatch[currentIndex..<currentBatch.modeSizes[0], all]
+            currentIndex = 0
+        }
+        
+        
+    }
+}
