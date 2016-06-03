@@ -203,10 +203,10 @@ public struct Tensor<T: Number>: MultidimensionalData {
     }
     
     /// Initialize this tensor with the properties of another tensor (or some modes of that tensor)
-    public init(withPropertiesOf tensor: Tensor<T>, onlyModes: [Int]? = nil, repeatedValue: T = T(0), values: [T]? = nil) {
+    public init(withPropertiesOf data: Tensor<T>, onlyModes: [Int]? = nil, repeatedValue: Element = T(0), values: [Element]? = nil) {
         
-        let modes: [Int] = (onlyModes == nil) ? tensor.modeArray : onlyModes!
-        let sizes = modes.map({tensor.modeSizes[$0]})
+        let modes: [Int] = (onlyModes == nil) ? data.modeArray : onlyModes!
+        let sizes = modes.map({data.modeSizes[$0]})
         
         if(values == nil) {
             self.init(modeSizes: sizes, repeatedValue: repeatedValue)
@@ -214,9 +214,9 @@ public struct Tensor<T: Number>: MultidimensionalData {
             self.init(modeSizes: sizes, values: values!)
         }
         
-        self.indices = modes.map({tensor.indices[$0]})
-        self.variances = modes.map({tensor.variances[$0]})
-        self.isCartesian = tensor.isCartesian
+        self.indices = modes.map({data.indices[$0]})
+        self.variances = modes.map({data.variances[$0]})
+        self.isCartesian = data.isCartesian
     }
     
     /// Initialize this tensor with the combined properties of tensorA and tensorB. The order of the modes will be outerModesA - outerModesB - innerModesA - innerModesB, with corresponding size, index and variance.

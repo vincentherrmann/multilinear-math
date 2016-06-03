@@ -47,7 +47,5 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
             minibatch = currentBatch[currentIndex..<currentBatch.modeSizes[0], all]
             currentIndex = 0
         }
-        
-        
     }
 }
