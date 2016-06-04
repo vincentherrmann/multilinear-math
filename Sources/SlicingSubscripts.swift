@@ -37,7 +37,7 @@ extension DataSliceSubscript {
 public struct AllIndices: DataSliceSubscript {
     public var sliceSize: Int {
         get {
-            print("slice size for AllIndices not defined")
+            //print("slice size for AllIndices not defined")
             return 0
         }
     }
@@ -100,6 +100,10 @@ public func copySliceFrom<T: MultidimensionalData>(from: T,
 
 /// Calculate the flat indices of a slice defined by the given subscripts in a tensor with the given mode sizes
 private func copyIndices(subscripts: [DataSliceSubscript], modeSizes: [Int]) -> [Int] {
+    if(subscripts.count == 0) {
+        return [0]
+    }
+    
     ///cycle lenghts of the modes in the value array of the embedding data object
     var cycleLengths: [Int] = [Int](count: subscripts.count, repeatedValue: 0)
     ///cycle lengths of the modes in the value array of the slice

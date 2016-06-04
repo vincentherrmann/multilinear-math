@@ -147,6 +147,7 @@ public extension MultidimensionalData {
         for m in 0..<modeCount {
             if(m >= subscripts.count) {
                 newSubscripts.append(0..<modeSizes[m])
+                continue
             }
             
             if newSubscripts[m] is AllIndices {

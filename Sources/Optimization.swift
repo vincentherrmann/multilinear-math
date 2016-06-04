@@ -63,17 +63,23 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
             currentBatch = changeOrderOfModeIn(currentBatch, mode: 0, newOrder: shuffleOrder)
             currentBatchTargets = changeOrderOfModeIn(currentBatchTargets, mode: 0, newOrder: shuffleOrder)
             epoch += 1
+            print("epoch \(epoch)")
         }
         
         //calculate current estimate and cost
         let estimate = objective.estimator.output(minibatch)
+        minibatchTargets.indices = estimate.indices
         let newCost = objective.regularizedCostForEstimate(estimate, target: minibatchTargets)
         print("SGD cost: \(newCost)")
         
         //calculate gradients and update parameters
         let regularizedCostGradient = objective.gradientForEstimate(estimate, target: minibatchTargets)
         let gradients = objective.estimator.gradients(regularizedCostGradient).wrtParameters
-        objective.updateParameters(gradients.map({(updateRate / Float(minibatchSize)) * sum($0, overModes: [0])}))
+        let scaledGradients = gradients.map({$0 * (updateRate / Float(minibatchSize))})
+        print("gradients: \(scaledGradients)")
+        print("parameters: \(objective.estimator.parameters)")
+        objective.updateParameters(scaledGradients)
+        
         
         //check for convergence
         if(abs(cost - newCost) < convergenceThreshold) {

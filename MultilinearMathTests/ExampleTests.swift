@@ -103,6 +103,19 @@ class ExampleTests: XCTestCase {
         print("logistic regression result: \(test.values)")
     }
     
+    func testSGDLogisticRegression() {
+        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
+        let x = data[all, 0...1]
+        let y = data[all, 2...2]
+        
+        let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+        
+        var costFunction: CostFunction = LogisticRegressionCost(featureCount: 2)
+        
+        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 0.5, convergenceThreshold: 0.001, maxLoops: 100, minibatchSize: 100)
+        print("parameters: \(costFunction.estimator.parameters[0])")
+    }
+    
     func testOneVsAllClassification() {
         let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
         let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)
