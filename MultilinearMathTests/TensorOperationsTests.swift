@@ -233,5 +233,19 @@ class TensorOperationsTests: XCTestCase {
     
     func testTensorInverse() {
     }
+    
+    func testTensorOrdering() {
+        let reorderedMode0 = changeOrderOfModeIn(tensor1, mode: 0, newOrder: [1, 0])
+        XCTAssertEqual(reorderedMode0.values[2], 14.0, "reordered mode 0")
+        print("reordered values in mode 0: \(reorderedMode0.values)")
+        
+        let reorderedMode1 = changeOrderOfModeIn(tensor1, mode: 1, newOrder: [2, 0, 1])
+        XCTAssertEqual(reorderedMode1.values[2], 10.0, "reordered mode 1")
+        print("reordered values in mode 1: \(reorderedMode1.values)")
+        
+        let reorderedMode2 = changeOrderOfModeIn(tensor1, mode: 2, newOrder: [2, 0, 1, 3])
+        XCTAssertEqual(reorderedMode2.values[2], 1.0, "reordered mode 2")
+        print("reordered values in mode 2: \(reorderedMode2.values)")
+    }
 
 }

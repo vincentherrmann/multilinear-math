@@ -21,10 +21,15 @@ public protocol DataSliceSubscript {
     func sliceIndices() -> [Int] //for some reason, this does not work as a computed property (?)
 }
 extension DataSliceSubscript {
-    //dummy, will be overwritten for the constrained types
     public func sliceIndices() -> [Int] {
-        let emptyArray = [Int]()
-        return emptyArray
+        if let array = self as? [Int] {
+            return array.map({$0.value})
+        } else if let range = self as? Range<Int> {
+            return Array(range).map({$0.value})
+        } else {
+            let emptyArray = [Int]()
+            return emptyArray
+        }
     }
     
 }
@@ -46,22 +51,12 @@ extension Array: DataSliceSubscript {
         }
     }
 }
-public extension Array where Element: IntegerType {
-    func sliceIndices() -> [Int] {
-        return self.map({$0.value})
-    }
-}
 
 extension Range: DataSliceSubscript {
     public var sliceSize: Int {
         get {
             return Array(self).count
         }
-    }
-}
-public extension Range where Element: IntegerType {
-    func sliceIndices() -> [Int] {
-        return Array(self).map({$0.value})
     }
 }
 

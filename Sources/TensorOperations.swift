@@ -107,6 +107,25 @@ public func log(tensor: Tensor<Float>) -> Tensor<Float> {
     return log
 }
 
+//Should be a function for all MuldimensionalData, but the generics don't seem to work!
+/// Change the order of one mode in a tensor
+public func changeOrderOfModeIn(tensor: Tensor<Float>, mode: Int, newOrder: [Int]) -> Tensor<Float> {
+    let outerModes = [mode]
+    var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
+    
+    tensor.performForOuterModes(outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
+        let indexPosition = (currentIndex[mode] as! Range<Int>).startIndex
+        var newCurrentIndex = currentIndex
+        newCurrentIndex[mode] = newOrder[indexPosition]...newOrder[indexPosition]
+        let currentSlice = sourceData[slice: newCurrentIndex]
+        return [currentSlice]
+    }), writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+        outputData[0][slice: currentIndex] = inputData[0]
+    }))
+    
+    return outputData[0]
+}
+
 
 // Operations combining two tensors
 /// Concatenate two tensors. The content of tensor `b` gets appended to `a` in direction of the given mode. Both `a` and `b` must have the same mode sizes in all modes but `alongMode`. One of the tensors may have one mode less than the other, then the additional `alongMode` of size one is amended.
@@ -149,23 +168,6 @@ public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) ->
     return concatTensor
 }
 
-public func randomizeOrder(tensor: Tensor<Float>, inModes: [Int]) -> Tensor<Float> {
-    var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
-    tensor.performForOuterModes(inModes, outputData: &outputData, calculate: { (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
-        <#code#>
-        }, writeOutput: { (currentIndex, outerIndex, inputData, outputData) in
-            <#code#>
-            })
-}
-
-public func changeOrder(tensor: Tensor<Float>, inModes: Int, newOrder: [Int]) {
-    var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
-    tensor.performForOuterModes(inModes, outputData: &outputData: , calculate: { (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
-        let currentNewOrderIndex = newOrder
-        }, writeOutput: { (currentIndex, outerIndex, inputData, outputData) in
-            <#code#>
-            })
-}
 
 public func add(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     

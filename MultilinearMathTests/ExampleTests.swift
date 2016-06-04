@@ -116,10 +116,10 @@ class ExampleTests: XCTestCase {
         let parameters = oneVsAllClassification(x: mnistNorm, y: y, classCount: 10)
     }
     
-    func testFeedforwardNeuralNet() {
-        let net = FeedforwardNeuralNet(withLayerSizes: [3, 5, 4, 2])
-        let test = net.feedforward(ones(3))
-        
-    }
+//    func testFeedforwardNeuralNet() {
+//        let net = FeedforwardNeuralNet(withLayerSizes: [3, 5, 4, 2])
+//        let test = net.feedforward(ones(3))
+//        
+//    }
 
 }

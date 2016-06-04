@@ -234,30 +234,31 @@ public extension MultidimensionalData {
         return newData
     }
     
-    public func changeOrderOfMode(mode: Int, newOrder: [Int]) -> S {
-        let outerModes = [mode]
-        var newData = S(withPropertiesOf: self, onlyModes: modeArray, repeatedValue: values[0], values: nil) as S
-        var outputData = [newData]
-        
-        self.performForOuterModes(outerModes, outputData: outputData,
-                                  calculate: ({ (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: S) -> [S] in
-                let indexPosition = currentIndex[mode].sliceIndices()[0]
-                var newCurrentIndex = currentIndex
-                newCurrentIndex[mode] = newOrder[indexPosition]...newOrder[indexPosition]
-                return [(sourceData[slice: newCurrentIndex])]
-            }),
-                                  writeOutput: ({ (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [S], inout outputData: [S]) in
-                outputData[slice: currentIndex] = inputData[0]
-            }))
-        
-        return outputData[0]
-    }
+//    public func changeOrderOfMode(mode: Int, newOrder: [Int]) -> S {
+//        let outerModes = [mode]
+//        var newData = S(withPropertiesOf: self, onlyModes: modeArray, repeatedValue: values[0], values: nil) as S
+//        var outputData = [newData]
+//        
+//        performOn(self, forOuterModes: outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> [S] in
+//            let indexPosition = currentIndex[mode].sliceIndices()[0]
+//            var newCurrentIndex = currentIndex
+//            newCurrentIndex[mode] = newOrder[indexPosition]...newOrder[indexPosition]
+//            return [(sourceData[slice: newCurrentIndex])]
+//        }), writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+//            outputData[slice: currentIndex] = inputData[0]
+//        }))
+//        
+//        
+//        
+//        
+//        return outputData[0]
+//    }
     
-    public func shuffleMode(mode: Int) -> Self {
-        let shuffledOrder = (0..<modeSizes[mode]).shuffle()
-        let shuffledData = changeOrderOfMode(mode, newOrder: shuffledOrder)
-        return shuffledData
-    }
+//    public func shuffleMode(mode: Int) -> S {
+//        let shuffledOrder = (0..<modeSizes[mode]).shuffle()
+//        let shuffledData = changeOrderOfMode(mode, newOrder: shuffledOrder)
+//        return shuffledData
+//    }
 
     
     /// - Returns: The data as matrix unfolded along the given mode. If allowTranspose is true, the returned matrix could be transposed, if that was computationally more efficient
@@ -386,9 +387,9 @@ public extension MultidimensionalData {
 //        
 //    }
     
-    public func performForOuterModes(outerModes: [Int], inout outputData: [S],
-                                     calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: S) -> [S],
-                                     writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [S], inout outputData: [S]) -> ()) {
+    public func performForOuterModes(outerModes: [Int], inout outputData: [Self],
+                                     calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> [Self],
+                                     writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [Self], inout outputData: [Self]) -> ()) {
         
         let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
         let group = dispatch_group_create()
@@ -453,6 +454,47 @@ public extension MultidimensionalData {
         print(infoString)
     }
 }
+
+//public func performOn<T: MultidimensionalData>(data: T, forOuterModes outerModes: [Int], inout outputData: [T],
+//                                 calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: T) -> [T],
+//                                 writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [T], inout outputData: [T]) -> ()) {
+//    
+//    let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+//    let group = dispatch_group_create()
+//    let sync = NSObject()
+//    
+//    func actionRecurse(outerModes outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
+//        if(modeNumber < outerModes.count) {
+//            let currentMode = outerModes[modeNumber]
+//            
+//            for i in 0..<data.modeSizes[currentMode] {
+//                var newCurrentIndex = currentIndex
+//                newCurrentIndex[currentMode] = i...i
+//                var newOuterIndex = outerIndex
+//                newOuterIndex[modeNumber] = i...i
+//                
+//                actionRecurse(outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
+//            }
+//        } else {
+//            dispatch_group_async(group, queue, {
+//                let result = calculate(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: data)
+//                
+//                objc_sync_enter(sync)
+//                writeOutput(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
+//                objc_sync_exit(sync)
+//            })
+//        }
+//    }
+//    
+//    //        outputData[0].printMemoryAdresses(printTitle: "--start output--")
+//    
+//    let startCurrentIndex: [DataSliceSubscript] = data.modeSizes.map({0..<$0})
+//    let startOuterIndex: [DataSliceSubscript] = outerModes.map({data.modeSizes[$0]}).map({0..<$0})
+//    
+//    actionRecurse(outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
+//    
+//    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+//}
 
 
 /// Combine two `MultidimensionalData` items with the given `combineFunction`

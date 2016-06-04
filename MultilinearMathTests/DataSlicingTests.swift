@@ -26,7 +26,7 @@ class DataSlicingTests: XCTestCase {
         var sliceTensor = ones(2, 3, 2)
         let subscripts: [DataSliceSubscript] = [[2, 4], [0, 1, 3], [1, 4]]
         
-        copyIndices(subscripts, modeSizes: [5, 5, 5])
+        //copyIndices(subscripts, modeSizes: [5, 5, 5])
         originalTensor.values.withUnsafeMutableBufferPointer { (pointer) -> () in
             //
             copySliceFrom(sliceTensor, to: originalTensor, targetPointer: pointer, subscripts: subscripts, copyFromSlice: true)

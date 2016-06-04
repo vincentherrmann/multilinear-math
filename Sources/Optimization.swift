@@ -35,17 +35,50 @@ public func batchGradientDescent(objective: GradientOptimizable, input: Tensor<F
 public func stochasticGradientDescent(inout objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.001, maxLoops: Int = 1000, minibatchSize: Int = 16) {
     
     var cost = FLT_MAX
+    var epoch = 0
     var currentBatch = inputs
+    var currentBatchTargets = targets
     var currentIndex = 0
     
     for _ in 0..<maxLoops {
+        //create minibatch
         var minibatch: Tensor<Float>
+        var minibatchTargets: Tensor<Float>
         if(currentIndex + minibatchSize < currentBatch.modeSizes[0]) {
-            minibatch = currentBatch[Range(start: currentIndex, distance: minibatchSize), all]
+            let minibatchRange = Range(start: currentIndex, distance: minibatchSize)
+            
+            minibatch = currentBatch[minibatchRange, all]
+            minibatchTargets = currentBatchTargets[minibatchRange, all]
+            
             currentIndex += minibatchSize
         } else {
-            minibatch = currentBatch[currentIndex..<currentBatch.modeSizes[0], all]
+            let minibatchRange = currentIndex..<currentBatch.modeSizes[0]
+            
+            minibatch = currentBatch[minibatchRange, all]
+            minibatchTargets = currentBatchTargets[minibatchRange, all]
+            
             currentIndex = 0
+            //reshuffle batch for new epoch
+            let shuffleOrder = (0..<inputs.modeSizes[0]).shuffle()
+            currentBatch = changeOrderOfModeIn(currentBatch, mode: 0, newOrder: shuffleOrder)
+            currentBatchTargets = changeOrderOfModeIn(currentBatchTargets, mode: 0, newOrder: shuffleOrder)
+            epoch += 1
         }
+        
+        //calculate current estimate and cost
+        let estimate = objective.estimator.output(minibatch)
+        let newCost = objective.regularizedCostForEstimate(estimate, target: minibatchTargets)
+        print("SGD cost: \(newCost)")
+        
+        //calculate gradients and update parameters
+        let regularizedCostGradient = objective.gradientForEstimate(estimate, target: minibatchTargets)
+        let gradients = objective.estimator.gradients(regularizedCostGradient).wrtParameters
+        objective.updateParameters(gradients.map({(updateRate / Float(minibatchSize)) * sum($0, overModes: [0])}))
+        
+        //check for convergence
+        if(abs(cost - newCost) < convergenceThreshold) {
+            break
+        }
+        cost = newCost
     }
 }
