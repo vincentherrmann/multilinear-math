@@ -19,7 +19,7 @@ public class Sigmoid: ActivationFunction {
     }
     public static func derivative(input: Tensor<Float>) -> Tensor<Float> {
         let s = output(input)
-        return s * (1 - s)
+        return s °* (1 - s)
     }
 }
 
@@ -148,21 +148,22 @@ public class LogisticRegressionEstimator: ParametricTensorFunction {
         return currentHypothesis
     }
     
-//    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
-//        let preactivationGradient = Sigmoid.derivative(currentPreactivations) °* gradientWrtOutput
-//        let parameter0Gradient = preactivationGradient * currentInput
-//        let parameter1Gradient = sum(preactivationGradient, overModes: [0])
-//        let inputGradient = sum(preactivationGradient * parameters[0], overModes: [0])
-//        
-//        return (inputGradient, [parameter0Gradient, parameter1Gradient])
-//    }
-    
     public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
-        let gradient0 = multiply(a: gradientWrtOutput, remainingModesA: [], b: currentInput, summationModesB: [0])
-        let gradient1 = sum(gradientWrtOutput, overModes: [0])
+        let sigmoidGradient = Sigmoid.derivative(currentPreactivations)
+        let preactivationGradient = sigmoidGradient °* gradientWrtOutput
+        let parameter0Gradient = preactivationGradient * currentInput
+        let parameter1Gradient = sum(preactivationGradient, overModes: [0])
+        let inputGradient = sum(preactivationGradient * parameters[0], overModes: [0])
         
-        return (zeros(), [gradient0, gradient1])
+        return (inputGradient, [parameter0Gradient, parameter1Gradient])
     }
+    
+//    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+//        let gradient0 = multiply(a: gradientWrtOutput, remainingModesA: [], b: currentInput, summationModesB: [0])
+//        let gradient1 = sum(gradientWrtOutput, overModes: [0])
+//        
+//        return (zeros(), [gradient0, gradient1])
+//    }
     
     public func updateParameters(subtrahends: [Tensor<Float>]) {
         parameters[0] = parameters[0] - subtrahends[0]
@@ -190,23 +191,23 @@ public class LogisticRegressionCost: CostFunction {
         return cost
     }
     
-//    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
-//        if(estimate.indices != target.indices) {
-//            print("abstract indices of estimate and target should be the same!")
-//        }
-//        
-//        let g1 = -target °* (1/estimate)
-//        let g2 = (1-target) °* (-1 / (1-estimate))
-//        let gradient = (g1 - g2)
-//        
-//        return gradient
-//    }
-    
     public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
-        let logi = estimator as! LogisticRegressionEstimator
-        let gradient = multiply(a: -(target - estimate), remainingModesA: [], b: logi.currentInput, summationModesB: [0])
-        return -(target - estimate)
+        if(estimate.indices != target.indices) {
+            print("abstract indices of estimate and target should be the same!")
+        }
+        
+        let g1 = target °* (1/estimate)
+        let g2 = (1-target) °* (1 / (1-estimate))
+        let gradient = -(g1 - g2)
+        
+        return gradient
     }
+    
+//    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+//        let logi = estimator as! LogisticRegressionEstimator
+//        let gradient = multiply(a: -(target - estimate), remainingModesA: [], b: logi.currentInput, summationModesB: [0])
+//        return -(target - estimate)
+//    }
 }
 
 public func oneVsAllClassification(x x: Tensor<Float>, y: Tensor<Float>, classCount: Int, regularize: Float = 0) -> Tensor<Float> {
