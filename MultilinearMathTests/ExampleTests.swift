@@ -78,30 +78,48 @@ class ExampleTests: XCTestCase {
         let test = parameters[TensorIndex.a] * (Tensor<Float>(modeSizes: [3], values: [1] + testTensor.values))[TensorIndex.a]
         print("test result: \(test.values)")
         
-        
-        let (parametersGD, meanGD, deviationGD) = linearRegressionGD(x: x, y: y)
-        print("parameters linear regression gradient descent: \(parametersGD.values)")
-        let normalizedTestTensor = normalize(testTensor, overModes: [], withMean: meanGD, deviation: deviationGD)
-        let testGD = parametersGD[TensorIndex.a] * concatenate(a: ones(1), b: normalizedTestTensor, alongMode: 0)[TensorIndex.a]
-//        let testGD = parametersGD[TensorIndex.a] * (Tensor<Float>(modeSizes: [3], values: [1] + normalizedTestTensor.values))[TensorIndex.a]
-        print("GD test result: \(testGD.values)")
+//        
+//        let (parametersGD, meanGD, deviationGD) = linearRegressionGD(x: x, y: y)
+//        print("parameters linear regression gradient descent: \(parametersGD.values)")
+//        let normalizedTestTensor = normalize(testTensor, overModes: [], withMean: meanGD, deviation: deviationGD)
+//        let testGD = parametersGD[TensorIndex.a] * concatenate(a: ones(1), b: normalizedTestTensor, alongMode: 0)[TensorIndex.a]
+//        print("GD test result: \(testGD.values)")
     }
     
-    func testLogisticRegression() {
-        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
+    func testSGDLinearRegression() {
+        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/Data3D.txt")
         let x = data[all, 0...1]
         let y = data[all, 2...2]
-        
         let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+        let testTensor = Tensor<Float>(modeSizes: [2], values: [2100.0, 3.0])
         
-        let parameters = logisticRegression(x: xNorm, y: y)
-        print("parameters logistic regression: \(parameters)")
+        var costFunction: CostFunction = LinearRegressionCost(featureCount: 2)
         
-        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
-        let tVwithOnes = concatenate(a: ones(3), b: testValues, alongMode: 1)
-        let test = sigmoid(parameters[TensorIndex.b] * tVwithOnes[.a, .b])
-        print("logistic regression result: \(test.values)")
+        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 5.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 47)
+        print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
+        
+        let normalizedTestTensor = normalize(testTensor, overModes: [], withMean: mean, deviation: deviation)
+        let test = costFunction.estimator.output(normalizedTestTensor)
+        print("linear regression result for input \(testTensor.values): \(test.values[0])")
+        
+        XCTAssert((354000 < test.values[0]) && (test.values[0] < 356000), "linear regression with SGD test")
     }
+    
+//    func testLogisticRegression() {
+//        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
+//        let x = data[all, 0...1]
+//        let y = data[all, 2...2]
+//        
+//        let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+//        
+//        let parameters = logisticRegression(x: xNorm, y: y)
+//        print("parameters logistic regression: \(parameters)")
+//        
+//        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+//        let tVwithOnes = concatenate(a: ones(3), b: testValues, alongMode: 1)
+//        let test = sigmoid(parameters[TensorIndex.b] * tVwithOnes[.a, .b])
+//        print("logistic regression result: \(test.values)")
+//    }
     
     func testSGDLogisticRegression() {
         let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
@@ -112,22 +130,27 @@ class ExampleTests: XCTestCase {
         
         var costFunction: CostFunction = LogisticRegressionCost(featureCount: 2)
         
-        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 0.5, convergenceThreshold: 0.001, maxLoops: 100, minibatchSize: 100)
-        print("parameters: \(costFunction.estimator.parameters[0])")
+        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 1.0, convergenceThreshold: 0.001, maxLoops: 200, minibatchSize: 25)
+        print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
+        
+        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+        let test = costFunction.estimator.output(testValues)
+        print("logistic regression result: \(test.values)")
+        XCTAssert((test.values[0] < 0.1) && (0.5 < test.values[1]) && (test.values[1] < 0.8) && (0.99 < test.values[2]), "logistic regression with SGD test")
     }
     
-    func testOneVsAllClassification() {
-        let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
-        let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)
-        let mnistLabels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
-        
-        print("normalize...")
-        let (mnistNorm, mean, deviation) = normalize(mnistData, overModes: [0])
-        let y = Tensor<Float>(modeSizes: [mnistLabels.count], values: mnistLabels.map({Float($0)}))
-        
-        print("one vs all logistic regression...")
-        let parameters = oneVsAllClassification(x: mnistNorm, y: y, classCount: 10)
-    }
+//    func testOneVsAllClassification() {
+//        let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
+//        let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)
+//        let mnistLabels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
+//        
+//        print("normalize...")
+//        let (mnistNorm, mean, deviation) = normalize(mnistData, overModes: [0])
+//        let y = Tensor<Float>(modeSizes: [mnistLabels.count], values: mnistLabels.map({Float($0)}))
+//        
+//        print("one vs all logistic regression...")
+//        let parameters = oneVsAllClassification(x: mnistNorm, y: y, classCount: 10)
+//    }
     
 //    func testFeedforwardNeuralNet() {
 //        let net = FeedforwardNeuralNet(withLayerSizes: [3, 5, 4, 2])
