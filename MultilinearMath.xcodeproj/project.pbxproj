@@ -13,6 +13,11 @@
 		BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
+		BA860B2E1D04C29E00473436 /* NestedVsMultidimensional.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */; };
+		BA860B2F1D04C29E00473436 /* MNIST_compression_pca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */; };
+		BA860B301D04C29E00473436 /* MNIST_compression_umpca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2B1D04C29E00473436 /* MNIST_compression_umpca.jpg */; };
+		BA860B311D04C29E00473436 /* MNIST_compression_mpca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2C1D04C29E00473436 /* MNIST_compression_mpca.jpg */; };
+		BA860B321D04C29E00473436 /* MNIST_compression_original.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2D1D04C29E00473436 /* MNIST_compression_original.jpg */; };
 		BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */; };
 		BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BEB1CD160BD00FDF14A /* LogisticRegression.swift */; };
 		BA9C0BEF1CD54F7500FDF14A /* DataSetLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */; };
@@ -32,6 +37,8 @@
 		BAC83E531CAAD68D00290119 /* Tensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE6F1CA86F26009906F2 /* Tensors.swift */; };
 		BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE711CA86F4B009906F2 /* TensorMultiplication.swift */; };
 		BAC83E551CAAD68D00290119 /* TensorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA67AE731CA86F73009906F2 /* TensorOperations.swift */; };
+		BACA1D0B1D08095E00FB4323 /* SlicingTwoModes3dFlat_table.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BACA1D091D08095E00FB4323 /* SlicingTwoModes3dFlat_table.jpg */; };
+		BACA1D0C1D08095E00FB4323 /* Slicing3dFlat_table.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BACA1D0A1D08095E00FB4323 /* Slicing3dFlat_table.jpg */; };
 		BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +69,11 @@
 		BA67AE731CA86F73009906F2 /* TensorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorOperations.swift; path = Sources/TensorOperations.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE781CA87993009906F2 /* MPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MPCA.swift; path = Sources/MPCA.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE7A1CA879BD009906F2 /* UMPCA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UMPCA.swift; path = Sources/UMPCA.swift; sourceTree = SOURCE_ROOT; };
+		BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = NestedVsMultidimensional.jpg; path = Resources/NestedVsMultidimensional.jpg; sourceTree = "<group>"; };
+		BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MNIST_compression_pca.jpg; path = Resources/MNIST_compression_pca.jpg; sourceTree = "<group>"; };
+		BA860B2B1D04C29E00473436 /* MNIST_compression_umpca.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MNIST_compression_umpca.jpg; path = Resources/MNIST_compression_umpca.jpg; sourceTree = "<group>"; };
+		BA860B2C1D04C29E00473436 /* MNIST_compression_mpca.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MNIST_compression_mpca.jpg; path = Resources/MNIST_compression_mpca.jpg; sourceTree = "<group>"; };
+		BA860B2D1D04C29E00473436 /* MNIST_compression_original.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MNIST_compression_original.jpg; path = Resources/MNIST_compression_original.jpg; sourceTree = "<group>"; };
 		BA9C0BE91CCE6CD600FDF14A /* LinearRegression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinearRegression.swift; path = Sources/LinearRegression.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BEB1CD160BD00FDF14A /* LogisticRegression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogisticRegression.swift; path = Sources/LogisticRegression.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetLoading.swift; path = Sources/DataSetLoading.swift; sourceTree = SOURCE_ROOT; };
@@ -75,6 +87,8 @@
 		BAC83E3E1CAAD61500290119 /* MultilinearMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultilinearMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAC83E431CAAD61500290119 /* MultilinearMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilinearMathTests.swift; sourceTree = "<group>"; };
 		BAC83E451CAAD61500290119 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BACA1D091D08095E00FB4323 /* SlicingTwoModes3dFlat_table.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = SlicingTwoModes3dFlat_table.jpg; path = Resources/SlicingTwoModes3dFlat_table.jpg; sourceTree = "<group>"; };
+		BACA1D0A1D08095E00FB4323 /* Slicing3dFlat_table.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Slicing3dFlat_table.jpg; path = Resources/Slicing3dFlat_table.jpg; sourceTree = "<group>"; };
 		BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSlicingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +114,13 @@
 		BA2E8AC91CE9EFE10062B59D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BACA1D091D08095E00FB4323 /* SlicingTwoModes3dFlat_table.jpg */,
+				BACA1D0A1D08095E00FB4323 /* Slicing3dFlat_table.jpg */,
+				BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */,
+				BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */,
+				BA860B2B1D04C29E00473436 /* MNIST_compression_umpca.jpg */,
+				BA860B2C1D04C29E00473436 /* MNIST_compression_mpca.jpg */,
+				BA860B2D1D04C29E00473436 /* MNIST_compression_original.jpg */,
 				BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */,
 				BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */,
 				BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */,
@@ -274,8 +295,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */,
+				BA860B301D04C29E00473436 /* MNIST_compression_umpca.jpg in Resources */,
+				BACA1D0B1D08095E00FB4323 /* SlicingTwoModes3dFlat_table.jpg in Resources */,
+				BA860B2F1D04C29E00473436 /* MNIST_compression_pca.jpg in Resources */,
+				BA860B2E1D04C29E00473436 /* NestedVsMultidimensional.jpg in Resources */,
 				BAA6767C1CF63C050071526C /* MultilinearDataUnfolding.jpg in Resources */,
+				BA860B321D04C29E00473436 /* MNIST_compression_original.jpg in Resources */,
 				BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */,
+				BACA1D0C1D08095E00FB4323 /* Slicing3dFlat_table.jpg in Resources */,
+				BA860B311D04C29E00473436 /* MNIST_compression_mpca.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
