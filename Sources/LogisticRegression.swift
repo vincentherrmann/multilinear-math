@@ -9,15 +9,15 @@
 import Foundation
 
 public protocol ActivationFunction {
-    static func output(input: Tensor<Float>) -> Tensor<Float>
-    static func derivative(input: Tensor<Float>) -> Tensor<Float>
+    func output(input: Tensor<Float>) -> Tensor<Float>
+    func derivative(input: Tensor<Float>) -> Tensor<Float>
 }
 
 public class Sigmoid: ActivationFunction {
-    public static func output(input: Tensor<Float>) -> Tensor<Float> {
+    public func output(input: Tensor<Float>) -> Tensor<Float> {
         return 1 / (1 + exp(-input))
     }
-    public static func derivative(input: Tensor<Float>) -> Tensor<Float> {
+    public func derivative(input: Tensor<Float>) -> Tensor<Float> {
         let s = output(input)
         let sDiff = 1-s
         let result = s °* sDiff
@@ -26,11 +26,17 @@ public class Sigmoid: ActivationFunction {
 }
 
 public class ReLU: ActivationFunction {
-    public static func output(input: Tensor<Float>) -> Tensor<Float> {
-        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({max(0.01*$0, $0)}))
+    public var secondarySlope: Float
+    
+    public init(secondarySlope: Float) {
+        self.secondarySlope = secondarySlope
     }
-    public static func derivative(input: Tensor<Float>) -> Tensor<Float> {
-        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({$0 > 0 ? 1.0 : 0.01}))
+    
+    public func output(input: Tensor<Float>) -> Tensor<Float> {
+        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({max(secondarySlope*$0, $0)}))
+    }
+    public func derivative(input: Tensor<Float>) -> Tensor<Float> {
+        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({$0 > 0 ? 1.0 : secondarySlope}))
     }
 }
 
@@ -166,7 +172,7 @@ public class LogisticRegressionEstimator: ParametricTensorFunction {
     }
     
     public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
-        let sigmoidGradient = Sigmoid.derivative(currentPreactivations)
+        let sigmoidGradient = Sigmoid().derivative(currentPreactivations)
         let preactivationGradient = sigmoidGradient °* gradientWrtOutput
         let parameter0Gradient = preactivationGradient * currentInput
         let parameter1Gradient = sum(preactivationGradient, overModes: [0])

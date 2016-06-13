@@ -344,12 +344,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487523045.738068"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "84"
             endingLineNumber = "84"
-            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:)"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -360,12 +360,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487523045.738068"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "82"
             endingLineNumber = "82"
-            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:)"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -408,11 +408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487509117.351297"
+            timestampString = "487524747.221992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "output(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -424,11 +424,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487509117.351297"
+            timestampString = "487524747.221992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -440,11 +440,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487509117.351297"
+            timestampString = "487524747.221992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -456,11 +456,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487509117.351297"
+            timestampString = "487524747.221992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "gradientForEstimate(_:target:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -472,11 +472,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487509117.351297"
+            timestampString = "487524747.221992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -727,12 +727,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487523045.738068"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
             endingLineNumber = "78"
-            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:)"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -823,12 +823,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487523045.738068"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "75"
             endingLineNumber = "75"
-            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:)"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -887,11 +887,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487514364.196226"
+            timestampString = "487522788.784875"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "testNeuralNetworkMNIST()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1015,12 +1015,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487522788.784875"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:)"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

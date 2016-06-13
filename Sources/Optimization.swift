@@ -32,7 +32,7 @@ public func batchGradientDescent(objective: GradientOptimizable, input: Tensor<F
     }
 }
 
-public func stochasticGradientDescent(inout objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.001, maxLoops: Int = 1000, minibatchSize: Int = 16) {
+public func stochasticGradientDescent(inout objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.001, maxLoops: Int = 1000, minibatchSize: Int = 16, validationCallback: (currentEpoch: Int, currentEstimator: ParametricTensorFunction) -> () = {(epoch, _) in print("epoch \(epoch)")}) {
     
     var cost = FLT_MAX
     var epoch = 0
@@ -42,7 +42,6 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
     var convergenceCounter = 0
     
     print("stochastic gradient descent")
-    print("epoch 0")
     
     for _ in 0..<maxLoops {
         //create minibatch
@@ -56,6 +55,8 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
             
             currentIndex += minibatchSize
         } else {
+            validationCallback(currentEpoch: epoch, currentEstimator: objective.estimator)
+            
             let minibatchRange = currentIndex..<currentBatch.modeSizes[0]
             
             minibatch = currentBatch[minibatchRange, all]
@@ -67,7 +68,6 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
             currentBatch = changeOrderOfModeIn(currentBatch, mode: 0, newOrder: shuffleOrder)
             currentBatchTargets = changeOrderOfModeIn(currentBatchTargets, mode: 0, newOrder: shuffleOrder)
             epoch += 1
-            print("epoch \(epoch)")
         }
         
         //calculate current estimate and cost

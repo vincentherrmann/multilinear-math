@@ -208,8 +208,8 @@ class ExampleTests: XCTestCase {
     func testNeuralNetworkMNIST() {
         //var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 25, 10]))
         var estimator =  NeuralNet(layerSizes: [28*28, 25, 10])
-        estimator.layers[0].activationFunction = ReLU.self
-        estimator.layers[1].activationFunction = ReLU.self
+        estimator.layers[0].activationFunction = ReLU(secondarySlope: 0.01)
+        estimator.layers[1].activationFunction = ReLU(secondarySlope: 0.01)
         var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: estimator)
         
         let x_values = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
@@ -220,7 +220,14 @@ class ExampleTests: XCTestCase {
         
         //let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         
-        stochasticGradientDescent(&neuralNetCost, inputs: x[.a, .b], targets: y[.a, .c], updateRate: 0.03, convergenceThreshold: 0.000001, maxLoops: 4000, minibatchSize: 50)
+        stochasticGradientDescent(&neuralNetCost, inputs: x[.a, .b], targets: y[.a, .c], updateRate: 0.03, convergenceThreshold: 0.000001, maxLoops: 4000, minibatchSize: 50, validationCallback: ({ (epoch, estimator) -> () in
+            print("epoch \(epoch)")
+            let estimate = estimator.output(x)
+            let maximumIndices = findMaximumElementOf(estimate, inMode: 1)
+            let floatLabels = y_labels.map({Float($0)})
+            let correctValues = zip(floatLabels, maximumIndices.values).filter({$0.0 == $0.1})
+            print("classified \(correctValues.count) of \(floatLabels.count) correctly")
+        }))
         
         let testBatch = x[0..<10, all]
         let finalEstimate = neuralNetCost.estimator.output(testBatch)

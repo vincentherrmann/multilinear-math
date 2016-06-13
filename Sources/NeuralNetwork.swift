@@ -167,7 +167,7 @@ public class NeuralNetLayer: ParametricTensorFunction {
     /// Cached activations of this layer of the last forward propagation, for being used in backpropagation of the gradients. Can be a minibatch.
     var currentActivations: Tensor<Float> = zeros()
     
-    public var activationFunction: ActivationFunction.Type = Sigmoid.self
+    public var activationFunction: ActivationFunction = Sigmoid()
     
     var previousLayer: NeuralNetLayer?
     var nextLayer: NeuralNetLayer?
