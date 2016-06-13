@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol ParametricTensorFunction {
-    var parameters: [Tensor<Float>] {get}
+    var parameters: [Tensor<Float>] {get set}
     
     func output(input: Tensor<Float>) -> Tensor<Float>
     func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>])
@@ -63,6 +63,43 @@ public extension CostFunction {
         
         return cost + regularizationCosts.reduce(0, combine: {$0 + $1})
     }
+    
+    public mutating func numericalGradients(input: Tensor<Float>, target: Tensor<Float>, epsilon: Float = 0.01) -> [Tensor<Float>] {
+        let estimate = estimator.output(input)
+        let cost = costForEstimate(estimate, target: target)
+        
+        //check gradients
+        var numericalGradients: [Tensor<Float>] = estimator.parameters
+        
+        for p in 0..<estimator.parameters.count {
+            for i in 0..<estimator.parameters[p].elementCount {
+                //change one single element in the parameters
+                let originalValue = estimator.parameters[p].getWithFlatIndex(i)
+                
+                // + epsilon
+                let plusEpsilonValue = originalValue + epsilon
+                estimator.parameters[p].set(plusEpsilonValue, atFlatIndex: i)
+                //compute the numerical gradient value
+                let plusEpsilonEstimate = estimator.output(input)
+                let plusEpsilonCost = costForEstimate(plusEpsilonEstimate, target: target)
+                
+                // - epsilon
+                let minusEpsilonValue = originalValue - epsilon
+                estimator.parameters[p].set(minusEpsilonValue, atFlatIndex: i)
+                //compute the numerical gradient value
+                let minusEpsilonEstimate = estimator.output(input)
+                let minusEpsilonCost = costForEstimate(minusEpsilonEstimate, target: target)
+                
+                let gradientValue = (plusEpsilonCost - minusEpsilonCost) / (2*epsilon)
+                numericalGradients[p].set(gradientValue, atFlatIndex: i)
+                
+                //reset the estimator parameter
+                estimator.parameters[p].set(originalValue, atFlatIndex: i)
+            }
+        }
+        
+        return numericalGradients
+    }
 }
 
 public struct SquaredErrorCost: CostFunction {
@@ -73,13 +110,53 @@ public struct SquaredErrorCost: CostFunction {
         }
     }
     
+    public init(forEstimator: ParametricTensorFunction) {
+        estimator = forEstimator
+    }
+    
     public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+        let exampleCount = Float(target.modeCount > 1 ? target.modeSizes[0] : 1)
+        
         let error = substract(a: target, outerModesA: [], b: estimate, outerModesB: [])
-        return (error * error).values[0]
+        let cost = multiply(a: error, remainingModesA: [], b: error, remainingModesB: [])
+        return cost.values[0] / exampleCount
     }
     
     public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
-        return 2 * substract(a: target, outerModesA: [], b: estimate, outerModesB: [])
+        //let gradient = 2 * substract(a: target, outerModesA: [], b: estimate, outerModesB: [])
+        let gradient = 2 * substract(a: estimate, outerModesA: [], b: target, outerModesB: [])
+        return gradient
+    }
+}
+
+public struct NegLogClassificationCost: CostFunction {
+    public var estimator: ParametricTensorFunction
+    public var regularizers: [ParameterRegularizer?] {
+        get {
+            return [ParameterRegularizer?](count: estimator.parameters.count, repeatedValue: nil)
+        }
+    }
+    
+    public init(forEstimator: ParametricTensorFunction) {
+        estimator = forEstimator
+    }
+    
+    public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+        let exampleCount = Float(target.modeCount > 1 ? target.modeSizes[0] : 1)
+        
+        let t1 = -target °* log(estimate)
+        let t2 = (1-target) °* log(1-estimate)
+        let cost = vectorSummation((t1-t2).values) / exampleCount
+        
+        return cost
+    }
+    
+    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+        let g1 = target °* (1/estimate)
+        let g2 = (1-target) °* (1 / (1-estimate))
+        let gradient = -(g1 - g2)
+        
+        return gradient
     }
 }
 
@@ -90,10 +167,14 @@ public class NeuralNetLayer: ParametricTensorFunction {
     /// Cached activations of this layer of the last forward propagation, for being used in backpropagation of the gradients. Can be a minibatch.
     var currentActivations: Tensor<Float> = zeros()
     
-    var activationFunction: ActivationFunction.Type = Sigmoid.self
+    public var activationFunction: ActivationFunction.Type = Sigmoid.self
     
     var previousLayer: NeuralNetLayer?
     var nextLayer: NeuralNetLayer?
+    
+    let batch = TensorIndex.a
+    let prev = TensorIndex.b
+    let this = TensorIndex.c
     
     public var parameters: [Tensor<Float>] = []
     
@@ -109,13 +190,13 @@ public class NeuralNetLayer: ParametricTensorFunction {
     }
     
     public func output(input: Tensor<Float>) -> Tensor<Float> {
-        currentPreactivations = input
+        currentPreactivations = input[batch, this]
         currentActivations = activationFunction.output(currentPreactivations)
-        return currentActivations
+        return currentActivations // [batch, this]
     }
     
     public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
-        let preactivationGradient = activationFunction.derivative(currentPreactivations) °* gradientWrtOutput
+        let preactivationGradient = activationFunction.derivative(currentPreactivations) °* gradientWrtOutput[batch, this] // [batch, this]
         return (preactivationGradient, [])
     }
     
@@ -125,30 +206,30 @@ public class NeuralNetLayer: ParametricTensorFunction {
 /// One layer of a feedforward neural net
 public class FeedforwardLayer: NeuralNetLayer {
     
-    var weights: Tensor<Float>
-    var bias: Tensor<Float>
+    var weights: Tensor<Float>!
+    var bias: Tensor<Float>!
     
     override public var parameters: [Tensor<Float>] {
         get {
             return [weights, bias]
         }
         set(newParameters) {
-            weights = newParameters[0]
-            bias = newParameters[1]
+            weights = newParameters[0][prev, this]
+            bias = newParameters[1][this]
         }
     }
     
     init(weights: Tensor<Float>, bias: Tensor<Float>, previousLayer: NeuralNetLayer? = nil, nextLayer: NeuralNetLayer? = nil) {
-        self.weights = weights
-        self.bias = bias
         super.init(previousLayer: previousLayer, nextLayer: nextLayer)
+        self.weights = weights[prev, this]
+        self.bias = bias[this]
     }
     
     func feedforward(inputActivations: Tensor<Float>) -> Tensor<Float> {
-        let activationProduct = multiply(a: inputActivations, summationModesA: [inputActivations.modeCount-1], b: weights, summationModesB: [0])
-        currentPreactivations = add(a: bias, commonModesA: [0], b: activationProduct, commonModesB: [activationProduct.modeCount-1])
+        let activationProduct = inputActivations[batch, prev] * weights
+        currentPreactivations = activationProduct + bias // [batch, this]
         currentActivations = activationFunction.output(currentPreactivations)
-        return currentActivations
+        return currentActivations // [batch, this]
     }
     
     override public func output(input: Tensor<Float>) -> Tensor<Float> {
@@ -161,14 +242,17 @@ public class FeedforwardLayer: NeuralNetLayer {
     /// `wrtInput`: <br> The gradient of the target function with respect to the input of this layer. Should be used as input to this function of the preceding layer during backpropagation. <br>
     /// `wrtParameters`: <br> The gradient of the target function with respect to the parameters of this layer (i.e. [wrtWeights, wrtBias]).  <br>
     override public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
-        let preactivationGradient = activationFunction.derivative(currentPreactivations) °* gradientWrtOutput
+        let activationDerivative = activationFunction.derivative(currentPreactivations)[batch, this]
+        let preactivationGradient = gradientWrtOutput[batch, this] °* activationDerivative // [batch, this]
         
-        let weightGradient = preactivationGradient * previousLayer!.currentActivations
-        let biasGradient = preactivationGradient
-        let inputGradient = preactivationGradient * weights
+        let weightGradient = previousLayer!.currentActivations[batch, prev] * preactivationGradient // [prev, this]
+        let biasGradient = sum(preactivationGradient, overModes: [0]) // [this]
+        let inputGradient = preactivationGradient * weights // [batch, prev]
         
         return (inputGradient, [weightGradient, biasGradient])
     }
+    
+
     
     override public func updateParameters(substrahends: [Tensor<Float>]) {
         weights = weights - substrahends[0]
@@ -177,24 +261,37 @@ public class FeedforwardLayer: NeuralNetLayer {
 }
 
 public class NeuralNet: ParametricTensorFunction {
-    var layers: [NeuralNetLayer]
+    public var layers: [NeuralNetLayer]
     
     public var parameters: [Tensor<Float>] {
         get {
             return layers.flatMap({$0.parameters})
         }
+        set(newParameters) {
+            var currentParameter = 0
+            
+            for layer in layers {
+                let parameterCount = layer.parameters.count
+                for p in 0..<parameterCount {
+                    layer.parameters[p] = newParameters[currentParameter]
+                    currentParameter += 1
+                }
+            }
+        }
     }
     
-    init(withLayers: [NeuralNetLayer]) {
+    public init(withLayers: [NeuralNetLayer]) {
         layers = withLayers
     }
     
-    init(layerSizes: [Int]) {
+    public init(layerSizes: [Int]) {
         layers = [NeuralNetLayer()]
         
         for l in 1..<layerSizes.count {
-            layers.append(FeedforwardLayer(weights: randomTensor(layerSizes[l-1], layerSizes[l]), bias: zeros(layerSizes[l]), previousLayer: layers[l-1]))
+            let e: Float = 0.1
+            layers.append(FeedforwardLayer(weights: randomTensor(min: -e, max: e, modeSizes: layerSizes[l-1], layerSizes[l]), bias: randomTensor(min: -e, max: e, modeSizes: layerSizes[l]), previousLayer: layers[l-1]))
         }
+        
     }
     
     public func output(input: Tensor<Float>) -> Tensor<Float> {
@@ -206,7 +303,8 @@ public class NeuralNet: ParametricTensorFunction {
         var gradientWrtParameters: [Tensor<Float>] = []
         let gradientWrtInput = layers.reverse().reduce(gradientWrtOutput) { (currentGradientWrtOutput, currentLayer) -> Tensor<Float> in
             let gradients = currentLayer.gradients(currentGradientWrtOutput)
-            gradientWrtParameters.appendContentsOf(gradients.wrtParameters)
+            gradientWrtParameters.insertContentsOf(gradients.wrtParameters, at: 0)
+            //gradientWrtParameters.appendContentsOf(gradients.wrtParameters)
             return gradients.wrtInput
         }
         

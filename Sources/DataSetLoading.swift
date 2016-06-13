@@ -76,3 +76,19 @@ public func loadMNISTLabelFile(path: String) -> [UInt8] {
     
     return values
 }
+
+public func createOneHotVectors(labels: [Int], differentValues: [Int]) -> Tensor<Float> {
+    var oneHotVectors = zeros(labels.count, differentValues.count)
+    for i in 0..<labels.count {
+        let position: Int
+        if let p = differentValues.indexOf(labels[i]) {
+            position = p
+        } else {
+            position = 0
+        }
+        
+        oneHotVectors[i, position] = 1.0
+    }
+    
+    return oneHotVectors
+}

@@ -31,7 +31,7 @@ class DispatchPerformaceTests: XCTestCase {
     }
     
     func testMode0Normalization() {
-        let tensor = randomTensor(5000, 100)
+        let tensor = randomTensor(modeSizes: 5000, 100)
         
         self.measureBlock { //4.7 / 0.74 sec //1.182 / 0.582 sec //2.0 / 0.128 sec
             let normalized = normalize(tensor, overModes: [0])
@@ -40,7 +40,7 @@ class DispatchPerformaceTests: XCTestCase {
     }
     
     func testMode1Normalization() {
-        let tensor = randomTensor(5000, 100)
+        let tensor = randomTensor(modeSizes: 5000, 100)
         
         self.measureBlock { //0.29 / 0.085 sec //0.277 / 0.15 sec //0.78 / 0.193 sec
             let normalized = normalize(tensor, overModes: [1])
@@ -48,7 +48,7 @@ class DispatchPerformaceTests: XCTestCase {
     }
     
     func testMode0NormalizationReverse() {
-        let tensor = randomTensor(100, 5000)
+        let tensor = randomTensor(modeSizes: 100, 5000)
         
         self.measureBlock { //4.5 / 0.89 sec //1.4 / 0.713 sec //2.462 / 0.265 sec
             let normalized = normalize(tensor, overModes: [0])
@@ -56,7 +56,7 @@ class DispatchPerformaceTests: XCTestCase {
     }
     
     func testMode1NormalizationReverse() {
-        let tensor = randomTensor(100, 5000)
+        let tensor = randomTensor(modeSizes: 100, 5000)
         
         self.measureBlock { //0.022 / 0.011 sec //0.048 / 0.043 sec //0.34 / 0.048 sec
             let normalized = normalize(tensor, overModes: [1])

@@ -19,7 +19,18 @@ public class Sigmoid: ActivationFunction {
     }
     public static func derivative(input: Tensor<Float>) -> Tensor<Float> {
         let s = output(input)
-        return s °* (1 - s)
+        let sDiff = 1-s
+        let result = s °* sDiff
+        return result
+    }
+}
+
+public class ReLU: ActivationFunction {
+    public static func output(input: Tensor<Float>) -> Tensor<Float> {
+        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({max(0.01*$0, $0)}))
+    }
+    public static func derivative(input: Tensor<Float>) -> Tensor<Float> {
+        return Tensor<Float>(withPropertiesOf: input, values: input.values.map({$0 > 0 ? 1.0 : 0.01}))
     }
 }
 

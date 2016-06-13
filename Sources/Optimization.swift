@@ -39,6 +39,10 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
     var currentBatch = inputs
     var currentBatchTargets = targets
     var currentIndex = 0
+    var convergenceCounter = 0
+    
+    print("stochastic gradient descent")
+    print("epoch 0")
     
     for _ in 0..<maxLoops {
         //create minibatch
@@ -76,15 +80,15 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
         let regularizedCostGradient = objective.gradientForEstimate(estimate, target: minibatchTargets)
         let gradients = objective.estimator.gradients(regularizedCostGradient).wrtParameters
         let scaledGradients = gradients.map({$0 * (updateRate / Float(minibatchSize))})
-        //print("gradients: \(scaledGradients)")
-        //print("parameters: \(objective.estimator.parameters)")
         objective.updateParameters(scaledGradients)
-        
         
         //check for convergence
         if(abs((cost - newCost) / newCost) < convergenceThreshold) {
-            print("converged!")
-            break
+            convergenceCounter += 1
+            if(convergenceCounter >= 3) {
+                print("converged!")
+                break
+            }
         }
         cost = newCost
     }

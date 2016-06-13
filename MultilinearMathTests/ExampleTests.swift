@@ -139,6 +139,100 @@ class ExampleTests: XCTestCase {
         XCTAssert((test.values[0] < 0.1) && (0.5 < test.values[1]) && (test.values[1] < 0.8) && (0.99 < test.values[2]), "logistic regression with SGD test")
     }
     
+    func testMiniNeuralNet() {
+        let data = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/DataSets/Misc/examScoresClassify.txt", modeSizes: [100, 3])
+        let x = data[all, 0...1]
+        let y = data[all, 2...2]
+        
+        let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+        
+        var neuralNetCostFunction: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [2, 3, 3, 1]))
+        stochasticGradientDescent(&neuralNetCostFunction, inputs: xNorm, targets: y, updateRate: 10.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 25)
+        
+        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+        let test = neuralNetCostFunction.estimator.output(testValues)
+        print("neural net result: \(test.values)")
+        
+    }
+    
+    func testNeuralNetGradient() {
+        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [4, 6, 5, 3]))
+        let input = randomTensor(min: -1, max: 1, modeSizes: 10, 4)
+        let target = randomTensor(min: 0, max: 1, modeSizes: 10, 3)
+        let estimate = neuralNetCost.estimator.output(input)
+        
+        let costGradient = neuralNetCost.gradientForEstimate(estimate, target: target)
+        let automaticGradient = neuralNetCost.estimator.gradients(costGradient)
+        let numericalGradient = neuralNetCost.numericalGradients(input, target: target, epsilon: 0.1)
+        
+        for p in 0..<numericalGradient.count {
+            let costs = automaticGradient.wrtParameters[p].values.combineWith(numericalGradient[p].values, combineFunction: { (i: Float, e: Float) -> Float in
+                let dev = i != 0 ? (abs(i-e) / abs(i)) : 0
+                return dev
+            })
+            let totalDeviation = vectorSummation(costs) / Float(numericalGradient[p].elementCount)
+            print("average gradient deviation for parameters \(p): \(totalDeviation*100)%")
+        }
+        
+    }
+    
+    func testMNISTGradient() {
+        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 15, 10]))
+        
+        let x_values = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
+        let x = Tensor<Float>(modeSizes: [x_values.modeSizes[0], 28*28], values: x_values.values) - 0.5
+        let y_labels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
+        let y = createOneHotVectors(y_labels.map({Int($0)}), differentValues: Array(0...9))
+        
+        let input = x[0..<10, all]
+        let target = y[0..<10, all]
+        let estimate = neuralNetCost.estimator.output(input)
+        
+        let costGradient = neuralNetCost.gradientForEstimate(estimate, target: target)
+        let automaticGradient = neuralNetCost.estimator.gradients(costGradient)
+        print("computing numerical gradient")
+        let numericalGradient = neuralNetCost.numericalGradients(input, target: target, epsilon: 0.1)
+        print("...done")
+        
+        for p in 0..<numericalGradient.count {
+            let costs = automaticGradient.wrtParameters[p].values.combineWith(numericalGradient[p].values, combineFunction: { (i: Float, e: Float) -> Float in
+                let dev = i != 0 ? (abs(i-e) / abs(i)) : 0
+                return dev
+            })
+            let totalDeviation = vectorSummation(costs) / Float(numericalGradient[p].elementCount)
+            print("average gradient deviation for parameters \(p): \(totalDeviation*100)%")
+        }
+        
+    }
+    
+    func testNeuralNetworkMNIST() {
+        //var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 25, 10]))
+        var estimator =  NeuralNet(layerSizes: [28*28, 25, 10])
+        estimator.layers[0].activationFunction = ReLU.self
+        estimator.layers[1].activationFunction = ReLU.self
+        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: estimator)
+        
+        let x_values = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
+        print("normalize...")
+        let x = normalize(Tensor<Float>(modeSizes: [x_values.modeSizes[0], 28*28], values: x_values.values), overModes: [0]).normalizedTensor
+        let y_labels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
+        let y = createOneHotVectors(y_labels.map({Int($0)}), differentValues: Array(0...9))
+        
+        //let (xNorm, mean, deviation) = normalize(x, overModes: [0])
+        
+        stochasticGradientDescent(&neuralNetCost, inputs: x[.a, .b], targets: y[.a, .c], updateRate: 0.03, convergenceThreshold: 0.000001, maxLoops: 4000, minibatchSize: 50)
+        
+        let testBatch = x[0..<10, all]
+        let finalEstimate = neuralNetCost.estimator.output(testBatch)
+        print("finalEstimate: \(finalEstimate.values)")
+        let maximumIndices = findMaximumElementOf(finalEstimate, inMode: 1)
+        print("max indices: \(maximumIndices.values)")
+        let target = Array(y_labels[0..<10])
+        print("targets: \(target)")
+        
+        
+    }
+    
 //    func testOneVsAllClassification() {
 //        let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
 //        let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)

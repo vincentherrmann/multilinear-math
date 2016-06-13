@@ -126,6 +126,22 @@ public func changeOrderOfModeIn(tensor: Tensor<Float>, mode: Int, newOrder: [Int
     return outputData[0]
 }
 
+/// - Returns: The index (as Float) of the maximum element in the given mode
+public func findMaximumElementOf(tensor: Tensor<Float>, inMode: Int) -> Tensor<Float> {
+    let outerModes = tensor.modeArray.removeValues([inMode])
+    var outputData = [Tensor<Float>(withPropertiesOf: tensor, onlyModes: outerModes)]
+    
+    tensor.performForOuterModes(outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
+        let slice = sourceData[slice: currentIndex]
+        let maxIndex = slice.values.indexOf((slice.values.maxElement()!))!
+        return [Tensor<Float>(scalar: Float(maxIndex))]
+    }), writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
+        outputData[0][slice: outerIndex] = inputData[0]
+    }))
+    
+    return outputData[0]
+}
+
 
 // Operations combining two tensors
 /// Concatenate two tensors. The content of tensor `b` gets appended to `a` in direction of the given mode. Both `a` and `b` must have the same mode sizes in all modes but `alongMode`. One of the tensors may have one mode less than the other, then the additional `alongMode` of size one is amended.

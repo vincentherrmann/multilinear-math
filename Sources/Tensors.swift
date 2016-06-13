@@ -307,7 +307,7 @@ public struct Tensor<T: Number>: MultidimensionalData {
         let nonStreakModesLeft = modeArray[0..<streak.last!].removeValues(streak)
         
         let newOrder = nonStreakModesLeft + streak + nonStreakModesRight
-        assert(newOrder.count == modeCount, "Cannot \(modeCount) modes to have a order \(streak)")
+        assert(newOrder.count == modeCount, "Cannot sort \(modeCount) modes to have a order \(streak)")
         let streakRange = Range<Int>(start: nonStreakModesLeft.count, distance: streak.count)
         let oldToNew = (0..<modeCount).map({newOrder.indexOf($0)!})
         
@@ -340,7 +340,8 @@ public struct Tensor<T: Number>: MultidimensionalData {
     
     /// - Returns: The indices that this tensor has in common with the given tensor, the corresponding modes in this tensor and the corresponding modes in the given tensor
     public func commonIndicesWith(otherTensor: Tensor<T>) -> ([CommonTensorIndex]) {
-        let commonIndices = Array(Set(indices).intersect(otherTensor.indices))
+        let commonIndices = indices.filter({otherTensor.indices.contains($0)})
+        //let commonIndices = Array(Set(indices).intersect(otherTensor.indices))
         var result: [CommonTensorIndex] = []
         for thisIndex in commonIndices {
             result.append(CommonTensorIndex(index: thisIndex, modeA: indices.indexOf(thisIndex)!, modeB: otherTensor.indices.indexOf(thisIndex)!))
@@ -366,9 +367,10 @@ public func ones(modeSizes: Int...) -> Tensor<Float> {
     return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 1)
 }
 
-public func randomTensor(modeSizes: Int...) -> Tensor<Float> {
+public func randomTensor(min min: Float = 0, max: Float = 1, modeSizes: Int...) -> Tensor<Float> {
     let elementCount = modeSizes.reduce(1, combine: {$0*$1})
-    let values = (0..<elementCount).map({_ in Float(arc4random()) / Float(UINT32_MAX)})
+    let distance = max - min
+    let values = (0..<elementCount).map({_ in (Float(arc4random()) / Float(UINT32_MAX)) * distance + min})
     return Tensor<Float>(modeSizes: modeSizes, values: values)
 }
 
