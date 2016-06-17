@@ -37,11 +37,16 @@ public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A
 /// Substract `vectorB` from `vectorA` of the same size
 /// - Returns: The difference vector
 public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
-    var difference = [Float](count: vectorA.count, repeatedValue: 0)
-    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
-        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
-            vDSP_vsub(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &difference, 1, UInt(vectorA.count))
-        }
+//    var difference = [Float](count: vectorA.count, repeatedValue: 0)
+//    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
+//        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+//            vDSP_vsub(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &difference, 1, UInt(vectorA.count))
+//        }
+//    }
+    
+    var difference = Array(vectorA)
+    vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
+        cblas_saxpy(Int32(vectorA.count), -1.0, pointerB.baseAddress, 1, &difference, 1)
     }
     return difference
 }

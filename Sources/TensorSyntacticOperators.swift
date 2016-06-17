@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - Scalar-Tensor functions
 /// Negative of a tensor
 public prefix func -(tensor: Tensor<Float>) -> Tensor<Float> {
     let negative = Tensor<Float>(withPropertiesOf: tensor, values: vectorNegation(tensor.values))
@@ -45,6 +46,7 @@ public func *(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
     return rhs*lhs
 }
 
+// MARK: - Tensor-Tensor functions
 public func +(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     
     let commonIndices = lhs.commonIndicesWith(rhs)

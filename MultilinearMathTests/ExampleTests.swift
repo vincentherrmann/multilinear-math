@@ -95,7 +95,7 @@ class ExampleTests: XCTestCase {
         
         var costFunction: CostFunction = LinearRegressionCost(featureCount: 2)
         
-        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 5.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 47)
+        stochasticGradientDescent(costFunction, inputs: xNorm, targets: y, updateRate: 5.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 47)
         print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
         
         let normalizedTestTensor = normalize(testTensor, overModes: [], withMean: mean, deviation: deviation)
@@ -130,7 +130,7 @@ class ExampleTests: XCTestCase {
         
         var costFunction: CostFunction = LogisticRegressionCost(featureCount: 2)
         
-        stochasticGradientDescent(&costFunction, inputs: xNorm, targets: y, updateRate: 1.0, convergenceThreshold: 0.001, maxLoops: 200, minibatchSize: 25)
+        stochasticGradientDescent(costFunction, inputs: xNorm, targets: y, updateRate: 1.0, convergenceThreshold: 0.001, maxLoops: 200, minibatchSize: 25)
         print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
         
         let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
@@ -147,9 +147,10 @@ class ExampleTests: XCTestCase {
         let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         
         var neuralNetCostFunction: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [2, 3, 3, 1]))
-        stochasticGradientDescent(&neuralNetCostFunction, inputs: xNorm, targets: y, updateRate: 10.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 25)
+        stochasticGradientDescent(neuralNetCostFunction, inputs: xNorm, targets: y, updateRate: 10.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 25)
         
-        let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+        //let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
+        let testValues = normalize(Tensor<Float>(modeSizes: [2], values: [40, 50]), overModes: [0], withMean: mean, deviation: deviation)
         let test = neuralNetCostFunction.estimator.output(testValues)
         print("neural net result: \(test.values)")
         
@@ -220,13 +221,14 @@ class ExampleTests: XCTestCase {
         
         //let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         
-        stochasticGradientDescent(&neuralNetCost, inputs: x[.a, .b], targets: y[.a, .c], updateRate: 0.03, convergenceThreshold: 0.000001, maxLoops: 4000, minibatchSize: 50, validationCallback: ({ (epoch, estimator) -> () in
+        stochasticGradientDescent(neuralNetCost, inputs: x[.a, .b], targets: y[.a, .c], updateRate: 0.03, convergenceThreshold: 0.000001, maxLoops: 4000, minibatchSize: 50, validationCallback: ({ (epoch, estimator) -> (Bool) in
             print("epoch \(epoch)")
             let estimate = estimator.output(x)
             let maximumIndices = findMaximumElementOf(estimate, inMode: 1)
             let floatLabels = y_labels.map({Float($0)})
             let correctValues = zip(floatLabels, maximumIndices.values).filter({$0.0 == $0.1})
             print("classified \(correctValues.count) of \(floatLabels.count) correctly")
+            return false
         }))
         
         let testBatch = x[0..<10, all]

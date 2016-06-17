@@ -180,7 +180,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/DataSlicingTests.swift"
@@ -344,11 +344,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487523045.738068"
+            timestampString = "487585583.565774"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
             landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -360,11 +360,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487523045.738068"
+            timestampString = "487585583.565774"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
             <Locations>
@@ -408,11 +408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487524747.221992"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "output(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -424,11 +424,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487524747.221992"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -440,11 +440,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487524747.221992"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -456,11 +456,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487524747.221992"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "228"
+            endingLineNumber = "228"
             landmarkName = "gradientForEstimate(_:target:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -472,11 +472,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487524747.221992"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -631,11 +631,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "294"
-            endingLineNumber = "294"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
             landmarkName = "init(layerSizes:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -647,11 +647,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "298"
-            endingLineNumber = "298"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "output(_:)"
             landmarkType = "5">
             <Locations>
@@ -695,11 +695,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "feedforward(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -711,11 +711,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -727,11 +727,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487523045.738068"
+            timestampString = "487585583.565774"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -743,11 +743,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487325445.400678"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -775,11 +775,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487242782.212758"
+            timestampString = "487583514.737042"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
             landmarkName = "derivative(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -791,11 +791,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Tensors.swift"
-            timestampString = "487241119.029534"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "init(combinationOfTensorA:tensorB:outerModesA:outerModesB:innerModesA:innerModesB:repeatedValue:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -807,11 +807,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Tensors.swift"
-            timestampString = "487241173.30007"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "init(combinationOfTensorA:tensorB:outerModesA:outerModesB:innerModesA:innerModesB:repeatedValue:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -823,11 +823,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Optimization.swift"
-            timestampString = "487523045.738068"
+            timestampString = "487585583.565774"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -835,17 +835,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "costForEstimate(_:target:)"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[2] = Dead&gt; of MultilinearMath.SquaredErrorCost.costForEstimate (MultilinearMath.Tensor&lt;Swift.Float&gt;, target : MultilinearMath.Tensor&lt;Swift.Float&gt;) -&gt; Swift.Float"
+                  moduleName = "MultilinearMath"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
+                  timestampString = "487861792.316199"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "3262">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[2] = Dead&gt; of MultilinearMath.SquaredErrorCost.costForEstimate (MultilinearMath.Tensor&lt;Swift.Float&gt;, target : MultilinearMath.Tensor&lt;Swift.Float&gt;) -&gt; Swift.Float"
+                  moduleName = "MultilinearMath"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
+                  timestampString = "487861792.316393"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "3346">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -855,11 +887,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "gradientForEstimate(_:target:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -871,11 +903,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487325445.400678"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
             landmarkName = "output(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -887,11 +919,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487522788.784875"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
             landmarkName = "testNeuralNetworkMNIST()"
             landmarkType = "5">
          </BreakpointContent>
@@ -903,11 +935,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487329197.133326"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "testNeuralNetGradient()"
             landmarkType = "5">
          </BreakpointContent>
@@ -919,11 +951,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487329197.133326"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
             landmarkName = "testNeuralNetGradient()"
             landmarkType = "5">
          </BreakpointContent>
@@ -935,11 +967,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487325445.400678"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "gradientForEstimate(_:target:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -951,11 +983,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "311"
-            endingLineNumber = "311"
+            startingLineNumber = "323"
+            endingLineNumber = "323"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -967,11 +999,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -983,11 +1015,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "251"
-            endingLineNumber = "251"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "gradients(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -995,15 +1027,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487329197.133326"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "testMiniNeuralNet()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1031,11 +1063,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487514364.196226"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "testNeuralNetworkMNIST()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1047,11 +1079,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487515565.310745"
+            timestampString = "487548784.136921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
             landmarkName = "updateParameters(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1063,11 +1095,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487503061.787451"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "testMNISTGradient()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1079,11 +1111,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MultilinearMathTests/ExampleTests.swift"
-            timestampString = "487507110.266607"
+            timestampString = "487861790.005224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "testMNISTGradient()"
             landmarkType = "5">
             <Locations>
@@ -1118,6 +1150,22 @@
                   offsetFromSymbolStart = "2892">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sources/Optimization.swift"
+            timestampString = "487585669.063859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

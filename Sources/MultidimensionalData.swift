@@ -297,6 +297,7 @@ public extension MultidimensionalData {
         }
     }
     
+    // MARK: - Subscripts
     public subscript(flatIndex: Int) -> Element {
         get {
             return getWithFlatIndex(flatIndex)
@@ -387,7 +388,7 @@ public extension MultidimensionalData {
 //        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
 //        
 //    }
-    
+    // MARK: - Perform functions
     public func performForOuterModes(outerModes: [Int], inout outputData: [Self],
                                      calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> [Self],
                                      writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [Self], inout outputData: [Self]) -> ()) {

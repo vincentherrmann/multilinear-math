@@ -8,7 +8,7 @@
 
 import Foundation
 
-// Operations on a single tensor
+// MARK: - Operations on a single tensor
 
 /// sum tensor over the given modes
 /// - Returns: a tensor with only the modes that were not summed over
@@ -143,7 +143,7 @@ public func findMaximumElementOf(tensor: Tensor<Float>, inMode: Int) -> Tensor<F
 }
 
 
-// Operations combining two tensors
+// MARK: - Operations combining two tensors
 /// Concatenate two tensors. The content of tensor `b` gets appended to `a` in direction of the given mode. Both `a` and `b` must have the same mode sizes in all modes but `alongMode`. One of the tensors may have one mode less than the other, then the additional `alongMode` of size one is amended.
 public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) -> Tensor<Float> {
     var newModeSizes: [Int]

@@ -202,6 +202,7 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.init(modeSizes: actualModeSizes, values: values)
     }
     
+    // TODO: Maybe replace this init with at `.makeWithSameProperties()` method
     /// Initialize this tensor with the properties of another tensor (or some modes of that tensor)
     public init(withPropertiesOf data: Tensor<T>, onlyModes: [Int]? = nil, repeatedValue: Element = T(0), values: [Element]? = nil) {
         
@@ -314,12 +315,13 @@ public struct Tensor<T: Number>: MultidimensionalData {
         return (newOrder, oldToNew, streakRange)
     }
     
-    
-    /// Label the modes with the given TensorIndices and return self
+    // MARK: - Indices
+    /// Label the modes with the given TensorIndices and return `self`. The number of new indices an the mode count of this tensor do not have to be the same. The indices get replaced from right to left. This means if there are more new indices than modes, only the last new indices will be used. If there are more modes than new indices, the only the indices of the last modes will be replaced.
     public subscript(newIndices: TensorIndex...) -> Tensor<T> {
         get {
             var newTensor = self
-            newTensor.indices = newIndices
+            let writableIndexCount = min(newIndices.count, newTensor.modeCount)
+            newTensor.indices[(newTensor.modeCount - writableIndexCount) ..< newTensor.modeCount] = newIndices[(newIndices.count - writableIndexCount) ..< newIndices.count]
             return newTensor
         }
     }
@@ -338,27 +340,21 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
     }
     
-    /// - Returns: The indices that this tensor has in common with the given tensor, the corresponding modes in this tensor and the corresponding modes in the given tensor
+    /// - Returns: The indices that this tensor has in common with the given tensor, the corresponding modes in this tensor and the corresponding modes in the given tensor. Modes with the default index `.notIndexed` cannot be common modes.
     public func commonIndicesWith(otherTensor: Tensor<T>) -> ([CommonTensorIndex]) {
         let commonIndices = indices.filter({otherTensor.indices.contains($0)})
-        //let commonIndices = Array(Set(indices).intersect(otherTensor.indices))
         var result: [CommonTensorIndex] = []
         for thisIndex in commonIndices {
+            if(thisIndex == .notIndexed) {
+                continue
+            }
             result.append(CommonTensorIndex(index: thisIndex, modeA: indices.indexOf(thisIndex)!, modeB: otherTensor.indices.indexOf(thisIndex)!))
-        }
-        return result
-    }
-    /// - Returns: The indices that this index has not in common with the given tensor, and the corresponding modes
-    public func indicesNotInCommonWith(otherTensor: Tensor<T>) -> ([(index: TensorIndex, mode: Int)]) {
-        let remainingIndices = Array(Set(indices).subtract(otherTensor.indices))
-        var result: [(index: TensorIndex, mode: Int)] = []
-        for thisIndex in remainingIndices {
-            result.append((thisIndex, indices.indexOf(thisIndex)!))
         }
         return result
     }
 }
 
+// MARK: - Quick initializers
 public func zeros(modeSizes: Int...) -> Tensor<Float> {
     return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 0)
 }

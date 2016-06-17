@@ -25,6 +25,10 @@ public protocol ParameterRegularizer {
 public struct ParameterDecay: ParameterRegularizer {
     public var regularizationParameter: Float
     
+    public init(decayRate: Float) {
+        regularizationParameter = decayRate
+    }
+    
     public func regularizationCost(parameter: Tensor<Float>) -> Float {
         return multiply(a: parameter, remainingModesA: [], b: parameter, remainingModesB: []).values[0] * regularizationParameter
     }
@@ -33,7 +37,7 @@ public struct ParameterDecay: ParameterRegularizer {
     }
 }
 
-public protocol CostFunction {
+public protocol CostFunction: class {
     var estimator: ParametricTensorFunction {get set}
     var regularizers: [ParameterRegularizer?] {get}
     
@@ -42,7 +46,7 @@ public protocol CostFunction {
 }
 
 public extension CostFunction {
-    mutating func updateParameters(subtrahends: [Tensor<Float>]) {
+    func updateParameters(subtrahends: [Tensor<Float>]) {
         let parameterRegularizations = estimator.parameters.combineWith(regularizers, combineFunction: { (parameter, regularizer) -> Tensor<Float> in
             if let r = regularizer {
                 return r.regularizationGradient(parameter)
@@ -64,7 +68,7 @@ public extension CostFunction {
         return cost + regularizationCosts.reduce(0, combine: {$0 + $1})
     }
     
-    public mutating func numericalGradients(input: Tensor<Float>, target: Tensor<Float>, epsilon: Float = 0.01) -> [Tensor<Float>] {
+    public func numericalGradients(input: Tensor<Float>, target: Tensor<Float>, epsilon: Float = 0.01) -> [Tensor<Float>] {
         let estimate = estimator.output(input)
         let cost = costForEstimate(estimate, target: target)
         
@@ -102,16 +106,13 @@ public extension CostFunction {
     }
 }
 
-public struct SquaredErrorCost: CostFunction {
+public class SquaredErrorCost: CostFunction {
     public var estimator: ParametricTensorFunction
-    public var regularizers: [ParameterRegularizer?] {
-        get {
-            return [ParameterRegularizer?](count: estimator.parameters.count, repeatedValue: nil)
-        }
-    }
+    public var regularizers: [ParameterRegularizer?]
     
     public init(forEstimator: ParametricTensorFunction) {
         estimator = forEstimator
+        regularizers = [ParameterRegularizer?](count: estimator.parameters.count, repeatedValue: nil)
     }
     
     public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
@@ -119,6 +120,18 @@ public struct SquaredErrorCost: CostFunction {
         
         let error = substract(a: target, outerModesA: [], b: estimate, outerModesB: [])
         let cost = multiply(a: error, remainingModesA: [], b: error, remainingModesB: [])
+        let scaledCost = cost.values[0] / exampleCount
+        
+        if(scaledCost.isNaN) {
+            print("cost is not a number")
+            print("estimate: \(estimate)")
+            print("target: \(target)")
+            print("error: \(error)")
+            print("cost: \(cost)")
+            print("scaled cost: \(scaledCost)")
+            return 0
+        }
+        
         return cost.values[0] / exampleCount
     }
     
@@ -129,7 +142,7 @@ public struct SquaredErrorCost: CostFunction {
     }
 }
 
-public struct NegLogClassificationCost: CostFunction {
+public class NegLogClassificationCost: CostFunction {
     public var estimator: ParametricTensorFunction
     public var regularizers: [ParameterRegularizer?] {
         get {

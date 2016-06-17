@@ -15,7 +15,17 @@ public protocol ActivationFunction {
 
 public class Sigmoid: ActivationFunction {
     public func output(input: Tensor<Float>) -> Tensor<Float> {
-        return 1 / (1 + exp(-input))
+        let values = input.values.map { (x) -> Float in
+            if x >= 0 {
+                return 1 / (1 + (exp(-x)))
+            } else {
+                let e = exp(x)
+                return e / (1 + e)
+            }
+        }
+        let tensor = Tensor<Float>(withPropertiesOf: input, values: values)
+        return tensor
+        //return 1 / (1 + exp(-input)) //this method would be numerically unstable
     }
     public func derivative(input: Tensor<Float>) -> Tensor<Float> {
         let s = output(input)

@@ -32,7 +32,7 @@ public func batchGradientDescent(objective: GradientOptimizable, input: Tensor<F
     }
 }
 
-public func stochasticGradientDescent(inout objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.001, maxLoops: Int = 1000, minibatchSize: Int = 16, validationCallback: (currentEpoch: Int, currentEstimator: ParametricTensorFunction) -> () = {(epoch, _) in print("epoch \(epoch)")}) {
+public func stochasticGradientDescent(objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.00001, maxLoops: Int = Int.max, minibatchSize: Int = 16, validationCallback: (currentEpoch: Int, currentEstimator: ParametricTensorFunction) -> (Bool) = {(epoch, _) in print("epoch \(epoch)"); return false}) {
     
     var cost = FLT_MAX
     var epoch = 0
@@ -55,7 +55,10 @@ public func stochasticGradientDescent(inout objective: CostFunction, inputs: Ten
             
             currentIndex += minibatchSize
         } else {
-            validationCallback(currentEpoch: epoch, currentEstimator: objective.estimator)
+            //call validiation callback, if it returns true, break the optimization loop
+            if(validationCallback(currentEpoch: epoch, currentEstimator: objective.estimator)) {
+                break
+            }
             
             let minibatchRange = currentIndex..<currentBatch.modeSizes[0]
             
