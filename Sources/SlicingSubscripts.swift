@@ -265,8 +265,12 @@ internal func recurseCopy<T: MultidimensionalData>(target target: T,
 public func getSlice<T: MultidimensionalData>(from from: T, modeSubscripts: [DataSliceSubscript]) -> T {
     let subscripts = from.completeDataSliceSubscripts(modeSubscripts)
     
-    let newSizes = subscripts.map({$0.sliceSize}).filter({$0 > 1})
-    var newData = T(modeSizes: newSizes, repeatedValue: from.values[0])
+    let modesWithSubscripts = zip(from.modeArray, subscripts).filter({$0.1.sliceSize > 1})
+    let onlyModes = modesWithSubscripts.map({$0.0})
+    let newSizes = modesWithSubscripts.map({$0.1.sliceSize})
+    
+    var newData = T(withPropertiesOf: from, onlyModes: onlyModes, newModeSizes: newSizes, repeatedValue: from.values[0], values: nil)
+    //var newData = T(modeSizes: newSizes, repeatedValue: from.values[0])
     
     let subscriptIndex = [Int](count: from.modeCount, repeatedValue: 0)
     let sliceIndex = [Int](count: newData.modeCount, repeatedValue: 0)

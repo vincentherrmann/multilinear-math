@@ -65,7 +65,9 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
 public func normalize(tensor: Tensor<Float>, overModes: [Int], withMean mean: Tensor<Float>, deviation: Tensor<Float>) -> Tensor<Float> {
     
     let commonModes = tensor.modeArray.removeValues(overModes)
-    let deviationInverse = 1/deviation
+    //let deviationInverse = 1/deviation
+    var deviationInverse = deviation
+    deviationInverse.values = deviation.values.map({ ($0 != 0) ? 1/$0 : 1})
     
     let offsetTensor = substract(a: tensor, commonModesA: commonModes, outerModesA: overModes, b: mean, commonModesB: mean.modeArray, outerModesB: [])
     let scaledTensor = multiplyElementwise(a: offsetTensor, commonModesA: commonModes, outerModesA: overModes, b: deviationInverse, commonModesB: deviationInverse.modeArray, outerModesB: [])

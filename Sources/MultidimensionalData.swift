@@ -19,10 +19,11 @@ public protocol MultidimensionalData {
     var values: [Element] {get set}
     
     init(modeSizes: [Int], values: [Element])
-    init(withPropertiesOf data: Self, onlyModes: [Int]?, repeatedValue: Element, values: [Element]?)
+    // TODO: Maybe replace this init with at `.makeWithSameProperties()` method?
+    init(withPropertiesOf data: Self, onlyModes: [Int]?, newModeSizes: [Int]?, repeatedValue: Element, values: [Element]?)
     
     /// Will get called everytime the order of the modes changes. If there are any changes to be done, implement them here, else do nothing
-    mutating func newModeOrder(newToOld: [Int])
+    mutating func newModeOrder(newToOld: [Int], oldData: Self)
 }
 
 public extension MultidimensionalData {
@@ -230,7 +231,7 @@ public extension MultidimensionalData {
         
         copyRecursion(0)
         
-        newData.newModeOrder(newToOld)
+        newData.newModeOrder(newToOld, oldData: self)
         
         return newData
     }

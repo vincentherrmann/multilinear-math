@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "487500800.825272"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307">
+            startingLineNumber = "309"
+            endingLineNumber = "309">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "487500800.825272"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "216"
-            endingLineNumber = "216"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "substract(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "487500800.825272"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "substract(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -109,8 +109,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "113"
             endingLineNumber = "113"
-            landmarkName = "init(modeSizes:values:)"
-            landmarkType = "5">
+            landmarkName = "Tensor"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -125,7 +125,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "128"
             endingLineNumber = "128"
-            landmarkName = "init(modeSizes:repeatedValue:)"
+            landmarkName = "init(modeSizes:values:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -141,8 +141,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
             endingLineNumber = "117"
-            landmarkName = "init(modeSizes:values:)"
-            landmarkType = "5">
+            landmarkName = "Tensor"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -248,11 +248,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "486721455.611209"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
             landmarkName = "changeOrderOfModeIn(_:mode:newOrder:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -264,11 +264,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "486721455.611209"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "changeOrderOfModeIn(_:mode:newOrder:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -312,11 +312,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/MultidimensionalData.swift"
-            timestampString = "486745819.793074"
+            timestampString = "487974692.481475"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "completeDataSliceSubscripts(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -759,11 +759,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "487500800.825272"
+            timestampString = "487950335.638177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
             landmarkName = "multiplyElementwise(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -791,12 +791,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Tensors.swift"
-            timestampString = "487861790.005224"
+            timestampString = "487974692.481475"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
-            landmarkName = "init(combinationOfTensorA:tensorB:outerModesA:outerModesB:innerModesA:innerModesB:repeatedValue:)"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "init(withPropertiesOf:onlyModes:newModeSizes:repeatedValue:values:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -807,12 +807,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/Tensors.swift"
-            timestampString = "487861790.005224"
+            timestampString = "487974692.481475"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
-            landmarkName = "init(combinationOfTensorA:tensorB:outerModesA:outerModesB:innerModesA:innerModesB:repeatedValue:)"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "init(withPropertiesOf:onlyModes:newModeSizes:repeatedValue:values:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -855,7 +855,7 @@
                   moduleName = "MultilinearMath"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
-                  timestampString = "487861792.316199"
+                  timestampString = "487975942.654965"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "130"
@@ -870,7 +870,7 @@
                   moduleName = "MultilinearMath"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
-                  timestampString = "487861792.316393"
+                  timestampString = "487975942.655193"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "130"

@@ -18,22 +18,27 @@ import Foundation
 /// - Returns:
 /// `projectedData`: <br> The data projected to a subspace with the given mode sizes. <br>
 /// `projectionMatrices`: <br> One matrix for each sample mode
-public func multilinearPCA(data: Tensor<Float>, projectionModeSizes: [Int]) -> (projectedData: Tensor<Float>, projectionMatrices: [Tensor<Float>]) {
+public func multilinearPCA(inputData: Tensor<Float>, projectionModeSizes: [Int]) -> (projectedData: Tensor<Float>, projectionMatrices: [Tensor<Float>]) {
     
     //Initialization
+    let data = inputData.uniquelyIndexed()
     let sampleModeCount = data.modeCount - 1
     let maxLoops = sampleModeCount == 1 ? 1 : 20 //the simple PCA (sampleModeCount = 1) has a closed form solution
     let projectionDifferenceThreshold: Float = 0.001
     
     var projectionMatrices: [Tensor<Float>] = [] // U_n
+    let projectionModeIndices = TensorIndex.uniqueIndexArray(sampleModeCount, excludedIndices: data.indices) //unique indices for projection matrices
     for n in 0..<sampleModeCount {
         //initialize as diagonal matrices
         let modeSizes = [projectionModeSizes[n], data.modeSizes[n+1]]
-        projectionMatrices.append(Tensor<Float>(diagonalWithModeSizes: modeSizes, repeatedValue: 1.0))
+        var thisProjectionMatrix = Tensor<Float>(diagonalWithModeSizes: modeSizes, repeatedValue: 1.0)
+        thisProjectionMatrix.indices = [projectionModeIndices[n], data.indices[n+1]]
+        projectionMatrices.append(thisProjectionMatrix)
+        
     }
     var projectedData: Tensor<Float> = multilinearPCAProjection(data: data, projectionMatrices: projectionMatrices)
     var projectionScatter: Float = 0
-    var newScatter = scatterOf(projectedData)
+    var newScatter = (projectedData * projectedData).values[0]
     print("multilinearPCA")
     print("initial projectionScatter: \(newScatter)")
     
@@ -44,7 +49,7 @@ public func multilinearPCA(data: Tensor<Float>, projectionModeSizes: [Int]) -> (
         projectionMatrices = constructNewProjectionMatrices(data: data, oldProjectionMatrices: projectionMatrices)
         projectedData = multilinearPCAProjection(data: data, projectionMatrices: projectionMatrices)
         
-        newScatter = scatterOf(projectedData)
+        newScatter = (projectedData * projectedData).values[0]
         
         if((newScatter - projectionScatter) / projectionScatter < projectionDifferenceThreshold) {
             break
@@ -77,8 +82,8 @@ private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProject
         print("Energy captured in mode \(n): \(energyPercentage*100)%")
         
         //create the projection matrix for mode n from the first eigenvectors
-        var thisProjectionMatrix = Tensor<Float>(modeSizes: oldProjectionMatrices[n].modeSizes, repeatedValue: 0)
-        thisProjectionMatrix.values = Array(eigenvectors[0..<thisProjectionMatrix.elementCount])
+        let newValues = Array(eigenvectors[0..<oldProjectionMatrices[n].elementCount])
+        let thisProjectionMatrix = Tensor<Float>(withPropertiesOf: oldProjectionMatrices[n], values: newValues)
         newProjectionMatrices.append(thisProjectionMatrix)
     }
     
@@ -103,8 +108,8 @@ public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrice
             //n=1:  [m, d1, d2, p0] * [p1, d1] = [m, d2, p0, p1]
             //n=2:  [m, d2, p0, p1] * [p2, d2] = [m, p0, p1, p2]
             
-            //n=2:  [d2, p2] * [m, d0, d1, d2] = [p2, m, d0, d1]
-            currentData = multiply(a: currentData, summationModesA: [1], b: projectionMatrices[n], summationModesB: [1])
+            currentData = currentData * projectionMatrices[n]
+            //currentData = multiply(a: currentData, summationModesA: [1], b: projectionMatrices[n], summationModesB: [1])
         } else {
             //do not project mode n, just reorder the data (as if the projectionMatrix was the identity matrix)
             currentData = currentData.reorderModes([0] + Array(2..<data.modeCount) + [1])
@@ -120,13 +125,15 @@ public func multilinearPCAReconstructionMatrices(projectionMatrices: [Tensor<Flo
     for thisMatrix in projectionMatrices {
         let size = MatrixSize(rows: thisMatrix.modeSizes[0], columns: thisMatrix.modeSizes[1])
         let values = pseudoInverse(thisMatrix.values, size: size)
-        reconstructionMatrices.append(Tensor<Float>(modeSizes: [size.columns, size.rows], values: values))
+        var thisReconstructionMatrix = Tensor<Float>(modeSizes: [size.columns, size.rows], values: values)
+        thisReconstructionMatrix.indices = thisMatrix.indices.reverse()
+        reconstructionMatrices.append(thisReconstructionMatrix)
     }
     return reconstructionMatrices
 }
 
 /// - Returns: The scatter of the given tensor, i.e. the square of the Frobenius norm.
-public func scatterOf(tensor: Tensor<Float>) -> Float {
-    return multiply(a: tensor, remainingModesA: [], b: tensor, remainingModesB: []).values[0]
-}
+//public func scatterOf(tensor: Tensor<Float>) -> Float {
+//    return multiply(a: tensor, remainingModesA: [], b: tensor, remainingModesB: []).values[0]
+//}
 

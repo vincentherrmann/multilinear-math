@@ -9,11 +9,11 @@
 import Foundation
 
 ///Latin and greek letters to index modes of a tensor
-public enum TensorIndex: Hashable {
+public enum TensorIndex: Int {
     
-    case notIndexed
+    case notIndexed = 0
     
-    case a
+    case a = 1
     case b
     case c
     case d
@@ -65,6 +65,23 @@ public enum TensorIndex: Hashable {
     case χ
     case ψ
     case ω
+    
+    /// - Returns: An array of unique tensor indices that does not containt any of the excluded indices.
+    static public func uniqueIndexArray(count: Int, excludedIndices: [TensorIndex] = []) -> [TensorIndex] {
+        let allPossibleIndices = Array(1...(count + excludedIndices.count))
+        let withoutExcludedIndices = allPossibleIndices.removeValues(excludedIndices.map({$0.rawValue}))
+        
+        let uniqueIndices: [TensorIndex] = withoutExcludedIndices[0..<count].map({
+            if let i = TensorIndex(rawValue: $0) {
+                return i
+            } else {
+                print("cannot find a unique index for mode \($0)")
+                return TensorIndex.notIndexed
+            }
+        })
+        
+        return uniqueIndices
+    }
 }
 
 
@@ -202,12 +219,17 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.init(modeSizes: actualModeSizes, values: values)
     }
     
-    // TODO: Maybe replace this init with at `.makeWithSameProperties()` method
     /// Initialize this tensor with the properties of another tensor (or some modes of that tensor)
-    public init(withPropertiesOf data: Tensor<T>, onlyModes: [Int]? = nil, repeatedValue: Element = T(0), values: [Element]? = nil) {
+    public init(withPropertiesOf data: Tensor<T>, onlyModes: [Int]? = nil, newModeSizes: [Int]? = nil, repeatedValue: Element = T(0), values: [Element]? = nil) {
         
         let modes: [Int] = (onlyModes == nil) ? data.modeArray : onlyModes!
-        let sizes = modes.map({data.modeSizes[$0]})
+        
+        let sizes: [Int]
+        if(newModeSizes == nil) {
+            sizes = modes.map({data.modeSizes[$0]})
+        } else {
+            sizes = newModeSizes!
+        }
         
         if(values == nil) {
             self.init(modeSizes: sizes, repeatedValue: repeatedValue)
@@ -254,6 +276,64 @@ public struct Tensor<T: Number>: MultidimensionalData {
         self.values = [T](count: elementCount, repeatedValue: repeatedValue)
     }
     
+    public init(fromFileAt: String) {
+        guard let data = NSData(contentsOfFile: fromFileAt) else {
+            print("could not load file \(fromFileAt)")
+            self.init(scalar: T(0))
+            return
+        }
+        
+        let intSize = sizeof(Int)
+        var currentLocation: Int = 0
+        
+        var dataType: Int = 0
+        data.getBytes(&dataType, range: NSRange(location: currentLocation, length: intSize))
+        currentLocation += intSize
+        
+        guard dataType == 1 else {
+            print("wrong data type: \(dataType)")
+            self.init(scalar: T(0))
+            return
+        }
+        
+        var fileModeCount: Int = 0
+        data.getBytes(&fileModeCount, range: NSRange(location: currentLocation, length: intSize))
+        currentLocation += intSize
+        
+        var fileModeSizes: [Int] = []
+        for _ in 0..<fileModeCount {
+            var thisSize: Int = 0
+            data.getBytes(&thisSize, range: NSRange(location: currentLocation, length: intSize))
+            currentLocation += intSize
+            fileModeSizes.append(thisSize)
+        }
+        
+        self.init(modeSizes: fileModeSizes, repeatedValue: T(0))
+        
+        data.getBytes(&values, range: NSRange(location: currentLocation, length: sizeof(T) * elementCount))
+    }
+    
+    public func writeToFile(path: String) {
+        //file format:
+        // 8 bytes: data type (1 == Float32)
+        // 8 bytes: modeCount (Int)
+        // 8 bytes: modeSize[0]
+        // ...
+        // 8 bytes: modeSize[modeCount-1]
+        // bytes of the flat value array
+        // ...
+        var propertiesArray: [Int] = []
+        let elementTypeCode: Int = (Element.self == Float.self) ? 1 : 0
+        propertiesArray.append(elementTypeCode)
+        propertiesArray.append(modeCount)
+        propertiesArray.appendContentsOf(modeSizes)
+        
+        var data = NSMutableData(bytes: &propertiesArray, length: sizeof(Int)*propertiesArray.count)
+        data.appendBytes(values, length: sizeof(Element) * elementCount)
+        
+        data.writeToFile(path, atomically: true)
+    }
+    
     /// - Returns: The number of seperate copy streaks that would be necessary for this reordering of indices
     public func reorderComplexityOf(newIndices: [TensorIndex]) -> Int {
         assert(indices.count == newIndices.count, "Cannot reorder indices \(indices) to \(newIndices)")
@@ -268,9 +348,9 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
     }
     
-    mutating public func newModeOrder(newToOld: [Int]) {
-        indices = newToOld.map({indices[$0]})
-        variances = newToOld.map({variances[$0]})
+    mutating public func newModeOrder(newToOld: [Int], oldData: Tensor) {
+        indices = newToOld.map({oldData.indices[$0]})
+        variances = newToOld.map({oldData.variances[$0]})
     }
     
     /// - Returns: A suggestion for an order of the indices that contains the given continous index streak while leaving as many modes in place as possible, the number of modes left of the streak and the number of modes after the streak
@@ -324,6 +404,19 @@ public struct Tensor<T: Number>: MultidimensionalData {
             newTensor.indices[(newTensor.modeCount - writableIndexCount) ..< newTensor.modeCount] = newIndices[(newIndices.count - writableIndexCount) ..< newIndices.count]
             return newTensor
         }
+    }
+    
+    /// - Returns: A tensor with automatically created unique indices. If the indices were already unique, nothing changes.
+    public func uniquelyIndexed(excludedIndices: [TensorIndex] = []) -> Tensor<T> {
+        //see if there are any duplicates
+        let indexSet = Set(indices + excludedIndices) //Set() removes duplicates
+        if(indexSet.count == (indices.count + excludedIndices.count)) {
+            return self
+        }
+        
+        var newTensor = self
+        newTensor.indices = TensorIndex.uniqueIndexArray(modeCount, excludedIndices: excludedIndices)
+        return newTensor
     }
     
     /// - Returns: The number of the mode indexed with the given letter, or nil

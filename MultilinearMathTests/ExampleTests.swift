@@ -242,6 +242,42 @@ class ExampleTests: XCTestCase {
         
     }
     
+    func testWritingNormalizedMNISTtoFile() {
+        let trainData = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-images-2.idx3-ubyte")
+        let trainLabels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-labels.idx1-ubyte")
+        let testData = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
+        let testLabels = loadMNISTLabelFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-labels.idx1-ubyte")
+        
+        print("normalize training data...")
+        let (normalizedTrainingData, mean, deviation) = normalize(trainData, overModes: [0])
+        print("normalize testing data...")
+        let normalizedTestData = normalize(testData, overModes: [0], withMean: mean, deviation: deviation)
+        print("create labels...")
+        let trainLabelsOneHot = createOneHotVectors(trainLabels.map({Int($0)}), differentValues: Array(0...9))
+        let testLabelsOneHot = createOneHotVectors(testLabels.map({Int($0)}), differentValues: Array(0...9))
+        
+        print("write files")
+        mean.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-data-means.tensor-bin")
+        deviation.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-data-deviations.tensor-bin")
+        print("write training data...")
+        normalizedTrainingData.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-data-normalized.tensor-bin")
+        print("write testing data...")
+        normalizedTestData.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/test-data-normalized.tensor-bin")
+        trainLabelsOneHot.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-labels-one-hot.tensor-bin")
+        testLabelsOneHot.writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/test-labels-one-hot.tensor-bin")
+        
+        
+//        print("write files")
+//        (mean.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/traing-data-means.plist", atomically: true)
+//        (deviation.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/traing-data-deviations.plist", atomically: true)
+//        print("write training data...")
+//        (normalizedTrainingData.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-data-normalized.plist", atomically: true)
+//        print("write testing data...")
+//        (normalizedTestData.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/test-data-normalized.plist", atomically: true)
+//        (trainLabelsOneHot.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/train-labels-one-hot.plist", atomically: true)
+//        (testLabelsOneHot.values as NSArray).writeToFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/test-labels-one-hot.plist", atomically: true)
+    }
+    
 //    func testOneVsAllClassification() {
 //        let mnistImages = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
 //        let mnistData = Tensor<Float>(modeSizes: [mnistImages.modeSizes[0], mnistImages.modeSizes[1] * mnistImages.modeSizes[2]], values: mnistImages.values)
