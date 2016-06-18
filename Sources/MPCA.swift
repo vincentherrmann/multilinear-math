@@ -109,7 +109,6 @@ public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrice
             //n=2:  [m, d2, p0, p1] * [p2, d2] = [m, p0, p1, p2]
             
             currentData = currentData * projectionMatrices[n]
-            //currentData = multiply(a: currentData, summationModesA: [1], b: projectionMatrices[n], summationModesB: [1])
         } else {
             //do not project mode n, just reorder the data (as if the projectionMatrix was the identity matrix)
             currentData = currentData.reorderModes([0] + Array(2..<data.modeCount) + [1])
@@ -131,9 +130,3 @@ public func multilinearPCAReconstructionMatrices(projectionMatrices: [Tensor<Flo
     }
     return reconstructionMatrices
 }
-
-/// - Returns: The scatter of the given tensor, i.e. the square of the Frobenius norm.
-//public func scatterOf(tensor: Tensor<Float>) -> Float {
-//    return multiply(a: tensor, remainingModesA: [], b: tensor, remainingModesB: []).values[0]
-//}
-

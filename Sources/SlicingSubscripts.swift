@@ -31,7 +31,6 @@ extension DataSliceSubscript {
             return emptyArray
         }
     }
-    
 }
 
 public struct AllIndices: DataSliceSubscript {
