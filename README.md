@@ -1,5 +1,5 @@
 # multilinear-math
-Swift library for multidimensional data and tensor operations on OS X. For additional comments and documentation, please take a look at the [Wiki](https://github.com/vincentherrmann/multilinear-math/wiki).
+Swift library for multidimensional data, tensor operations and machine learning on OS X. For additional comments and documentation, please take a look at the [Wiki](https://github.com/vincentherrmann/multilinear-math/wiki).
 
 ## Tensor reading, writing, slicing
 Create data tensor:
