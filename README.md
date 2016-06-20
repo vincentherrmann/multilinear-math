@@ -73,5 +73,6 @@ To use this framework in an OSX XCode project:
 - go to the "General" tab and add MultilinearMath.framework to the Linked Frameworks and Libraries
 - go to the "Build Settings" tab and set "Embedded Content Contains Swift Code" to YES
 - import MultilinearMath in your Swift files
+
 If possible, whole module optimization should be used for very significant performance gains.
 
