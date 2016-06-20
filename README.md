@@ -42,10 +42,26 @@ riemannianTensor.variances = [.contravariant, .covariant, .covariant, .covariant
 let relativeAcceleration = riemannianTensor[.μ, .ν, .ρ, .σ] * tangentVector[.ν] * tangentVector[.ρ] * deviationTensor[.σ]
 ```
 
+## Neural networks
+A simple feedforward neural net:
+```swift
+var estimator =  NeuralNet(layerSizes: [28*28, 40, 10])
+estimator.layers[0].activationFunction = ReLU(secondarySlope: 0.01) 
+estimator.layers[1].activationFunction = ReLU(secondarySlope: 0.01)
+
+var neuralNetCost = SquaredErrorCost(forEstimator: estimator)
+
+stochasticGradientDescent(neuralNetCost, inputs: trainingData[.a, .b], targets: trainingLabels[.a, .c], updateRate: 0.1, minibatchSize: 50, validationCallback: ({ (epoch, estimator) -> (Bool) in
+    if(epoch >= 30) {return true} 
+    else {return false}
+}))
+```
+[documentation](https://github.com/vincentherrmann/multilinear-math/wiki/Neural-Networks)
+
 ## Multilinear subspace learning
 Extended PCA algorithms to work with tensors with arbitrary mode count
- - multilinear principal component analysis (MPCA)
- - uncorrelated multilinear principal component analysis (UMPCA) <br>
+ - [multilinear principal component analysis (MPCA)](https://github.com/vincentherrmann/multilinear-math/wiki/Subspace-Learning)
+ - [uncorrelated multilinear principal component analysis (UMPCA)](https://github.com/vincentherrmann/multilinear-math/wiki/Subspace-Learning) <br>
 *(Lu, Plataniotis, Venetsanopoulos)*
 
 ## Installation
