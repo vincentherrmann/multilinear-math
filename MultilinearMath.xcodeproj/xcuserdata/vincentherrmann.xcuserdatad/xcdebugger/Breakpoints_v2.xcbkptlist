@@ -774,22 +774,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Sources/LogisticRegression.swift"
-            timestampString = "487583514.737042"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "derivative(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Sources/Tensors.swift"
             timestampString = "487974692.481475"
             startingColumnNumber = "9223372036854775807"
@@ -830,70 +814,6 @@
             endingLineNumber = "78"
             landmarkName = "stochasticGradientDescent(_:inputs:targets:updateRate:convergenceThreshold:maxLoops:minibatchSize:validationCallback:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487548784.136921"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "costForEstimate(_:target:)"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "function signature specialization &lt;Arg[2] = Dead&gt; of MultilinearMath.SquaredErrorCost.costForEstimate (MultilinearMath.Tensor&lt;Swift.Float&gt;, target : MultilinearMath.Tensor&lt;Swift.Float&gt;) -&gt; Swift.Float"
-                  moduleName = "MultilinearMath"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
-                  timestampString = "487975942.654965"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "130"
-                  endingLineNumber = "130"
-                  offsetFromSymbolStart = "3262">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "function signature specialization &lt;Arg[2] = Dead&gt; of MultilinearMath.SquaredErrorCost.costForEstimate (MultilinearMath.Tensor&lt;Swift.Float&gt;, target : MultilinearMath.Tensor&lt;Swift.Float&gt;) -&gt; Swift.Float"
-                  moduleName = "MultilinearMath"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/Sources/NeuralNetwork.swift"
-                  timestampString = "487975942.655193"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "130"
-                  endingLineNumber = "130"
-                  offsetFromSymbolStart = "3346">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487548784.136921"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "gradientForEstimate(_:target:)"
-            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -957,22 +877,6 @@
             startingLineNumber = "172"
             endingLineNumber = "172"
             landmarkName = "testNeuralNetGradient()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/NeuralNetwork.swift"
-            timestampString = "487548784.136921"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
-            landmarkName = "gradientForEstimate(_:target:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -69,9 +69,7 @@ private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProject
     for n in 0..<data.modeCount-1 {
         
         let projectionWithoutModeN = multilinearPCAProjection(data: data, projectionMatrices: oldProjectionMatrices, doNotProjectModes: [n])
-        //let summationModes = data.modeArray.removeValues([n+1])
         let sampleCovariance = multiply(a: projectionWithoutModeN, remainingModesA: [n+1], b: projectionWithoutModeN, remainingModesB: [n+1])
-        
         
         let thisModeSize = data.modeSizes[n+1]
         let (eigenvalues, eigenvectors) = eigendecomposition(sampleCovariance.values, size: MatrixSize(rows: thisModeSize, columns: thisModeSize))

@@ -12,6 +12,8 @@
 		BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */; };
 		BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
+		BA4E2A291D16AB28006008BB /* ActivationFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */; };
+		BA4E2A2B1D16AE12006008BB /* ParametricFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
 		BA860B2E1D04C29E00473436 /* NestedVsMultidimensional.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */; };
 		BA860B2F1D04C29E00473436 /* MNIST_compression_pca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */; };
@@ -59,6 +61,8 @@
 		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
 		BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = BackpropGraph.jpg; path = Resources/BackpropGraph.jpg; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
+		BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActivationFunctions.swift; path = Sources/ActivationFunctions.swift; sourceTree = SOURCE_ROOT; };
+		BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParametricFunctions.swift; path = Sources/ParametricFunctions.swift; sourceTree = SOURCE_ROOT; };
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
@@ -178,6 +182,8 @@
 				BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */,
 				BA9C0BF01CD5587C00FDF14A /* NeuralNetwork.swift */,
 				BA9C0BF21CDA611500FDF14A /* Optimization.swift */,
+				BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */,
+				BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */,
 			);
 			name = Applications;
 			sourceTree = "<group>";
@@ -337,8 +343,10 @@
 				BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */,
 				BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */,
 				BA9C0BF31CDA611600FDF14A /* Optimization.swift in Sources */,
+				BA4E2A2B1D16AE12006008BB /* ParametricFunctions.swift in Sources */,
 				BAC83E551CAAD68D00290119 /* TensorOperations.swift in Sources */,
 				BA9C0BF11CD5587C00FDF14A /* NeuralNetwork.swift in Sources */,
+				BA4E2A291D16AB28006008BB /* ActivationFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
