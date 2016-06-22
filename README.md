@@ -1,6 +1,18 @@
 # multilinear-math
 Swift library for multidimensional data, tensor operations and machine learning on OS X. For additional comments and documentation, please take a look at the [Wiki](https://github.com/vincentherrmann/multilinear-math/wiki).
 
+Already implemented:
+- Swift wrappers of many important functions from the Accelerate framework and LAPACK (vector summation, addition, substraction, matrix and elementwise multiplication, division, matrix inverse, pseudo inverse, eigendecomposition, singular value decomposition...)
+- `MultidimensionData` protocol for elegant handling of multidimensional data of any kind
+- Clear, compact and powerful syntax for mathematical operations on tensors
+- Principal component analysis
+- Multilinear subspace learning algorithms for dimensionality reduction
+- Linear and logistic regression
+- Stochastic gradient descent
+- Feedforward neural networks
+- Sigmoid, ReLU, Softplus activation functions
+- Easy regularizations
+
 ## Tensor reading, writing, slicing
 Create data tensor:
 ```swift
