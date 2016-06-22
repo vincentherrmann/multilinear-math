@@ -55,7 +55,7 @@ let relativeAcceleration = riemannianTensor[.μ, .ν, .ρ, .σ] * tangentVector[
 ```
 
 ## Neural networks
-A simple feedforward neural net:
+Setting up and training a simple feedforward neural net:
 ```swift
 var estimator =  NeuralNet(layerSizes: [28*28, 40, 10])
 estimator.layers[0].activationFunction = ReLU(secondarySlope: 0.01) 
