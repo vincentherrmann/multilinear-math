@@ -144,6 +144,22 @@ public func findMaximumElementOf(tensor: Tensor<Float>, inMode: Int) -> Tensor<F
     return outputData[0]
 }
 
+/// Zero padding for greater sizes, cutting away for smaller sizes
+public func changeModeSizes(tensor: Tensor<Float>, targetSizes: [Int]) -> Tensor<Float> {
+    if(tensor.modeSizes == targetSizes) {
+        return tensor
+    }
+    if(targetSizes.count != tensor.modeSizes.count) {
+        print("wrong number of moe sizes!")
+        return tensor
+    }
+    
+    var newTensor = Tensor<Float>(modeSizes: targetSizes, repeatedValue: 0)
+    let writeSizes: [DataSliceSubscript] = zip(tensor.modeSizes, targetSizes).map({min($0.0, $0.1)}).map({0..<$0})
+    newTensor.setSlice(getSlice(from: tensor, modeSubscripts: writeSizes), modeSubscripts: writeSizes)
+    return newTensor
+}
+
 
 // MARK: - Operations combining two tensors
 /// Concatenate two tensors. The content of tensor `b` gets appended to `a` in direction of the given mode. Both `a` and `b` must have the same mode sizes in all modes but `alongMode`. One of the tensors may have one mode less than the other, then the additional `alongMode` of size one is amended.

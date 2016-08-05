@@ -44,6 +44,7 @@
 		BACA1D0C1D08095E00FB4323 /* Slicing3dFlat_table.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BACA1D0A1D08095E00FB4323 /* Slicing3dFlat_table.jpg */; };
 		BACA1D0E1D0F047F00FB4323 /* NeuralNetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACA1D0D1D0F047F00FB4323 /* NeuralNetTests.swift */; };
 		BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */; };
+		BAE3DCB91D54C91900FFF5D6 /* FourierTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */; };
 		BAEAF2D11D1EDFC30059C97D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = BAEAF2CF1D1EDFC30059C97D /* README.md */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +100,8 @@
 		BACA1D0A1D08095E00FB4323 /* Slicing3dFlat_table.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Slicing3dFlat_table.jpg; path = Resources/Slicing3dFlat_table.jpg; sourceTree = "<group>"; };
 		BACA1D0D1D0F047F00FB4323 /* NeuralNetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeuralNetTests.swift; sourceTree = "<group>"; };
 		BAD2A2C51CAB07BF00656BF0 /* DataSlicingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSlicingTests.swift; sourceTree = "<group>"; };
+		BAE3DCB71D54C34F00FFF5D6 /* FFTPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = FFTPlayground.playground; path = Playgrounds/FFTPlayground.playground; sourceTree = "<group>"; };
+		BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FourierTransformTests.swift; sourceTree = "<group>"; };
 		BAEAF2CF1D1EDFC30059C97D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BAEC46971D1EE60500B2696E /* TestPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = TestPlayground.playground; path = Playgrounds/TestPlayground.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,6 +145,7 @@
 		BA67AE501CA86C3E009906F2 = {
 			isa = PBXGroup;
 			children = (
+				BAE3DCB71D54C34F00FFF5D6 /* FFTPlayground.playground */,
 				BAEC46971D1EE60500B2696E /* TestPlayground.playground */,
 				BAEAF2CF1D1EDFC30059C97D /* README.md */,
 				BA67AE651CA86D4F009906F2 /* Package.swift */,
@@ -208,6 +212,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */,
 				BACA1D0D1D0F047F00FB4323 /* NeuralNetTests.swift */,
 				BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */,
 				BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */,
@@ -365,6 +370,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
+				BAE3DCB91D54C91900FFF5D6 /* FourierTransformTests.swift in Sources */,
 				BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */,
 				BACA1D0E1D0F047F00FB4323 /* NeuralNetTests.swift in Sources */,
 				BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */,

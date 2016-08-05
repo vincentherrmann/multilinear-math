@@ -214,6 +214,17 @@ class TensorOperationsTests: XCTestCase {
 ////        print("normalizedConcurrent: \(tensor.values)")
 //    }
     
+    func testTensorModeSizesChange() {
+        let t1 = ones(5, 9)
+        let r1 = changeModeSizes(t1, targetSizes: [7, 10])
+        print("r1: \(r1.values)")
+        let r2 = changeModeSizes(t1, targetSizes: [4, 4])
+        print("r2: \(r2.values)")
+        let r3 = changeModeSizes(t1, targetSizes: [6, 2])
+        print("r3: \(r3.values)")
+        
+    }
+    
     func testTensorSum() {
         let sum1 = sum(tensor1, overModes: [0, 1, 2])
         XCTAssertEqual(sum1.values, [276.0], "sum tensor1 over all modes")
