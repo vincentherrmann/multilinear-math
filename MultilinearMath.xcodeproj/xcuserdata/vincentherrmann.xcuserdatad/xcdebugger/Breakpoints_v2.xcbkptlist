@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "151"
             endingLineNumber = "151"
-            landmarkName = "uncorrelatedMPCA(_:featureCount:)"
+            landmarkName = "uncorrelatedMPCAProject(_:projections:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -157,7 +157,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "137"
             endingLineNumber = "137"
-            landmarkName = "indexRecurse(_:mode:)"
+            landmarkName = "copyIndices(_:modeSizes:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

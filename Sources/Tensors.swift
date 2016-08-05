@@ -100,7 +100,7 @@ public struct CommonTensorIndex {
 }
 
 
-public struct Tensor<T: Number>: MultidimensionalData {
+public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     //MultidimensionalData properties:
     public typealias Element = T
     public var modeSizes: [Int]
@@ -432,6 +432,13 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
     }
     
+//    public func getSliceofModes(indices: [TensorIndex]) -> Tensor<T> {
+//        var sliceIndices = Array<DataSliceSubscript>(count: modeCount, repeatedValue: all)
+//        for m in 0..<modeCount {
+//            if let
+//        }
+//    }
+    
     /// - Returns: The indices that this tensor has in common with the given tensor, the corresponding modes in this tensor and the corresponding modes in the given tensor. Modes with the default index `.notIndexed` cannot be common modes.
     public func commonIndicesWith(otherTensor: Tensor<T>) -> ([CommonTensorIndex]) {
         let commonIndices = indices.filter({otherTensor.indices.contains($0)})
@@ -444,7 +451,14 @@ public struct Tensor<T: Number>: MultidimensionalData {
         }
         return result
     }
+    
+    public func customMirror() -> Mirror {
+        let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .Tuple)
+        return mirror
+    }
 }
+
+
 
 // MARK: - Quick initializers
 public func zeros(modeSizes: Int...) -> Tensor<Float> {
