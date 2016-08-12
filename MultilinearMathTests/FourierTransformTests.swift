@@ -35,17 +35,9 @@ class FourierTransformTests: XCTestCase {
         let factor = reconstructedSignal.values[0] / inputSignal.values[0]
         print("scaling factor for sizes \(inputSignal.modeSizes): \(factor)")
         
-        //sizes: factor
-        //4, 8: 32.0
-        //4, 4: 16.0
-        //4, 4, 4: 64
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+        let mse = meanSquaredError(target: inputSignal.values, result: reconstructedSignal.values)
+        print("mse: \(mse)")
+        XCTAssert(mse < 0.01, "no acceptable reconstruction from fourier transform")
     }
 
 }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA0BC9FC1D5D0B9600C05075 /* Plot2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BC9FB1D5D0B9600C05075 /* Plot2D.swift */; };
+		BA0BC9FE1D5D0BB300C05075 /* PlotView2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BC9FD1D5D0BB300C05075 /* PlotView2D.swift */; };
+		BA0BCA001D5D338300C05075 /* PlotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BC9FF1D5D338300C05075 /* PlotTests.swift */; };
+		BA0BCA021D5E202D00C05075 /* BoundingProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BCA011D5E202D00C05075 /* BoundingProtocols.swift */; };
 		BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */; };
 		BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */; };
 		BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */; };
@@ -59,6 +63,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA0BC9FB1D5D0B9600C05075 /* Plot2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Plot2D.swift; path = Sources/Plot2D.swift; sourceTree = SOURCE_ROOT; };
+		BA0BC9FD1D5D0BB300C05075 /* PlotView2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlotView2D.swift; path = Sources/PlotView2D.swift; sourceTree = SOURCE_ROOT; };
+		BA0BC9FF1D5D338300C05075 /* PlotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlotTests.swift; sourceTree = "<group>"; };
+		BA0BCA011D5E202D00C05075 /* BoundingProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BoundingProtocols.swift; path = Sources/BoundingProtocols.swift; sourceTree = SOURCE_ROOT; };
 		BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchPerformaceTests.swift; sourceTree = "<group>"; };
 		BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorSyntacticOperators.swift; path = Sources/TensorSyntacticOperators.swift; sourceTree = SOURCE_ROOT; };
 		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
@@ -125,6 +133,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA0BC9FA1D5D0B5A00C05075 /* Plotting */ = {
+			isa = PBXGroup;
+			children = (
+				BA0BCA011D5E202D00C05075 /* BoundingProtocols.swift */,
+				BA0BC9FB1D5D0B9600C05075 /* Plot2D.swift */,
+				BA0BC9FD1D5D0BB300C05075 /* PlotView2D.swift */,
+			);
+			name = Plotting;
+			sourceTree = "<group>";
+		};
 		BA2E8AC91CE9EFE10062B59D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +187,7 @@
 		BA67AE5B1CA86C3E009906F2 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				BA0BC9FA1D5D0B5A00C05075 /* Plotting */,
 				BA67AE751CA87902009906F2 /* Applications */,
 				BA67AE6B1CA86E8F009906F2 /* Utilities.swift */,
 				BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */,
@@ -212,6 +231,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BA0BC9FF1D5D338300C05075 /* PlotTests.swift */,
 				BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */,
 				BACA1D0D1D0F047F00FB4323 /* NeuralNetTests.swift */,
 				BA0BE4701CCAA8660024F368 /* DispatchPerformaceTests.swift */,
@@ -343,6 +363,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA0BC9FE1D5D0BB300C05075 /* PlotView2D.swift in Sources */,
+				BA0BC9FC1D5D0B9600C05075 /* Plot2D.swift in Sources */,
 				BAC1DFA71D3F7A14003528DB /* TensorOperationNodes.swift in Sources */,
 				BAC83E4C1CAAD68D00290119 /* MPCA.swift in Sources */,
 				BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */,
@@ -350,6 +372,7 @@
 				BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */,
 				BAC83E501CAAD68D00290119 /* AccelerateFunctionsFloat.swift in Sources */,
 				BAC83E511CAAD68D00290119 /* MultidimensionalData.swift in Sources */,
+				BA0BCA021D5E202D00C05075 /* BoundingProtocols.swift in Sources */,
 				BAEAF2D11D1EDFC30059C97D /* README.md in Sources */,
 				BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */,
 				BAC83E521CAAD68D00290119 /* SlicingSubscripts.swift in Sources */,
@@ -369,6 +392,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA0BCA001D5D338300C05075 /* PlotTests.swift in Sources */,
 				BAC83E441CAAD61500290119 /* MultilinearMathTests.swift in Sources */,
 				BAE3DCB91D54C91900FFF5D6 /* FourierTransformTests.swift in Sources */,
 				BA0BE4711CCAA8660024F368 /* DispatchPerformaceTests.swift in Sources */,

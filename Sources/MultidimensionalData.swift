@@ -645,4 +645,3 @@ public func concatenate<T: MultidimensionalData>(a: T, b: T, alongMode: Int) -> 
 //    outputData.values[0] = outputData.values[0]
 //    
 //}
-

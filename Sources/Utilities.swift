@@ -149,8 +149,15 @@ public extension UnsafeBuffer where Generator.Element: Equatable, Index == Int {
     }
 }
 
-public func squaredDistance(a: [Float], b: [Float]) -> Float {
-    return a.combineWith(b, combineFunction: {($0-$1)*($0-$1)}).reduce(0, combine: {$0+$1})
+//public func squaredDistance(a: [Float], b: [Float]) -> Float {
+//    return a.combineWith(b, combineFunction: {($0-$1)*($0-$1)}).reduce(0, combine: {$0+$1})
+//}
+
+public func meanSquaredError(target target: [Float], result: [Float]) -> Float {
+    assert(target.count == result.count)
+    let factor = 1 / Float(target.count)
+    let errors = zip(target, result).map({pow($0.0 - $0.1, 2)})
+    return errors.reduce(0, combine: {$0 + $1}) * factor
 }
 
 public func memoryAddress(o: UnsafePointer<Void>) -> UnsafePointer<Void> {
