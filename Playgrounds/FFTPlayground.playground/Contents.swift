@@ -10,9 +10,9 @@ import MultilinearMath
 //let inputSignal = randomTensor(modeSizes: 2, 4, 4).uniquelyIndexed()
 //let transformedSignal = forwardFFT.execute([inputSignal])
 
-let a: [Float] = [1, -2, 2.0, -2, 1, 0.5, -0.2, 3.0]
+let a: [Float] = [0, -2, 2.0, -2, 1, 0.5, -0.2, 3.0]
 let quickLook = QuickArrayPlot(array: a)
-let bounds = quickLook.plotView.plotBounds
-let p = quickLook.plotView.plots[0].plotBounds
+let bounds = quickLook.plotView.plottingBounds
+//let p = quickLook.plotView.plots[0].plotBounds
 
 
