@@ -444,3 +444,19 @@ public func pseudoInverse<A: UnsafeBuffer where A.Generator.Element == Float>(ma
     
     return inverse
 }
+
+public func solveLinearEquationSystem<A: UnsafeBuffer where A.Generator.Element == Float>(factorMatrix: A, factorMatrixSize: MatrixSize, results: A, resultsSize: MatrixSize) -> [Float] {
+    
+    var a = matrixTranspose(factorMatrix, size: factorMatrixSize)
+    var b = matrixTranspose(results, size: resultsSize)
+    var n = Int32(factorMatrixSize.columns)
+    var nrhs = Int32(resultsSize.rows)
+    var ipiv: Int32 = 0
+    var info: Int32 = 0
+    
+    sgesv_(&n, &nrhs, &a, &n, &ipiv, &b, &n, &info)
+    print("ipiv: \(ipiv)")
+    print("info: \(info)")
+    
+    return matrixTranspose(b, size: resultsSize.transpose)
+}

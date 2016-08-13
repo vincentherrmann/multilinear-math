@@ -16,8 +16,10 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
         var plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
         plotView.addPlottable(plot)
         plotView.plottingBounds = plot.plotBounds
-        var axis = PlotAxis(direction: .x)
-        plotView.addPlottable(axis)
+        var xAxis = PlotAxis(direction: .x)
+        var yAxis = PlotAxis(direction: .y)
+        plotView.addPlottable(xAxis)
+        plotView.addPlottable(yAxis)
         plotView.updatePlotting()
     }
     
@@ -94,25 +96,24 @@ public class PlotAxis: PlottableIn2D {
     
     public func createAxis(plotView: Plotting2D) {
         path = NSBezierPath()
-
-        let scaleToScreenFactor: CGFloat
-        //points on screen
-        let startPoint: CGPoint
-        let endPoint: CGPoint
-        let zeroPoint: CGPoint
         
+        let axisDim, otherDim: CGPoint.Dimension
         switch direction {
         case .y:
-            startPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: plotView.plottingBounds.minY)).reverse()
-            endPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: plotView.plottingBounds.maxY)).reverse()
-            zeroPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: 0)).reverse()
-            scaleToScreenFactor = plotView.transformFromPlotToScreen.scaleY
+            axisDim = .y
+            otherDim = .x
         default:
-            startPoint = plotView.convertFromPlotToScreen(CGPoint(x: plotView.plottingBounds.minX, y: 0))
-            endPoint = plotView.convertFromPlotToScreen(CGPoint(x: plotView.plottingBounds.maxX, y: 0))
-            zeroPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: 0))
-            scaleToScreenFactor = plotView.transformFromPlotToScreen.scaleX
+            axisDim = .x
+            otherDim = .y
         }
+
+        let scaleToScreenFactor: CGFloat = axisDim == .x ? plotView.transformFromPlotToScreen.scaleX : plotView.transformFromPlotToScreen.scaleY
+        //points on screen
+        let startPoint: CGPoint = plotView.convertFromPlotToScreen(CGPoint(a: plotView.plottingBounds.origin.value(axisDim), b: 0, aDimension: axisDim))
+        let farEdge = CGPoint(x: plotView.plottingBounds.maxX, y: plotView.plottingBounds.maxY)
+        let endPoint: CGPoint = plotView.convertFromPlotToScreen(CGPoint(a: farEdge.value(axisDim), b: 0, aDimension: axisDim))
+        let zeroPoint: CGPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: 0))
+        
         print("axis start position: \(startPoint)")
         print("axis end position: \(endPoint)")
         
@@ -130,19 +131,20 @@ public class PlotAxis: PlottableIn2D {
         path.moveToPoint(startPoint)
         path.lineToPoint(endPoint)
         //arrow
-        path.moveToPoint(CGPoint(x: endPoint.x - 5, y: endPoint.y - 5))
+        path.moveToPoint(CGPoint(a: endPoint.value(axisDim) - 5, b: endPoint.value(otherDim) - 5, aDimension: axisDim))
         path.lineToPoint(endPoint)
-        path.lineToPoint(CGPoint(x: endPoint.x - 5, y: endPoint.y + 5))
+        path.lineToPoint(CGPoint(a: endPoint.value(axisDim) - 5, b: endPoint.value(otherDim) + 5, aDimension: axisDim))
         
         //ticks
-        let distanceToZero = startPoint.x - zeroPoint.x
+        let distanceToZero = startPoint.value(axisDim) - zeroPoint.value(axisDim)
         let tickModulo = distanceToZero % tickDistance
-        var currentTickPosition = startPoint.x + (tickDistance - tickModulo)
-        while currentTickPosition < endPoint.x {
-            path.moveToPoint(CGPoint(x: currentTickPosition, y: zeroPoint.y - tickLength))
-            path.lineToPoint(CGPoint(x: currentTickPosition, y: zeroPoint.y))
+        var currentTickPosition = startPoint.value(axisDim) + (tickDistance - tickModulo)
+        while currentTickPosition < endPoint.value(axisDim) {
+            path.moveToPoint(CGPoint(a: currentTickPosition, b: zeroPoint.value(otherDim) - tickLength, aDimension: axisDim))
+            path.lineToPoint(CGPoint(a: currentTickPosition, b: zeroPoint.value(otherDim), aDimension: axisDim))
             currentTickPosition += tickDistance
         }
+        
         
     }
 
@@ -159,6 +161,7 @@ public class PlotAxis: PlottableIn2D {
                 continue
             }
         }
+        //print("step size: \(stepSize)")
         return stepSize
     }
 }
@@ -300,8 +303,33 @@ public class CubicPlot: LinePlot {
 }
 
 extension CGPoint {
+    enum Dimension {
+        case x
+        case y
+    }
+    
+    init(a: CGFloat, b: CGFloat, aDimension: Dimension) {
+        switch aDimension {
+        case .y:
+            x = b
+            y = a
+        default:
+            x = a
+            y = b
+        }
+    }
+    
     func reverse() -> CGPoint {
         return CGPoint(x: y, y: x)
+    }
+    
+    func value(dim: Dimension) -> CGFloat {
+        switch dim {
+        case .y:
+            return y
+        default:
+            return x
+        }
     }
 }
 
