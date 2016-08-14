@@ -8,6 +8,14 @@
 
 import Foundation
 
+public func createWaveletFromCoefficients(coefficients: [Float], levels: Int) -> [Float] {
+    var wavelet = calculateIntegerWaveletValues(coefficients)
+    for _ in 0..<levels {
+        wavelet = newWaveletApproximation(wavelet, coefficients: coefficients)
+    }
+    return wavelet
+}
+
 /// calculate the values of the wavelet function on the integer position from the filter coefficients. This is done by solving a system of linear equations constructed from the dilation equation
 public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
     let count = coefficients.count
@@ -17,10 +25,10 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
     // a0-1  0    0    0   =  0
     //  a2  a1-1  a0   0   =  0
     //  0    a3  a2-1  a1  =  0
-    //  0    0    0   a3-1 =  0 //this last row is replaced by:
-    //  1    1    1    1   =  1 //to create a unambiguous solution
+    //  0    0    0   a3-1 =  0 //this last row is substracted from the first and the next row
+    //  1    1    1    1   =  1 //is added to create a unambiguous solution
     var factorMatrix = Tensor<Float>(modeSizes: [count, count], repeatedValue: 0)
-    for r in 0..<count-1 {
+    for r in 0..<count {
         let coeff0Position = 2*r
         for c in 0..<count {
             let index = coeff0Position - c
@@ -29,10 +37,19 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
         }
         factorMatrix[r, r] += -1
     }
-    factorMatrix[count-1...count-1, all] = ones(count)
-    let results = [Float](count: count-1, repeatedValue: 0) + [1]
+    //factorMatrix[0, count-1] = 1 - coefficients.last!
+    //factorMatrix[count-1...count-1, all] = ones(count)
+    factorMatrix = factorMatrix + 1
+    let results = [Float](count: count-1, repeatedValue: 1) + [1]
     
+    print("count: \(count)")
+    print("factor matrix: \(factorMatrix.values)")
+    print("results: \(results)")
     let solution = solveLinearEquationSystem(factorMatrix.values, factorMatrixSize: MatrixSize(rows: count, columns: count), results: results, resultsSize: MatrixSize(rows: count, columns: 1))
+    
+    let testResults = matrixMultiplication(matrixA: factorMatrix.values, sizeA: MatrixSize(rows: count, columns: count), matrixB: solution, sizeB: MatrixSize(rows: count, columns: 1))
+    print("test result: \(testResults)")
+    
     
     return solution
 }
@@ -56,16 +73,5 @@ public func newWaveletApproximation(currentApproximation: [Float], coefficients:
         }
         newApproximation[2*n+1] = value
     }
-    
-//    for t in 1..<currentApproximation.count {
-//        newApproximation[2*t] = currentApproximation[t]
-//        var value: Float = 0
-//        for c in 0..<coefficients.count {
-//            let index = 2*t-1-c*level/2
-//            if(index < 0 || index >= currentApproximation.count) {continue}
-//            value += currentApproximation[index] * coefficients[c]
-//        }
-//        newApproximation[2*t-1] = value
-//    }
     return newApproximation
 }

@@ -38,14 +38,21 @@ class AccelerateFunctionTests: XCTestCase {
         XCTAssert(solution == [0.5, 0.5], "error in linear equation system solution")
         //print("solution: \(solution)")
         
-        let matrix2: [Float] = randomTensor(min: -1, max: 1, modeSizes: 4, 4).values
-        let results2: [Float] = [0, 0, 0, 1]
-        matrix2.withUnsafeBufferPointer { (a) -> () in
-            results2.withUnsafeBufferPointer({ (b) -> () in
-                solution = solveLinearEquationSystem(a, factorMatrixSize: MatrixSize(rows: 4, columns: 4), results: b, resultsSize: MatrixSize(rows: 4, columns: 1))
-            })
+        let m1: [Float] = [1, 1, 1,
+                           0, 2, 5,
+                           2, 5, -1]
+        let r1: [Float] = [6, -4, 27]
+        let s1 = solveLinearEquationSystem(m1, factorMatrixSize: MatrixSize(rows: 3, columns: 3), results: r1, resultsSize: MatrixSize(rows: 3, columns: 1))
+        print("solution: \(s1)")
+        
+        
+        for size in 2..<8 {
+            print("")
+            print("size: \(size)")
+            let m: [Float] = randomTensor(min: -1, max: 1, modeSizes: size, size).values
+            let r: [Float] = randomTensor(min: -1, max: 1, modeSizes: size).values
+            solveLinearEquationSystem(m, factorMatrixSize: MatrixSize(rows: size, columns: size), results: r, resultsSize: MatrixSize(rows: size, columns: 1))
         }
-        print("solution: \(solution)")
     }
     
     func testWaveletComputation() {

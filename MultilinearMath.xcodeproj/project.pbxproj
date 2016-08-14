@@ -14,6 +14,7 @@
 		BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0BE4721CCB688C0024F368 /* TensorSyntacticOperators.swift */; };
 		BA0E47031D5F4C5E00217021 /* AccelerateFunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0E47021D5F4C5E00217021 /* AccelerateFunctionTests.swift */; };
 		BA0E47061D5FA3E700217021 /* WaveletCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0E47051D5FA3E700217021 /* WaveletCreation.swift */; };
+		BA1EBB391D5FD53200FA7196 /* WaveletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1EBB381D5FD53200FA7196 /* WaveletTests.swift */; };
 		BA2E8ACB1CE9F06B0062B59D /* ExampleTextFile.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */; };
 		BA2E8ACD1CE9F0980062B59D /* BackpropGraph.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */; };
 		BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */; };
@@ -72,6 +73,7 @@
 		BA0E47011D5F132400217021 /* WaveletPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = WaveletPlayground.playground; path = Playgrounds/WaveletPlayground.playground; sourceTree = "<group>"; };
 		BA0E47021D5F4C5E00217021 /* AccelerateFunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccelerateFunctionTests.swift; sourceTree = "<group>"; };
 		BA0E47051D5FA3E700217021 /* WaveletCreation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaveletCreation.swift; path = Sources/WaveletCreation.swift; sourceTree = SOURCE_ROOT; };
+		BA1EBB381D5FD53200FA7196 /* WaveletTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveletTests.swift; sourceTree = "<group>"; };
 		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
 		BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = BackpropGraph.jpg; path = Resources/BackpropGraph.jpg; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 		BAC83E421CAAD61500290119 /* MultilinearMathTests */ = {
 			isa = PBXGroup;
 			children = (
+				BA1EBB381D5FD53200FA7196 /* WaveletTests.swift */,
 				BA0E47021D5F4C5E00217021 /* AccelerateFunctionTests.swift */,
 				BA0BC9FF1D5D338300C05075 /* PlotTests.swift */,
 				BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */,
@@ -415,6 +418,7 @@
 				BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */,
 				BAD2A2C61CAB07BF00656BF0 /* DataSlicingTests.swift in Sources */,
 				BA3EFBD01CAB15A800F723D4 /* ExampleTests.swift in Sources */,
+				BA1EBB391D5FD53200FA7196 /* WaveletTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
