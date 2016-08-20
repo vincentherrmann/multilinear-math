@@ -452,81 +452,15 @@ public func solveLinearEquationSystem<A: UnsafeBuffer where A.Generator.Element 
     
     var a = matrixTranspose(factorMatrix, size: factorMatrixSize)
     var b = matrixTranspose(results, size: resultsSize)
-    print("b: \(b)")
     var n = Int32(factorMatrixSize.columns)
     var lda = n
     var ldb = n
-    print("n: \(n)")
     var nrhs = Int32(resultsSize.columns)
-    print("nrhs: \(nrhs)")
     var ipiv = [Int32](count: Int(n), repeatedValue: 0)
     var info: Int32 = 0
-    //var pivots = [Int32](count: Int(n), repeatedValue: 0)
-    //var error: Int32 = 0
-    //sgetrf_(n, n, &a, &lda, <#T##__ipiv: UnsafeMutablePointer<__CLPK_integer>##UnsafeMutablePointer<__CLPK_integer>#>, <#T##__info: UnsafeMutablePointer<__CLPK_integer>##UnsafeMutablePointer<__CLPK_integer>#>)
     
     let r = sgesv_(&n, &nrhs, &a, &lda, &ipiv, &b, &ldb, &info)
-    print("return: \(r)")
-    print("lu matrix: \(a)")
-    print("n: \(n)")
-    print("ipiv: \(ipiv)")
-    print("info: \(info)")
     
     return b
-    
-//    var inMatrix:[Double]       = A
-//    var solution:[Double]       = B
-//    // Get the dimensions of the matrix. An NxN matrix has N^2
-//    // elements, so sqrt( N^2 ) will return N, the dimension
-//    var N:__CLPK_integer        = __CLPK_integer( sqrt( Double( A.count ) ) )
-//    // Number of columns on the RHS
-//    var NRHS:__CLPK_integer     = 1
-//    // Leading dimension of A and B
-//    var LDA:__CLPK_integer      = N
-//    var LDB:__CLPK_integer      = N
-//    // Initialize some arrays for the dgetrf_(), and dgetri_() functions
-//    var pivots:[__CLPK_integer] = [__CLPK_integer](count: Int(N), repeatedValue: 0)
-//    var error: __CLPK_integer   = 0
-//    // Perform LU factorization
-//    dgetrf_(&N, &N, &inMatrix, &N, &pivots, &error)
-//    // Calculate solution from LU factorization
-//    _ = "T".withCString {
-//        dgetrs_( UnsafeMutablePointer($0), &N, &NRHS, &inMatrix, &LDA, &pivots, &solution, &LDB, &error )
-//    }
-    
-//    var m = Array(factorMatrix)
-//    print("m: \(m)")
-//    var v = Array(results)
-//    let count = UInt(factorMatrixSize.columns)
-//    let matrix: la_object_t = la_matrix_from_float_buffer(&m, count, count, count, la_hint_t(LA_NO_HINT), la_attribute_t(LA_ATTRIBUTE_ENABLE_LOGGING))
-//    let vector: la_object_t = la_matrix_from_float_buffer(&v, count, 1, 1, la_hint_t(LA_NO_HINT), la_attribute_t(LA_ATTRIBUTE_ENABLE_LOGGING))
-//    
-//    var resultBuffer = [Float](count: Int(count), repeatedValue: 0)
-//    la_matrix_to_float_buffer(&resultBuffer, 1, vector)
-//    print("la_solve vector: \(resultBuffer)")
-//    
-//    var factorsBuffer = [Float](count: Int(count*count), repeatedValue: 0)
-//    la_matrix_to_float_buffer(&factorsBuffer, count, matrix)
-//    print("la_solve matrix: \(factorsBuffer)")
-//    
-//    let solution = la_solve(matrix, vector)
-//    let status = la_status(solution)
-//    if status == Int(LA_SUCCESS) {
-//        print("la_solve success")
-//    } else {
-//        print("la_solve status: \(status)")
-//    }
-//    
-//    
-//    var solutionBuffer = [Float](count: Int(count), repeatedValue: 0)
-//    la_matrix_to_float_buffer(&solutionBuffer, 1, solution)
-//    
-//    let testResults = matrixMultiplication(matrixA: m, sizeA: factorMatrixSize, matrixB: solutionBuffer, sizeB: resultsSize)
-//    let accuracy = meanSquaredError(target: testResults, result: v)
-//    print("result error: \(accuracy)")
-//    
-//    return solutionBuffer
-    
-    
 }
 

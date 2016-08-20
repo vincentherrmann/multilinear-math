@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/TensorOperations.swift"
-            timestampString = "492118850.879035"
+            timestampString = "492958620.247679"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "325"
-            endingLineNumber = "325">
+            startingLineNumber = "332"
+            endingLineNumber = "332">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1069,13 +1069,109 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/AccelerateFunctionsFloat.swift"
-            timestampString = "492901527.625444"
+            timestampString = "492958620.247679"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "467"
-            endingLineNumber = "467"
+            startingLineNumber = "461"
+            endingLineNumber = "461"
             landmarkName = "solveLinearEquationSystem(_:factorMatrixSize:results:resultsSize:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MultilinearMathTests/WaveletTests.swift"
+            timestampString = "492958814.869101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "testFrequencyResponse()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.testFrequencyResponse () -&gt; ()"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "492958817.849584"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "1493">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.(testFrequencyResponse () -&gt; ()).(closure #3)"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "492958817.849849"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "17">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MultilinearMathTests/WaveletTests.swift"
+            timestampString = "492958843.838476"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "testFrequencyResponse()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.testFrequencyResponse () -&gt; ()"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "492958843.84058"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "61"
+                  endingLineNumber = "61"
+                  offsetFromSymbolStart = "2148">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.(testFrequencyResponse () -&gt; ()).(closure #4)"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "492958843.840742"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "61"
+                  endingLineNumber = "61"
+                  offsetFromSymbolStart = "14">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -25,8 +25,8 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
     // a0-1  0    0    0   =  0
     //  a2  a1-1  a0   0   =  0
     //  0    a3  a2-1  a1  =  0
-    //  0    0    0   a3-1 =  0 //this last row is substracted from the first and the next row
-    //  1    1    1    1   =  1 //is added to create a unambiguous solution
+    //  0    0    0   a3-1 =  0
+    //  1    1    1    1   =  1 //this last equation is added to each row to get an unambiguous solution
     var factorMatrix = Tensor<Float>(modeSizes: [count, count], repeatedValue: 0)
     for r in 0..<count {
         let coeff0Position = 2*r
@@ -37,8 +37,6 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
         }
         factorMatrix[r, r] += -1
     }
-    //factorMatrix[0, count-1] = 1 - coefficients.last!
-    //factorMatrix[count-1...count-1, all] = ones(count)
     factorMatrix = factorMatrix + 1
     let results = [Float](count: count-1, repeatedValue: 1) + [1]
     
@@ -49,7 +47,6 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
     
     let testResults = matrixMultiplication(matrixA: factorMatrix.values, sizeA: MatrixSize(rows: count, columns: count), matrixB: solution, sizeB: MatrixSize(rows: count, columns: 1))
     print("test result: \(testResults)")
-    
     
     return solution
 }

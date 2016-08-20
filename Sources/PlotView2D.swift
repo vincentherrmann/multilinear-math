@@ -15,7 +15,7 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
         var plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
         plotView.addPlottable(plot)
-        plotView.plottingBounds = plot.plotBounds
+        plotView.setPlottingBounds(plot.plotBounds)
         var xAxis = PlotAxis(direction: .x)
         var yAxis = PlotAxis(direction: .y)
         plotView.addPlottable(xAxis)

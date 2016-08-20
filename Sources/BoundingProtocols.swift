@@ -51,6 +51,18 @@ public extension Plotting2D {
         plots.append(newPlottable)
     }
     
+    mutating func setPlottingBounds(newBounds: NSRect) {
+        plottingBounds = newBounds
+        if(newBounds.width == 0) {
+            plottingBounds.origin.x += -0.5
+            plottingBounds.size.width = 1
+        }
+        if(newBounds.height == 0) {
+            plottingBounds.origin.y += -0.5
+            plottingBounds.size.height = 1
+        }
+    }
+    
     func updatePlotting() {
         for plot in plots {
             plot.fitTo(self)

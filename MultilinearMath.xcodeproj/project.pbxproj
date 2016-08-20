@@ -21,6 +21,7 @@
 		BA4E2A291D16AB28006008BB /* ActivationFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */; };
 		BA4E2A2B1D16AE12006008BB /* ParametricFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */; };
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
+		BA5886D41D61B3E500584ECA /* FIRFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5886D31D61B3E400584ECA /* FIRFilter.swift */; };
 		BA860B2E1D04C29E00473436 /* NestedVsMultidimensional.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */; };
 		BA860B2F1D04C29E00473436 /* MNIST_compression_pca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */; };
 		BA860B301D04C29E00473436 /* MNIST_compression_umpca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2B1D04C29E00473436 /* MNIST_compression_umpca.jpg */; };
@@ -80,6 +81,7 @@
 		BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActivationFunctions.swift; path = Sources/ActivationFunctions.swift; sourceTree = SOURCE_ROOT; };
 		BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParametricFunctions.swift; path = Sources/ParametricFunctions.swift; sourceTree = SOURCE_ROOT; };
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
+		BA5886D31D61B3E400584ECA /* FIRFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FIRFilter.swift; path = Sources/FIRFilter.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerateFunctionsFloat.swift; path = Sources/AccelerateFunctionsFloat.swift; sourceTree = SOURCE_ROOT; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				BA0E47051D5FA3E700217021 /* WaveletCreation.swift */,
+				BA5886D31D61B3E400584ECA /* FIRFilter.swift */,
 			);
 			name = Wavelets;
 			sourceTree = "<group>";
@@ -385,6 +388,7 @@
 				BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */,
 				BAC83E4F1CAAD68D00290119 /* Utilities.swift in Sources */,
 				BA0E47061D5FA3E700217021 /* WaveletCreation.swift in Sources */,
+				BA5886D41D61B3E500584ECA /* FIRFilter.swift in Sources */,
 				BA0BE4731CCB688C0024F368 /* TensorSyntacticOperators.swift in Sources */,
 				BAC83E501CAAD68D00290119 /* AccelerateFunctionsFloat.swift in Sources */,
 				BAC83E511CAAD68D00290119 /* MultidimensionalData.swift in Sources */,

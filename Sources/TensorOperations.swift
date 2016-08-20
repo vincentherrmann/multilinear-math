@@ -286,3 +286,10 @@ public func divide(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: 
     
     return quotient[0]
 }
+
+//public func multiplyComplex(a a: Tensor<Float>, complexModeA: Int = 0, b: Tensor<Float>, complexModeB: Int = 0) -> {
+//    assert(a.modeSizes[complexModeA] == b.modeSizes[complexModeB] && b.modeSizes[complexModeB] == 2)
+//    var outerA = a.modeArray.filter({$0 != complexModeA})
+//    var outerB = b.modeArray.filter({$0 != complexModeB})
+//    combine(a, forOuterModes: outerA, with: b, forOuterModes: outerB, outputData: &<#T##[T]#>, calculate: <#T##(indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceA: T, sourceB: T) -> [T]#>, writeOutput: <#T##(indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [T], inout outputData: [T]) -> ()#>)
+//}

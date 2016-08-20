@@ -52,6 +52,15 @@ class WaveletTests: XCTestCase {
         let db8Wavelet = createWaveletFromCoefficients(db8, levels: 0)
         print("db8: \(db8Wavelet)")
     }
+    
+    func testFrequencyResponse() {
+        let db4: [Float] = [0.48296291314469025, 0.836516303737469, 0.22414386804185735, -0.12940952255092145].map({$0 * pow(2, 0.5)})
+        let spectrum = FIRFilter(coefficients: db4)
+        let v = Array(0..<99).map({(Float($0)/100)})
+        let fr = v.map({spectrum.frequencyResponse(6.28*$0 - 3.14)})
+        let impulseResponse = fr.map({$0.r * $0.i})
+        print("ir: \(impulseResponse)")
+    }
 
 }
 
