@@ -26,3 +26,5 @@ QuickArrayPlot(array: impulseResponse)
 QuickArrayPlot(array: db6)
 let db6Wavelet = createWaveletFromCoefficients(db6, levels: 6)
 QuickArrayPlot(array: db6Wavelet)
+
+//test comment
