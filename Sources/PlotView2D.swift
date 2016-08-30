@@ -28,6 +28,28 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
     }
 }
 
+public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
+    public var plotView: PlotView2D
+    
+    public init(x: [Float], y: [Float], bounds: CGRect? = nil) {
+        plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
+        var plot = LinePlot(withPoints: zip(x, y).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
+        plotView.addPlottable(plot)
+        let theseBounds = bounds != nil ? bounds! : plot.plotBounds
+        plotView.setPlottingBounds(theseBounds)
+        var xAxis = PlotAxis(direction: .x)
+        var yAxis = PlotAxis(direction: .y)
+        plotView.addPlottable(xAxis)
+        plotView.addPlottable(yAxis)
+        plotView.updatePlotting()
+    }
+    
+    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
+        return PlaygroundQuickLook.View(plotView)
+    }
+}
+
+
 public class PlotView2D: NSView, Plotting2D {
     
     public var plots: [PlottableIn2D] = []
