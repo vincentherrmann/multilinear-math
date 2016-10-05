@@ -75,6 +75,7 @@
 		BA0E47021D5F4C5E00217021 /* AccelerateFunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccelerateFunctionTests.swift; sourceTree = "<group>"; };
 		BA0E47051D5FA3E700217021 /* WaveletCreation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaveletCreation.swift; path = Sources/WaveletCreation.swift; sourceTree = SOURCE_ROOT; };
 		BA1EBB381D5FD53200FA7196 /* WaveletTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveletTests.swift; sourceTree = "<group>"; };
+		BA2C7DB51D887B7C00CDE5DC /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = Playgrounds/MyPlayground.playground; sourceTree = "<group>"; };
 		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
 		BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = BackpropGraph.jpg; path = Resources/BackpropGraph.jpg; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
@@ -158,6 +159,15 @@
 			name = Wavelets;
 			sourceTree = "<group>";
 		};
+		BA2C7DB41D887B3A00CDE5DC /* WaveletPlaygrounds */ = {
+			isa = PBXGroup;
+			children = (
+				BA0E47011D5F132400217021 /* WaveletPlayground.playground */,
+				BA2C7DB51D887B7C00CDE5DC /* MyPlayground.playground */,
+			);
+			name = WaveletPlaygrounds;
+			sourceTree = "<group>";
+		};
 		BA2E8AC91CE9EFE10062B59D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,7 +188,7 @@
 		BA67AE501CA86C3E009906F2 = {
 			isa = PBXGroup;
 			children = (
-				BA0E47011D5F132400217021 /* WaveletPlayground.playground */,
+				BA2C7DB41D887B3A00CDE5DC /* WaveletPlaygrounds */,
 				BAE3DCB71D54C34F00FFF5D6 /* FFTPlayground.playground */,
 				BAEC46971D1EE60500B2696E /* TestPlayground.playground */,
 				BAEAF2CF1D1EDFC30059C97D /* README.md */,
@@ -326,6 +336,7 @@
 				TargetAttributes = {
 					BAC83E341CAAD61400290119 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 					BAC83E3D1CAAD61500290119 = {
 						CreatedOnToolsVersion = 7.3;
@@ -535,6 +546,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vincentherrmann.MultilinearMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -558,6 +570,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 2.3;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

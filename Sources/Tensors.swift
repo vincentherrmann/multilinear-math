@@ -158,7 +158,7 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         
         let elementCount = modeSizes.reduce(1, combine: {$0*$1})
         let modeCount = modeSizes.count
-        var diagonalLength: Int = modeSizes.count > 0 ? modeSizes.minElement()! : 1
+        let diagonalLength: Int = modeSizes.count > 0 ? modeSizes.minElement()! : 1
         var values = [T](count: elementCount, repeatedValue:T(0))
         
         for i in 0..<diagonalLength {
@@ -328,7 +328,7 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         propertiesArray.append(modeCount)
         propertiesArray.appendContentsOf(modeSizes)
         
-        var data = NSMutableData(bytes: &propertiesArray, length: sizeof(Int)*propertiesArray.count)
+        let data = NSMutableData(bytes: &propertiesArray, length: sizeof(Int)*propertiesArray.count)
         data.appendBytes(values, length: sizeof(Element) * elementCount)
         
         data.writeToFile(path, atomically: true)

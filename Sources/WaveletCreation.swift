@@ -72,3 +72,24 @@ public func newWaveletApproximation(currentApproximation: [Float], coefficients:
     }
     return newApproximation
 }
+
+public func newFilterApproximation(currentApproximation: [Float], coefficients: [Float]) -> [Float] {
+    let newValueCount = 2*currentApproximation.count + coefficients.count - 2
+    var newApproximation = [Float](count: newValueCount, repeatedValue: 0)
+    
+    for j in 0..<newValueCount {
+        var currentValue: Float = 0
+        for k in 0..<coefficients.count {
+            if((j+k) % 2 == 0) {
+                let index = (j-k)/2
+                if(index >= 0 && index < currentApproximation.count) {
+                    currentValue += coefficients[k] * currentApproximation[index]
+                }
+                
+            }
+        }
+        newApproximation[j] = currentValue
+    }
+    
+    return newApproximation
+}

@@ -78,7 +78,7 @@
             startingLineNumber = "234"
             endingLineNumber = "234"
             landmarkName = "substract(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -94,7 +94,7 @@
             startingLineNumber = "239"
             endingLineNumber = "239"
             landmarkName = "substract(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -110,7 +110,7 @@
             startingLineNumber = "113"
             endingLineNumber = "113"
             landmarkName = "Tensor"
-            landmarkType = "3">
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -126,7 +126,7 @@
             startingLineNumber = "128"
             endingLineNumber = "128"
             landmarkName = "init(modeSizes:values:)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -142,7 +142,7 @@
             startingLineNumber = "117"
             endingLineNumber = "117"
             landmarkName = "Tensor"
-            landmarkType = "3">
+            landmarkType = "14">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -253,8 +253,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "123"
             endingLineNumber = "123"
-            landmarkName = "changeOrderOfModeIn(_:mode:newOrder:)"
-            landmarkType = "7">
+            landmarkName = "changeOrderOfModeIn(tensor:mode:newOrder:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -269,8 +269,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "125"
             endingLineNumber = "125"
-            landmarkName = "changeOrderOfModeIn(_:mode:newOrder:)"
-            landmarkType = "7">
+            landmarkName = "changeOrderOfModeIn(tensor:mode:newOrder:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -755,39 +755,7 @@
             startingLineNumber = "249"
             endingLineNumber = "249"
             landmarkName = "multiplyElementwise(a:commonModesA:outerModesA:b:commonModesB:outerModesB:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/Tensors.swift"
-            timestampString = "487974692.481475"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
-            landmarkName = "init(withPropertiesOf:onlyModes:newModeSizes:repeatedValue:values:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/Tensors.swift"
-            timestampString = "487974692.481475"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
-            landmarkName = "init(withPropertiesOf:onlyModes:newModeSizes:repeatedValue:values:)"
-            landmarkType = "5">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

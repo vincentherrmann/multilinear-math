@@ -74,4 +74,3 @@ public protocol PlottableIn2D {
     func draw()
     func fitTo(plotting: Plotting2D)
 }
-

@@ -13,11 +13,11 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
     
     public init(array: [Float]) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
-        var plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
+        let plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
         plotView.addPlottable(plot)
         plotView.setPlottingBounds(plot.plotBounds)
-        var xAxis = PlotAxis(direction: .x)
-        var yAxis = PlotAxis(direction: .y)
+        let xAxis = PlotAxis(direction: .x)
+        let yAxis = PlotAxis(direction: .y)
         plotView.addPlottable(xAxis)
         plotView.addPlottable(yAxis)
         plotView.updatePlotting()
@@ -33,12 +33,35 @@ public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
     
     public init(x: [Float], y: [Float], bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
-        var plot = LinePlot(withPoints: zip(x, y).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
+        let plot = LinePlot(withPoints: zip(x, y).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
         plotView.addPlottable(plot)
         let theseBounds = bounds != nil ? bounds! : plot.plotBounds
         plotView.setPlottingBounds(theseBounds)
-        var xAxis = PlotAxis(direction: .x)
-        var yAxis = PlotAxis(direction: .y)
+        let xAxis = PlotAxis(direction: .x)
+        let yAxis = PlotAxis(direction: .y)
+        plotView.addPlottable(xAxis)
+        plotView.addPlottable(yAxis)
+        plotView.updatePlotting()
+    }
+    
+    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
+        return PlaygroundQuickLook.View(plotView)
+    }
+}
+
+public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
+    public var plotView: PlotView2D
+    
+    public init(x: [Float], y1: [Float], y2: [Float], bounds: CGRect? = nil) {
+        plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
+        let xPositions = x + x.reverse()
+        let yPositions = y1 + y2.reverse()
+        let plot = ClosedLinePlot(withPoints: zip(xPositions, yPositions).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
+        plotView.addPlottable(plot)
+        let theseBounds = bounds != nil ? bounds! : plot.plotBounds
+        plotView.setPlottingBounds(theseBounds)
+        let xAxis = PlotAxis(direction: .x)
+        let yAxis = PlotAxis(direction: .y)
         plotView.addPlottable(xAxis)
         plotView.addPlottable(yAxis)
         plotView.updatePlotting()
@@ -74,6 +97,11 @@ public class PlotView2D: NSView, Plotting2D {
         for thisPlot in plots {
             thisPlot.draw()
         }
+    }
+    
+    public func writeAsPdfTo(path: String) {
+        let pdfData = self.dataWithPDFInsideRect(bounds)
+        pdfData.writeToFile(path, atomically: false)
     }
 }
 
@@ -293,6 +321,13 @@ public class StepPlot: LinePlot {
             xPosition += xStep
             points.append(CGPoint(x: xPosition, y: value))
         }
+    }
+}
+
+public class ClosedLinePlot: LinePlot {
+    override public func createGraph() {
+        super.createGraph()
+        path.closePath()
     }
 }
 
