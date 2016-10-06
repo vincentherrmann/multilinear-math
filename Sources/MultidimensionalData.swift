@@ -398,7 +398,7 @@ public extension MultidimensionalData {
         let group = DispatchGroup()
         let sync = NSObject()
         
-        var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works...
+        var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works... see proposal 0035-limit-inout-capture
         
         func actionRecurse(outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
             if(modeNumber < outerModes.count) {
@@ -562,7 +562,7 @@ public func combine<T: MultidimensionalData>(_ a: T, forOuterModes outerModesA: 
     
     let outerModeCount = outerModesA.count + outerModesB.count
     
-    var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works...
+    var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works... see proposal 0035-limit-inout-capture
     
     func actionRecurse(_ modeNumber: Int, currentIndexA: [DataSliceSubscript], currentIndexB: [DataSliceSubscript], currentOuterIndex: [DataSliceSubscript]) {
         if(modeNumber < outerModeCount) {

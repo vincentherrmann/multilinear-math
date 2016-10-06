@@ -11,6 +11,12 @@ import Cocoa
 public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
     
+    public var customPlaygroundQuickLook: PlaygroundQuickLook {
+        get {
+            return PlaygroundQuickLook.view(plotView)
+        }
+    }
+    
     public init(array: [Float]) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
         let plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
@@ -23,13 +29,19 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
         plotView.updatePlotting()
     }
     
-    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
-        return PlaygroundQuickLook.view(plotView)
-    }
+//    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
+//        return PlaygroundQuickLook.view(plotView)
+//    }
 }
 
 public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
+    
+    public var customPlaygroundQuickLook: PlaygroundQuickLook {
+        get {
+            return PlaygroundQuickLook.view(plotView)
+        }
+    }
     
     public init(x: [Float], y: [Float], bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
@@ -44,13 +56,19 @@ public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
         plotView.updatePlotting()
     }
     
-    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
-        return PlaygroundQuickLook.view(plotView)
-    }
+//    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
+//        return PlaygroundQuickLook.view(plotView)
+//    }
 }
 
 public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
+    
+    public var customPlaygroundQuickLook: PlaygroundQuickLook {
+        get {
+            return PlaygroundQuickLook.view(plotView)
+        }
+    }
     
     public init(x: [Float], y1: [Float], y2: [Float], bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
@@ -67,9 +85,9 @@ public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
         plotView.updatePlotting()
     }
     
-    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
-        return PlaygroundQuickLook.view(plotView)
-    }
+//    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
+//        return PlaygroundQuickLook.view(plotView)
+//    }
 }
 
 
@@ -101,7 +119,11 @@ public class PlotView2D: NSView, Plotting2D {
     
     public func writeAsPdfTo(path: String) {
         let pdfData = self.dataWithPDF(inside: bounds)
-        pdfData.writeToFile(path, atomically: false)
+        do {
+            try pdfData.write(to: URL(fileURLWithPath: path))
+        } catch {
+            print("could not write file to \(path)")
+        }
     }
 }
 

@@ -119,6 +119,13 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         }
     }
     
+    public var customMirror: Mirror {
+        get {
+            let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .tuple)
+            return mirror
+        }
+    }
+    
     public init(modeSizes: [Int], values: [T]) {
         let elementCount = modeSizes.reduce(1, {$0*$1})
         assert(elementCount == values.count, "Cannot initialize a tensor with \(elementCount) elements with \(values.count) values")
@@ -452,10 +459,10 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         return result
     }
     
-    public func customMirror() -> Mirror {
-        let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .tuple)
-        return mirror
-    }
+//    public func customMirror() -> Mirror {
+//        let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .tuple)
+//        return mirror
+//    }
 }
 
 
