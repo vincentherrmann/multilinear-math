@@ -12,22 +12,23 @@ import Accelerate
 //VECTOR OPERATIONS//
 
 /// Add a scalar to a every element of a vector
-public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector vector: A, add: Float) -> [Float] {
-    var sum = [Float](count: vector.count, repeatedValue: 0)
+public func vectorAddition<A: UnsafeBuffer>(vector: A, add: Float) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var sum = [Float](repeating: 0, count: vector.count)
+    
     var addScalar = add
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_vsadd(pointer.baseAddress, 1, &addScalar, &sum, 1, UInt(vector.count))
+        vDSP_vsadd(pointer.baseAddress!, 1, &addScalar, &sum, 1, UInt(vector.count))
     }
     return sum
 }
 
 /// Add two vectors of same size
 /// - Returns: The sum vector
-public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA vectorA: A, vectorB: A) -> [Float] {
-    var sum = [Float](count: vectorA.count, repeatedValue: 0)
+public func vectorAddition<A: UnsafeBuffer>(vectorA: A, vectorB: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var sum = [Float](repeating: 0, count: vectorA.count)
     vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
         vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
-            vDSP_vadd(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &sum, 1, UInt(vectorA.count))
+            vDSP_vadd(pointerA.baseAddress!, 1, pointerB.baseAddress!, 1, &sum, 1, UInt(vectorA.count))
         }
     }
     return sum
@@ -36,7 +37,7 @@ public func vectorAddition<A: UnsafeBuffer where A.Generator.Element == Float, A
 
 /// Substract `vectorB` from `vectorA` of the same size
 /// - Returns: The difference vector
-public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
+public func vectorSubtraction<A: UnsafeBuffer>(_ vectorA: A, vectorB: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
 //    var difference = [Float](count: vectorA.count, repeatedValue: 0)
 //    vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
 //        vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
@@ -52,22 +53,22 @@ public func vectorSubtraction<A: UnsafeBuffer where A.Generator.Element == Float
 }
 
 /// Multiply every element of a vector with a scalar factor
-public func vectorMultiplication<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A, factor: Float) -> [Float] {
-    var product = [Float](count: vector.count, repeatedValue: 0)
+public func vectorMultiplication<A: UnsafeBuffer>(_ vector: A, factor: Float) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var product = [Float](repeating: 0, count: vector.count)
     var factorScalar = factor
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_vsmul(pointer.baseAddress, 1, &factorScalar, &product, 1, UInt(vector.count))
+        vDSP_vsmul(pointer.baseAddress!, 1, &factorScalar, &product, 1, UInt(vector.count))
     }
     return product
 }
 
 /// Multiply two vectors of same size element wise
 /// - Returns: The product vector
-public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
-    var product = [Float](count: vectorA.count, repeatedValue: 0)
+public func vectorElementWiseMultiplication<A: UnsafeBuffer>(_ vectorA: A, vectorB: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var product = [Float](repeating: 0, count: vectorA.count)
     vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
         vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
-            vDSP_vmul(pointerA.baseAddress, 1, pointerB.baseAddress, 1, &product, 1, UInt(vectorA.count))
+            vDSP_vmul(pointerA.baseAddress!, 1, pointerB.baseAddress!, 1, &product, 1, UInt(vectorA.count))
         }
     }
     return product
@@ -75,69 +76,69 @@ public func vectorElementWiseMultiplication<A: UnsafeBuffer where A.Generator.El
 
 /// Divide `vectorA` by `vectorB` element wise
 /// - Returns: The difference vector
-public func vectorDivision<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vectorA: A, vectorB: A) -> [Float] {
-    var quotient = [Float](count: vectorA.count, repeatedValue: 0)
+public func vectorDivision<A: UnsafeBuffer>(_ vectorA: A, vectorB: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var quotient = [Float](repeating: 0, count: vectorA.count)
     vectorA.performWithUnsafeBufferPointer { (pointerA: UnsafeBufferPointer<Float>) -> Void in
         vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
-            vDSP_vdiv(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &quotient, 1, UInt(vectorA.count))
+            vDSP_vdiv(pointerB.baseAddress!, 1, pointerA.baseAddress!, 1, &quotient, 1, UInt(vectorA.count))
         }
     }
     return quotient
 }
 
 /// Divide a scalar by every element of a vector
-public func vectorDivision<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(numerator numerator: Float, vector: A) -> [Float] {
-    var quotient = [Float](count: vector.count, repeatedValue: 0)
+public func vectorDivision<A: UnsafeBuffer>(numerator: Float, vector: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var quotient = [Float](repeating: 0, count: vector.count)
     var numScalar = numerator
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_svdiv(&numScalar, pointer.baseAddress, 1, &quotient, 1, UInt(vector.count))
+        vDSP_svdiv(&numScalar, pointer.baseAddress!, 1, &quotient, 1, UInt(vector.count))
     }
     return quotient
 }
 
 /// Calculate the negative of every element of a vector
-public func vectorNegation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
-    var neg = [Float](count: vector.count, repeatedValue: 0)
+public func vectorNegation<A: UnsafeBuffer>(_ vector: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var neg = [Float](repeating: 0, count: vector.count)
     vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_vneg(pointer.baseAddress, 1, &neg, 1, UInt(vector.count))
+        vDSP_vneg(pointer.baseAddress!, 1, &neg, 1, UInt(vector.count))
     }
     return neg
 }
 
 /// Calculate the sum of all elements in the vector
-public func vectorSummation<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> Float {
+public func vectorSummation<A: UnsafeBuffer>(_ vector: A) -> Float where A.Iterator.Element == Float, A.Index == Int {
     var sum: Float = 0
     vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_sve(pointer.baseAddress, 1, &sum, UInt(vector.count))
+        vDSP_sve(pointer.baseAddress!, 1, &sum, UInt(vector.count))
     }
     return sum
 }
 
 /// Square every element of the vector
-public func vectorSquaring<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
-    var squares = [Float](count: vector.count, repeatedValue: 0)
+public func vectorSquaring<A: UnsafeBuffer>(_ vector: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var squares = [Float](repeating: 0, count: vector.count)
     vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_vsq(pointer.baseAddress, 1, &squares, 1, UInt(vector.count))
+        vDSP_vsq(pointer.baseAddress!, 1, &squares, 1, UInt(vector.count))
     }
     return squares
 }
 
 /// Calculate the exponential (e^v[n]) of every element of the vector
-public func vectorExponential<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
-    var exp = [Float](count: vector.count, repeatedValue: 0)
+public func vectorExponential<A: UnsafeBuffer>(_ vector: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var exp = [Float](repeating: 0, count: vector.count)
     var count = Int32(vector.count)
     vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vvexpf(&exp, pointer.baseAddress, &count)
+        vvexpf(&exp, pointer.baseAddress!, &count)
     }
     return exp
 }
 
 /// Calculate the (natural) logarithm of every element of the vector
-public func vectorLogarithm<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> [Float] {
-    var log = [Float](count: vector.count, repeatedValue: 0)
+public func vectorLogarithm<A: UnsafeBuffer>(_ vector: A) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
+    var log = [Float](repeating: 0, count: vector.count)
     var count = Int32(vector.count)
     vector.performWithUnsafeBufferPointer{ (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vvlogf(&log, pointer.baseAddress, &count)
+        vvlogf(&log, pointer.baseAddress!, &count)
     }
     return log
 }
@@ -147,15 +148,15 @@ public func vectorLogarithm<A: UnsafeBuffer where A.Generator.Element == Float, 
 /// `normalizedVector` with mean 0 and standard deviation 1, <br>
 /// `mean` of the input vector, <br>
 /// `standardDeviation` of the input vector
-public func vectorNormalization<A: UnsafeBuffer where A.Generator.Element == Float, A.Index == Int>(vector: A) -> (normalizedVector: [Float], mean: Float, standardDeviation: Float) {
-    var norm = [Float](count: vector.count, repeatedValue: 0)
+public func vectorNormalization<A: UnsafeBuffer>(_ vector: A) -> (normalizedVector: [Float], mean: Float, standardDeviation: Float) where A.Iterator.Element == Float, A.Index == Int {
+    var norm = [Float](repeating: 0, count: vector.count)
     var mean: Float = 0
     var deviation: Float = 0
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_normalize(pointer.baseAddress, 1, &norm, 1, &mean, &deviation, UInt(vector.count))
+        vDSP_normalize(pointer.baseAddress!, 1, &norm, 1, &mean, &deviation, UInt(vector.count))
     }
     if(mean == 0 && deviation == 0) {
-        norm = [Float](count: vector.count, repeatedValue: 0)
+        norm = [Float](repeating: 0, count: vector.count)
     }
     return (norm, mean, deviation)
 }
@@ -191,17 +192,17 @@ public struct MatrixSize {
 }
 
 /// Matrix transpose
-public func matrixTranspose<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> [Float] {
-    var result = [Float](count: size.columns*size.rows, repeatedValue: 0)
+public func matrixTranspose<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Float] where A.Iterator.Element == Float {
+    var result = [Float](repeating: 0, count: size.columns*size.rows)
     matrix.performWithUnsafeBufferPointer { (matrixPointer: UnsafeBufferPointer<Float>) -> Void in
-        vDSP_mtrans(matrixPointer.baseAddress, 1, &result, 1, UInt(size.columns), UInt(size.rows))
+        vDSP_mtrans(matrixPointer.baseAddress!, 1, &result, 1, UInt(size.columns), UInt(size.rows))
     }
     return result
 }
 
 /// Check if the dimensions are compatible for matrix multiplication
 /// - Returns: The effective matrixSizes after transposition
-internal func matrixMultiplyDimensions(sizeA sizeA: MatrixSize, transposeA: Bool, sizeB: MatrixSize, transposeB: Bool) -> (sizeA: MatrixSize, sizeB: MatrixSize) {
+internal func matrixMultiplyDimensions(sizeA: MatrixSize, transposeA: Bool, sizeB: MatrixSize, transposeB: Bool) -> (sizeA: MatrixSize, sizeB: MatrixSize) {
     
     if (transposeA && transposeB) {
         assert(sizeA.rows == sizeB.columns, "Cannot multiply matrices of size \(sizeA.columns)x\(sizeA.rows) and \(sizeB.columns)x\(sizeB.rows)")
@@ -242,13 +243,13 @@ public extension CBLAS_TRANSPOSE {
 /// - Parameter sizeB: The size of `matrixB`
 /// - Parameter transposeB: `matrixB` should be transposed before the multiplication. Default: `false`
 /// - Returns: The product matrix
-public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Float>(matrixA matrixA: A, sizeA: MatrixSize, transposeA: Bool = false, matrixB: A, sizeB: MatrixSize, transposeB: Bool = false, useBLAS: Bool = false) -> [Float] {
+public func matrixMultiplication<A: UnsafeBuffer>(matrixA: A, sizeA: MatrixSize, transposeA: Bool = false, matrixB: A, sizeB: MatrixSize, transposeB: Bool = false, useBLAS: Bool = false) -> [Float] where A.Iterator.Element == Float {
     
     //vDSP seems to have better performance, at least for matrices with 10,000,000 elements or fewer.
     let (newSizeA, newSizeB) = matrixMultiplyDimensions(sizeA: sizeA, transposeA: transposeA, sizeB: sizeB, transposeB: transposeB)
     //print("matrix multiplication: (\(newSizeA.rows) x \(newSizeA.columns)) * (\(newSizeB.rows) x \(newSizeB.columns))")
     
-    var matrixC = [Float](count: newSizeA.rows * newSizeB.columns, repeatedValue: 0)
+    var matrixC = [Float](repeating: 0, count: newSizeA.rows * newSizeB.columns)
     
     matrixA.performWithUnsafeBufferPointer { (matrixABuffer: UnsafeBufferPointer<Float>) -> Void in
         matrixB.performWithUnsafeBufferPointer { (matrixBBuffer: UnsafeBufferPointer<Float>) -> Void in
@@ -261,11 +262,11 @@ public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
                 if (transposeA && transposeB) {
                     vDSP_mmul(matrixTranspose(matrixA, size: sizeA), 1, matrixTranspose(matrixB, size: sizeB), 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
                 } else if transposeA {
-                    vDSP_mmul(matrixTranspose(matrixA, size: sizeA), 1, matrixBPointer, 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
+                    vDSP_mmul(matrixTranspose(matrixA, size: sizeA), 1, matrixBPointer!, 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
                 } else if transposeB {
-                    vDSP_mmul(matrixAPointer, 1, matrixTranspose(matrixB, size: sizeB), 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
+                    vDSP_mmul(matrixAPointer!, 1, matrixTranspose(matrixB, size: sizeB), 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
                 } else {
-                    vDSP_mmul(matrixAPointer, 1, matrixBPointer, 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
+                    vDSP_mmul(matrixAPointer!, 1, matrixBPointer!, 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
                 }
             }
         }
@@ -281,38 +282,38 @@ public func matrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Fl
 /// - Parameter diagonalMatrixSize: The size of the diagonal matrix. Does not have to be square.
 /// - Parameter matrixFirst: If true, the full matrix is left and the diagonal matrix is right, else the diagonal matrix is left and the full matrix is right.
 /// - Returns: The product matrix
-public func diagonalMatrixMultiplication<A: UnsafeBuffer where A.Generator.Element == Float, A.SubSequence.Generator.Element == Float, A.Index == Int>(matrix: A, size: MatrixSize, diagonals: A, diagonalMatrixSize: MatrixSize, matrixFirst: Bool) -> [Float] {
+public func diagonalMatrixMultiplication<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize, diagonals: A, diagonalMatrixSize: MatrixSize, matrixFirst: Bool) -> [Float] where A.Iterator.Element == Float, A.SubSequence.Iterator.Element == Float, A.Index == Int {
     
     var product: [Float] = []
     
     
     if(matrixFirst) { // calculate M * D
         //        assert(diagonals.count <= size.columns, "Cannot multiply \(diagonals.count) diagonal values with a \(size.rows) x \(size.columns) matrix")
-        let diagonalValues = Array(diagonals) + [Float](count: diagonalMatrixSize.columns - diagonals.count, repeatedValue: 0)
+        let diagonalValues = Array(diagonals) + [Float](repeating: 0, count: diagonalMatrixSize.columns - diagonals.count)
         
         let productSize = MatrixSize(rows: size.rows, columns: diagonalMatrixSize.columns)
         product.reserveCapacity(productSize.elementCount)
         let rangeLength = min(size.columns, diagonals.count)
-        let paddingZeros = [Float](count: diagonalMatrixSize.columns - rangeLength, repeatedValue: 0)
+        let paddingZeros = [Float](repeating: 0, count: diagonalMatrixSize.columns - rangeLength)
         
         for r in 0..<size.rows {
-            let thisRange = Range(start: r*size.columns, distance: rangeLength)
+            let thisRange = CountableRange(start: r*size.columns, distance: rangeLength)
             let slice = Array(matrix[thisRange]) + paddingZeros
             let result = vectorElementWiseMultiplication(slice, vectorB: diagonalValues)
-            product.appendContentsOf(result)
+            product.append(contentsOf: result)
         }
     } else { // calculate D * M
         //        assert(diagonals.count <= size.rows, "Cannot multiply a \(size.rows) x \(size.columns) matrix with \(diagonals.count) diagonal values")
-        let diagonalValues = Array(diagonals) + [Float](count: diagonalMatrixSize.rows - diagonals.count, repeatedValue: 0)
+        let diagonalValues = Array(diagonals) + [Float](repeating: 0, count: diagonalMatrixSize.rows - diagonals.count)
         
         let productSize = MatrixSize(rows: diagonalMatrixSize.rows, columns: size.columns)
         product.reserveCapacity(productSize.elementCount)
         
         for d in 0..<diagonalValues.count {
-            let thisRange = Range(start: d*size.columns, distance: size.columns)
+            let thisRange = CountableRange(start: d*size.columns, distance: size.columns)
             let slice = Array(matrix[thisRange])
             let result = vectorMultiplication(slice, factor: diagonals[d])
-            product.appendContentsOf(result)
+            product.append(contentsOf: result)
         }
     }
     
@@ -323,7 +324,7 @@ public func diagonalMatrixMultiplication<A: UnsafeBuffer where A.Generator.Eleme
 /// - Returns:
 /// `eigenvalues:` The eigenvalues of the matrix in descending magnitude <br>
 /// `eigenvectors:` The corresponding eigenvectors as row vectors in a matrix
-public func eigendecomposition<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> (eigenvalues: [Float], eigenvectors: [Float]) {
+public func eigendecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> (eigenvalues: [Float], eigenvectors: [Float]) where A.Iterator.Element == Float {
     assert(size.rows == size.columns, "eigendecomposition not possible for matrix of dimension \(size.rows)x\(size.columns)")
     print("eigendecomposition of a \(size.rows) x \(size.columns) matrix")
     
@@ -331,12 +332,12 @@ public func eigendecomposition<A: UnsafeBuffer where A.Generator.Element == Floa
     var jobvl = "N".charValue //options for left eigenvectors, "N" means the left eigenvectors are not computed
     var jobvr = "V".charValue //options for left eigenvectors, "V" means the left eigenvectors are computed
     var n = Int32(size.rows)
-    var wr = [Float](count: Int(n), repeatedValue: 0) //eigenvalues (real part)
-    var wi = [Float](count: Int(n), repeatedValue: 0) //eigenvalues (imaginary part)
+    var wr = [Float](repeating: 0, count: Int(n)) //eigenvalues (real part)
+    var wi = [Float](repeating: 0, count: Int(n)) //eigenvalues (imaginary part)
     var vl = [Float]() //(left eigenvectors are not computed)
-    var vr = [Float](count: Int(n*n), repeatedValue: 0) //right eigenvectors
+    var vr = [Float](repeating: 0, count: Int(n*n)) //right eigenvectors
     var lwork = 40*n
-    var workspace = [__CLPK_real](count: Int(lwork), repeatedValue: 0)
+    var workspace = [__CLPK_real](repeating: 0, count: Int(lwork))
     var info: Int32 = 0
     
     //eigendecomposition
@@ -349,8 +350,8 @@ public func eigendecomposition<A: UnsafeBuffer where A.Generator.Element == Floa
     }
     
     
-    let newOrder = wr.combineWith(Array(0..<Int(n)), combineFunction: {($0, $1)}).sort({abs($0.0) > abs($1.0)})
-    let sortedEigenvectors = newOrder.map({vr[Range(start: $0.1*Int(n), distance: Int(n))]}).flatMap({Array($0)})
+    let newOrder = wr.combineWith(Array(0..<Int(n)), combineFunction: {($0, $1)}).sorted(by: {abs($0.0) > abs($1.0)})
+    let sortedEigenvectors = newOrder.map({vr[CountableRange(start: $0.1*Int(n), distance: Int(n))]}).flatMap({Array($0)})
     
     return (newOrder.map({$0.0}), sortedEigenvectors)
 }
@@ -360,23 +361,23 @@ public func eigendecomposition<A: UnsafeBuffer where A.Generator.Element == Floa
 /// `uMatrix`: The left singular vectors as row vectors in a matrix
 /// `singularValues`: Vector consisting of all singular values
 /// `vMatrix`: The right singular vectors as row vectors in a matrix
-public func singularValueDecomposition<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> (uMatrix: [Float], singularValues: [Float], vMatrix: [Float]) {
+public func singularValueDecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> (uMatrix: [Float], singularValues: [Float], vMatrix: [Float]) where A.Iterator.Element == Float {
     
     var inMatrix = matrixTranspose(matrix, size: size) //LAPACK uses Fortran style column-major matrices, hence the transpose
     var jobu = "A".charValue //options for left singular vectors, "A" means the full m x m matrix is returned in u
     var jobvt = "A".charValue //options for right singular vectors, "A" means the full transposed n x n matrix is returned in vt
     var m = Int32(size.rows)
     var n = Int32(size.columns)
-    var s = [Float](count: Int(min(m, n)), repeatedValue: 0) //the singular values
-    var u = [Float](count: Int(m*m), repeatedValue: 0) //matrix containing the left singular vectors
-    var vt = [Float](count: Int(n*n), repeatedValue: 0) //transposed matrix containing the left singular vectors
+    var s = [Float](repeating: 0, count: Int(min(m, n))) //the singular values
+    var u = [Float](repeating: 0, count: Int(m*m)) //matrix containing the left singular vectors
+    var vt = [Float](repeating: 0, count: Int(n*n)) //transposed matrix containing the left singular vectors
     var info: Int32 = 0
     
     //calculate size for workspace
     let lwork1 = 3*min(m, n) + max(m, n) + 10
     let lwork2 = 5*min(m, n)-4 + 10
     var lwork = Int32(max(lwork1, lwork2))
-    var workspace = [__CLPK_real](count: Int(lwork), repeatedValue: 0)
+    var workspace = [__CLPK_real](repeating: 0, count: Int(lwork))
     
     //SVD
     //documentation: http://www.netlib.org/lapack/explore-html/d4/dca/group__real_g_esing.html#gaf03d06284b1bfabd3d6c0f6955960533
@@ -390,13 +391,13 @@ public func singularValueDecomposition<A: UnsafeBuffer where A.Generator.Element
 }
 
 /// Inverse of a square matrix
-public func matrixInverse<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> [Float] {
+public func matrixInverse<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Float] where A.Iterator.Element == Float {
     
     assert(size.rows == size.columns, "inverse not possible for matrix of dimension \(size.rows)x\(size.columns)")
     var inMatrix = Array(matrix)
     
     var n = Int32(size.rows)
-    var pivots = [Int32](count: size.rows, repeatedValue: 0)
+    var pivots = [Int32](repeating: 0, count: size.rows)
     var info: Int32 = 0
     
     //LU factorization
@@ -408,10 +409,10 @@ public func matrixInverse<A: UnsafeBuffer where A.Generator.Element == Float>(ma
     var workspace: [__CLPK_real]
     var lwork : Int32
     if(n < 60) {
-        workspace = [__CLPK_real](count: Int(n), repeatedValue: 0)
+        workspace = [__CLPK_real](repeating: 0, count: Int(n))
         lwork = Int32(n)
     } else {
-        workspace = [__CLPK_real](count: Int(n)*128, repeatedValue: 0)
+        workspace = [__CLPK_real](repeating: 0, count: Int(n)*128)
         lwork = Int32(n*128)
     }
     info = 0
@@ -430,7 +431,7 @@ public func matrixInverse<A: UnsafeBuffer where A.Generator.Element == Float>(ma
 /// - Parameter matrix: The matrix that will be inversed
 /// - Parameter size: The size of this matrix. Does not have to be square
 /// - Returns: The pseudoinverse matrix of with the transposed size of the input matrix.
-public func pseudoInverse<A: UnsafeBuffer where A.Generator.Element == Float>(matrix: A, size: MatrixSize) -> [Float] {
+public func pseudoInverse<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Float] where A.Iterator.Element == Float {
     //matrix: m x n
     //u: m x m, s: m x n, v: n x n
     let (u, s, v) = singularValueDecomposition(matrix, size: size)
@@ -445,7 +446,7 @@ public func pseudoInverse<A: UnsafeBuffer where A.Generator.Element == Float>(ma
     return inverse
 }
 
-public func solveLinearEquationSystem<A: UnsafeBuffer where A.Generator.Element == Float>(factorMatrix: A, factorMatrixSize: MatrixSize, results: A, resultsSize: MatrixSize) -> [Float] {
+public func solveLinearEquationSystem<A: UnsafeBuffer>(_ factorMatrix: A, factorMatrixSize: MatrixSize, results: A, resultsSize: MatrixSize) -> [Float] where A.Iterator.Element == Float {
     
     assert(factorMatrixSize.columns == factorMatrixSize.rows, "factor matrix is not square: \(factorMatrixSize)")
     assert(factorMatrixSize.columns == resultsSize.rows, "resultsSize \(resultsSize.rows) is not compatible with factor matrix size \(factorMatrixSize.columns)")
@@ -456,7 +457,7 @@ public func solveLinearEquationSystem<A: UnsafeBuffer where A.Generator.Element 
     var lda = n
     var ldb = n
     var nrhs = Int32(resultsSize.columns)
-    var ipiv = [Int32](count: Int(n), repeatedValue: 0)
+    var ipiv = [Int32](repeating: 0, count: Int(n))
     var info: Int32 = 0
     
     let r = sgesv_(&n, &nrhs, &a, &lda, &ipiv, &b, &ldb, &info)

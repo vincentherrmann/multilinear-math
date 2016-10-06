@@ -14,10 +14,10 @@ public protocol Number: Comparable {
     init(_ value: Float)
     init(_ value: Double)
     
-    func + (lhs: Self, rhs: Self) -> Self
-    func - (lhs: Self, rhs: Self) -> Self
-    func * (lhs: Self, rhs: Self) -> Self
-    func / (lhs: Self, rhs: Self) -> Self
+    static func + (lhs: Self, rhs: Self) -> Self
+    static func - (lhs: Self, rhs: Self) -> Self
+    static func * (lhs: Self, rhs: Self) -> Self
+    static func / (lhs: Self, rhs: Self) -> Self
 }
 
 extension Double : Number {}
@@ -38,68 +38,73 @@ extension Int: IntegerType {
 
 // credit for the UnsafeBuffer protocol to Chris Liscio https://github.com/liscio
 /// A CollectionType that can perfom functions on its Unsafe(Mutable)BufferPointer
-public protocol UnsafeBuffer: CollectionType {
+public protocol UnsafeBuffer: RandomAccessCollection {
+    typealias IndexDistance = Int
+    
     /// Perform the a function with a UnsafeBufferPointer to this collection
-    func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Self.Generator.Element>) throws -> R) -> R?
+    func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Self.Iterator.Element>) throws -> R) -> R?
 }
 
-public protocol UnsafeMutableBuffer: UnsafeBuffer, MutableCollectionType {
+public protocol UnsafeMutableBuffer: UnsafeBuffer, RandomAccessCollection {
+    typealias IndexDistance = Int
+    
     /// Perform the a function with a UnsafeMutableBufferPointer to this collection
-    mutating func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Self.Generator.Element>) throws -> R) -> R?
+    mutating func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Self.Iterator.Element>) throws -> R) -> R?
 }
 
 
 extension Array : UnsafeMutableBuffer {
-    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+    public func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Iterator.Element>) throws -> R) -> R? {
         let value = try? withUnsafeBufferPointer(body)
         return value
     }
     
-    mutating public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+    mutating public func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R) -> R? {
+
         let value = try? withUnsafeMutableBufferPointer(body)
         return value
     }
 }
 extension ArraySlice : UnsafeMutableBuffer {
-    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+    public func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) -> R? {
         let value = try? withUnsafeBufferPointer(body)
         return value
     }
     
-    mutating public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+    mutating public func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R) -> R? {
         let value = try? withUnsafeMutableBufferPointer(body)
         return value
     }
 }
 extension UnsafeBufferPointer: UnsafeBuffer {
-    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+    public func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) -> R? {
         let value = try? body(self)
         return value
     }
 }
 extension UnsafeMutableBufferPointer: UnsafeMutableBuffer {
-    public func performWithUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Generator.Element>) throws -> R) -> R? {
+    public func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) -> R? {
         let thisPointer = UnsafeBufferPointer(start: baseAddress, count: count)
         let value = try? body(thisPointer)
         return value
     }
-    public func performWithUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Generator.Element>) throws -> R) -> R? {
+    public func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Iterator.Element>) throws -> R) -> R? {
         var thisPointer = self
         let value = try? body(&thisPointer)
         return value
     }
 }
 
-extension CollectionType {
+extension Collection {
     /// Return a copy of `self` with its elements shuffled
-    func shuffle() -> [Generator.Element] {
+    func shuffle() -> [Iterator.Element] {
         var list = Array(self)
         list.shuffleInPlace()
         return list
     }
 }
 
-extension MutableCollectionType where Index == Int {
+extension MutableCollection where IndexDistance == Int, Index == Int {
     /// Shuffle the elements of `self` in-place.
     mutating func shuffleInPlace() {
         // empty and single-element collections don't shuffle
@@ -115,17 +120,17 @@ extension MutableCollectionType where Index == Int {
 
 
 /// combine two arrays (preferably of same size, else smaller size is used) with the combineFunction
-func arrayCombine<A, B, R> (arrayA: [A], arrayB: [B], combineFunction: (a: A, b: B) -> R) -> [R] {
+func arrayCombine<A, B, R> (_ arrayA: [A], arrayB: [B], combineFunction: (_ a: A, _ b: B) -> R) -> [R] {
     let length = min(arrayA.count, arrayB.count)
     var result = [R]()
     for i in 0..<length {
-        result.append(combineFunction(a: arrayA[i], b: arrayB[i]))
+        result.append(combineFunction(arrayA[i], arrayB[i]))
     }
     return result
 }
 public extension Array {
     /// Combine this array with another array and a given combineFunction
-    func combineWith<E, R>(array: [E], combineFunction: (t: Element, e: E) -> R) -> [R] {
+    func combineWith<E, R>(_ array: [E], combineFunction: (_ t: Element, _ e: E) -> R) -> [R] {
         return arrayCombine(self, arrayB: array, combineFunction: combineFunction)
     }
     
@@ -135,13 +140,13 @@ public extension Array {
     }
 }
 
-public extension UnsafeBuffer where Generator.Element: Equatable, Index == Int {
+public extension UnsafeBuffer where Iterator.Element: Equatable, Index == Int {
     ///remove the given values from this array
-    func removeValues(values: [Generator.Element]) -> [Generator.Element] {
+    func removeValues(_ values: [Iterator.Element]) -> [Iterator.Element] {
         var returnArray = Array(self)
         for value in values {
-            if let index = returnArray.indexOf(value) {
-                returnArray.removeAtIndex(index)
+            if let index = returnArray.index(of: value) {
+                returnArray.remove(at: index)
                 
             }
         }
@@ -153,18 +158,18 @@ public extension UnsafeBuffer where Generator.Element: Equatable, Index == Int {
 //    return a.combineWith(b, combineFunction: {($0-$1)*($0-$1)}).reduce(0, combine: {$0+$1})
 //}
 
-public func meanSquaredError(target target: [Float], result: [Float]) -> Float {
+public func meanSquaredError(target: [Float], result: [Float]) -> Float {
     assert(target.count == result.count)
     let factor = 1 / Float(target.count)
     let errors = zip(target, result).map({pow($0.0 - $0.1, 2)})
-    return errors.reduce(0, combine: {$0 + $1}) * factor
+    return errors.reduce(0, {$0 + $1}) * factor
 }
 
-public func memoryAddress(o: UnsafePointer<Void>) -> UnsafePointer<Void> {
-    return UnsafePointer<Void>(bitPattern: unsafeBitCast(o, Int.self))
+public func memoryAddress(_ o: UnsafeRawPointer) -> UnsafeRawPointer {
+    return UnsafeRawPointer(bitPattern: unsafeBitCast(o, to: Int.self))!
 }
 
-public func printArrayAddress<T>(inout array: [T]) {
+public func printArrayAddress<T>(_ array: inout [T]) {
     print("array memory address: \(memoryAddress(&array))")
 }
 
@@ -174,24 +179,26 @@ public extension String {
     /// `Int8` value of the first character
     var charValue: Int8 {
         get {
-            return (self.cStringUsingEncoding(NSUTF8StringEncoding)?[0])!
+            return (self.cString(using: String.Encoding.utf8)?[0])!
         }
     }
     
     subscript (i: Int) -> Character {
-        return self[self.startIndex.advancedBy(i)]
+        return self[self.characters.index(self.startIndex, offsetBy: i)]
     }
     
-    subscript (r: Range<Int>) -> String {
-        let start = startIndex.advancedBy(r.startIndex)
-        let end = start.advancedBy(r.endIndex - r.startIndex)
-        return self[start..<end]
-    }
+//    subscript (r: CountableRange<Int>) -> String {
+//        let start = characters.index(startIndex, offsetBy: r.lowerBound)
+//        let end = <#T##String.CharacterView corresponding to `start`##String.CharacterView#>.index(start, offsetBy: r.upperBound - r.lowerBound)
+//        return self[start..<end]
+//    }
 }
 
 
-public extension Range {
-    init(start: Element, distance: Element.Distance) {
-        self.init(start: start, end: start.advancedBy(distance))
+public extension CountableRange {
+    init(start: Element, distance: Element.Stride) {
+        
+        let end = start.advanced(by: distance)
+        self.init(start..<end)
     }
 }

@@ -18,7 +18,7 @@ public struct FIRFilter {
         self.coefficients = coefficients
     }
     
-    public func zTransform(z: (Float, Float)) -> (r: Float, i: Float) {
+    public func zTransform(_ z: (Float, Float)) -> (r: Float, i: Float) {
         print("z transform at: \(z)")
         var x: (Float, Float) = (0, 0)
         for n in 0..<order {
@@ -31,19 +31,19 @@ public struct FIRFilter {
         return x
     }
     
-    public func frequencyResponse(omega: Float) -> (r: Float, i: Float) {
+    public func frequencyResponse(_ omega: Float) -> (r: Float, i: Float) {
         return zTransform((cos(omega), sin(omega)))
     }
     
 }
 
-public func multiplyComplex(a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
+public func multiplyComplex(_ a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
     let r = a.0 * b.0 - a.1 * b.1
     let i = a.1 * b.0 + a.0 * b.1
     return (r, i)
 }
 
-public func powComplex(z: (Float, Float), n: Int) -> (r: Float, i: Float) {
+public func powComplex(_ z: (Float, Float), n: Int) -> (r: Float, i: Float) {
     if(n == 0) {
         return (1, 0)
     }

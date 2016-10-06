@@ -11,7 +11,7 @@ import Foundation
 /// Multidimensional collection of elements of a certain type. The elements are stored in a flat array but accessed with multidimensional Integer indices.
 public protocol MultidimensionalData {
     /// the kind of value that is stored
-    typealias Element
+    associatedtype Element
     
     /// the size in of mode
     var modeSizes: [Int] {get set}
@@ -23,7 +23,7 @@ public protocol MultidimensionalData {
     init(withPropertiesOf data: Self, onlyModes: [Int]?, newModeSizes: [Int]?, repeatedValue: Element, values: [Element]?)
     
     /// Will get called everytime the order of the modes changes. If there are any changes to be done, implement them here, else do nothing
-    mutating func newModeOrder(newToOld: [Int], oldData: Self)
+    mutating func newModeOrder(_ newToOld: [Int], oldData: Self)
 }
 
 public extension MultidimensionalData {
@@ -40,7 +40,7 @@ public extension MultidimensionalData {
     var elementCount: Int {
         get {
             //multiply all modeSizes
-            return modeSizes.reduce(1, combine: {$0*$1})
+            return modeSizes.reduce(1, {$0*$1})
         }
     }
     
@@ -52,13 +52,13 @@ public extension MultidimensionalData {
     }
     
     init(modeSizes: [Int], repeatedValue: Element) {
-        let count = modeSizes.reduce(1, combine: {$0*$1})
-        self.init(modeSizes: modeSizes, values: [Element](count: count, repeatedValue: repeatedValue))
+        let count = modeSizes.reduce(1, {$0*$1})
+        self.init(modeSizes: modeSizes, values: [Element](repeating: repeatedValue, count: count))
     }
     
     /// Convert a nested multidimensional index into a flat index
     /// - Returns: The flattened index
-    func flatIndex(index: [Int]) -> Int {
+    func flatIndex(_ index: [Int]) -> Int {
         
         if(modeCount == 0) {
             return 0
@@ -77,12 +77,12 @@ public extension MultidimensionalData {
     
     /// Convert a flat index into a multidimensional nested index
     /// - Returns: The nested index
-    func nestedIndex(flatIndex: Int) -> [Int] {
+    func nestedIndex(_ flatIndex: Int) -> [Int] {
         //converts a flat index into a multidimensional index
         var currentFlatIndex = flatIndex
-        var index: [Int] = [Int](count: max(modeCount, 1), repeatedValue: 0)
+        var index: [Int] = [Int](repeating: 0, count: max(modeCount, 1))
         
-        for d in (0..<modeCount).reverse() {
+        for d in (0..<modeCount).reversed() {
             let thisIndex = currentFlatIndex % modeSizes[d]
             index[d] = thisIndex
             currentFlatIndex = (currentFlatIndex-thisIndex) / modeSizes[d]
@@ -92,19 +92,19 @@ public extension MultidimensionalData {
     }
     
     /// - Returns: The given flat index moved by a given number of steps in the given mode
-    func moveFlatIndex(index: Int, by: Int, mode: Int) -> Int {
-        var multiIndex = [Int](count: modeCount, repeatedValue: 0)
+    func moveFlatIndex(_ index: Int, by: Int, mode: Int) -> Int {
+        var multiIndex = [Int](repeating: 0, count: modeCount)
         multiIndex[mode] = by
         
         return index + flatIndex(multiIndex)
     }
     
     /// - Returns: All flat indices lying in the given multidimensional range
-    func indicesInRange(ranges: [Range<Int>]) -> [Int] {
+    func indicesInRange(_ ranges: [CountableRange<Int>]) -> [Int] {
         //create indices array with start index (corner with the lowest index)
         var indices: [Int] = [flatIndex(ranges.map({return $0.first!}))]
         
-        for m in (0..<modeCount).reverse() { //for each mode (start with last to have right order)
+        for m in (0..<modeCount).reversed() { //for each mode (start with last to have right order)
             for i in 0..<indices.count { //for every index currently in the array
                 for r in 1..<ranges[m].count { //for every number in the specified range
                     //move indicex by this number in the current mode and add them to the array
@@ -115,21 +115,21 @@ public extension MultidimensionalData {
         return indices
     }
     
-    func getWithFlatIndex(flatIndex: Int) -> Element {
+    func getWithFlatIndex(_ flatIndex: Int) -> Element {
         return values[flatIndex]
     }
-    mutating func set(newElement: Element, atFlatIndex: Int) {
+    mutating func set(_ newElement: Element, atFlatIndex: Int) {
         values[atFlatIndex] = newElement
     }
     
-    mutating func setSlice(slice: S, modeSubscripts: [DataSliceSubscript]) {
+    mutating func setSlice(_ slice: S, modeSubscripts: [DataSliceSubscript]) {
         let subscripts = completeDataSliceSubscripts(modeSubscripts)
         
-        let subscriptIndex = [Int](count: modeCount, repeatedValue: 0)
-        let sliceIndex = [Int](count: slice.modeCount, repeatedValue: 0)
+        let subscriptIndex = [Int](repeating: 0, count: modeCount)
+        let sliceIndex = [Int](repeating: 0, count: slice.modeCount)
         
         if(values.count == 0) {
-            print("error: no values to write in thread: \(NSThread.currentThread())")
+            print("error: no values to write in thread: \(Thread.current)")
         }
         
 //        printMemoryAdresses(printTitle: "--set slice \(subscripts)--", printThread: true)
@@ -143,7 +143,7 @@ public extension MultidimensionalData {
     }
     
     ///Replace subscripts of type AllIndices with the complete range, same with missing subscripts
-    internal func completeDataSliceSubscripts(subscripts: [DataSliceSubscript]) -> [DataSliceSubscript] {
+    internal func completeDataSliceSubscripts(_ subscripts: [DataSliceSubscript]) -> [DataSliceSubscript] {
         var newSubscripts = subscripts
         for m in 0..<modeCount {
             if(m >= subscripts.count) {
@@ -167,7 +167,7 @@ public extension MultidimensionalData {
     /// - Returns:
     /// `common:` <br> The common modes, if neither common nor outer modes are defined, the whole `modeArray` is used. <br>
     /// `outer:` <br> The outer modes.
-    internal func inferModes(commonModes commonModes: [Int]?, outerModes: [Int]?) -> (common: [Int], outer: [Int]) {
+    internal func inferModes(commonModes: [Int]?, outerModes: [Int]?) -> (common: [Int], outer: [Int]) {
         if(commonModes != nil) {
             return (commonModes!, modeArray.removeValues(commonModes!))
         } else if(outerModes != nil) {
@@ -180,14 +180,14 @@ public extension MultidimensionalData {
     ///Reorder the modes of this item
     /// - Parameter newToOld: Mapping from the new mode indices to the old ones
     /// - Returns: A copy of this item with the same values but reordered modes
-    func reorderModes(newToOld: [Int]) -> S {
+    func reorderModes(_ newToOld: [Int]) -> S {
         if(newToOld == Array(0..<modeCount) || newToOld.count == 0) {
             return self
         }
         
         //calculate mapping from modes in the original data to modes the new data
         let oldToNew = (0..<modeCount).map({(oldMode: Int) -> Int in
-            guard let i = newToOld.indexOf(oldMode) else {
+            guard let i = newToOld.index(of: oldMode) else {
                 assert(true, "mode \(oldMode) not found in mapping newToOld \(newToOld)")
                 return 0
             }
@@ -203,12 +203,12 @@ public extension MultidimensionalData {
         
         var newData = S(modeSizes: newToOld.map({modeSizes[$0]}), repeatedValue: values[0])
         
-        let copyLength = modeSizes[lastChangedMode+1..<modeCount].reduce(1, combine: {$0*$1})
+        let copyLength = modeSizes[lastChangedMode+1..<modeCount].reduce(1, {$0*$1})
         
-        var currentOldIndex = [Int](count: modeCount, repeatedValue: 0)
-        var currentNewIndex = [Int](count: modeCount, repeatedValue: 0)
+        var currentOldIndex = [Int](repeating: 0, count: modeCount)
+        var currentNewIndex = [Int](repeating: 0, count: modeCount)
         
-        var copyRecursion: (Int -> Void)!
+        var copyRecursion: ((Int) -> Void)!
         
         copyRecursion = {(oldMode: Int) -> () in
             if(oldMode < lastChangedMode) {
@@ -264,13 +264,13 @@ public extension MultidimensionalData {
 
     
     /// - Returns: The data as matrix unfolded along the given mode. If allowTranspose is true, the returned matrix could be transposed, if that was computationally more efficient
-    public func matrixWithMode(mode: Int, allowTranspose: Bool = true) -> (matrix: [Element], size: MatrixSize, transpose: Bool) {
+    public func matrixWithMode(_ mode: Int, allowTranspose: Bool = true) -> (matrix: [Element], size: MatrixSize, transpose: Bool) {
         assert(mode < modeCount, "mode \(mode) not available in tensor with \(modeCount) modes")
         
         let remainingModes = (0..<modeCount).filter({$0 != mode})
         let defaultOrder = [mode] + remainingModes
         let rows = modeSizes[mode]
-        let columns = remainingModes.map({modeSizes[$0]}).reduce(1, combine: {$0 * $1})
+        let columns = remainingModes.map({modeSizes[$0]}).reduce(1, {$0 * $1})
         
         if(allowTranspose) {
             let complexityDefault = reorderComplexity(defaultOrder)
@@ -288,11 +288,11 @@ public extension MultidimensionalData {
     }
     
     /// - Returns: The number of seperate copy streaks that would be necessary for this reordering of modes
-    func reorderComplexity(newToOld: [Int]) -> Int {
+    func reorderComplexity(_ newToOld: [Int]) -> Int {
         let hasToChange = Array(0..<modeCount).combineWith(newToOld, combineFunction: {$0 != $1})
         
-        if let lastMode = Array(hasToChange.reverse()).indexOf({$0}) { //last mode that has to change
-            return modeSizes[0...(modeCount-1-lastMode)].reduce(1, combine: {$0*$1})
+        if let lastMode = Array(hasToChange.reversed()).index(where: {$0}) { //last mode that has to change
+            return modeSizes[0...(modeCount-1-lastMode)].reduce(1, {$0*$1})
         } else {
             return 0
         }
@@ -390,15 +390,17 @@ public extension MultidimensionalData {
 //        
 //    }
     // MARK: - Perform functions
-    public func performForOuterModes(outerModes: [Int], inout outputData: [Self],
-                                     calculate: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceData: Self) -> [Self],
-                                     writeOutput: (currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [Self], inout outputData: [Self]) -> ()) {
+    public func performForOuterModes(_ outerModes: [Int], outputData: inout [Self],
+                                     calculate: @escaping (_ currentIndex: [DataSliceSubscript], _ outerIndex: [DataSliceSubscript], _ sourceData: Self) -> [Self],
+                                     writeOutput: @escaping (_ currentIndex: [DataSliceSubscript], _ outerIndex: [DataSliceSubscript], _ inputData: [Self], _ outputData: inout [Self]) -> ()) {
         
-        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-        let group = dispatch_group_create()
+        let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
+        let group = DispatchGroup()
         let sync = NSObject()
         
-        func actionRecurse(outerModes outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
+        var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works...
+        
+        func actionRecurse(outerModes: [Int], modeNumber: Int, currentIndex: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) {
             if(modeNumber < outerModes.count) {
                 let currentMode = outerModes[modeNumber]
                 
@@ -411,11 +413,11 @@ public extension MultidimensionalData {
                     actionRecurse(outerModes: outerModes, modeNumber: modeNumber + 1, currentIndex: newCurrentIndex, outerIndex: newOuterIndex)
                 }
             } else {
-                dispatch_group_async(group, queue, {
-                    let result = calculate(currentIndex:  currentIndex, outerIndex: outerIndex, sourceData: self)
+                queue.async(group: group, execute: {
+                    let result = calculate(currentIndex, outerIndex, self)
                     
                     objc_sync_enter(sync)
-                    writeOutput(currentIndex: currentIndex, outerIndex: outerIndex, inputData: result, outputData: &outputData)
+                    writeOutput(currentIndex, outerIndex, result, &shadowOutputData)
                     objc_sync_exit(sync)
                 })
             }
@@ -428,22 +430,22 @@ public extension MultidimensionalData {
         
         actionRecurse(outerModes: outerModes, modeNumber: 0, currentIndex: startCurrentIndex, outerIndex: startOuterIndex)
         
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+        group.wait(timeout: DispatchTime.distantFuture)
     }
     
     
     /// - Returns: The flat start indices in the value array of all continuous vectors (in the last mode) that constitute the given multidimensional range
-    private func startIndicesOfContinuousVectorsForRange(ranges: [Range<Int>]) -> [Int] {
+    fileprivate func startIndicesOfContinuousVectorsForRange(_ ranges: [CountableRange<Int>]) -> [Int] {
         //the ranges of all modes except the last (where the continuous vectors are)
         var firstModesRanges = Array(ranges[0..<modeCount-1])
-        firstModesRanges.append(ranges.last!.startIndex...ranges.last!.startIndex)
+        firstModesRanges.append(ranges.last!.startIndex..<ranges.last!.startIndex+1)
         //the flat indices of the first elements in the last mode that lie in the firstModesRanges
         let indexPositions = indicesInRange(Array(firstModesRanges))
         //add the start offset of the last mode to each index
         return indexPositions//.map({return $0 + ranges.last!.first!})
     }
     
-    internal mutating func printMemoryAdresses(printTitle printTitle: String? = nil, printThread: Bool = false) {
+    internal mutating func printMemoryAdresses(printTitle: String? = nil, printThread: Bool = false) {
         var infoString: String = ""
         if let title = printTitle {
             infoString = title + "\n"
@@ -452,7 +454,7 @@ public extension MultidimensionalData {
         infoString = infoString + "\n memory address: \(memoryAddress(&self))"
         infoString = infoString + "\n array address: \(memoryAddress(values))"
         if(printThread) {
-            infoString = infoString + "\n in thread: \(NSThread.currentThread())"
+            infoString = infoString + "\n in thread: \(Thread.current)"
         }
         print(infoString)
     }
@@ -514,52 +516,55 @@ public extension MultidimensionalData {
 /// - Parameter combineFunction: The action to combine `a` and `b`. <br> *Parateters*: <br>
 /// `currentIndexA:` The index for `a` that gives the relevant slice for this particular call. <br>
 /// `currentIndexB:` The index for `b` that gives the relevant slice for this particular call.
-public func combine<T: MultidimensionalData>(a a: T, outerModesA: [Int], b: T, outerModesB: [Int], combineFunction: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript]) -> ()) {
-    
-    let outerModeCount = outerModesA.count + outerModesB.count
-    var currentIndexA: [DataSliceSubscript] = a.modeSizes.map({0..<$0})
-    var currentIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
-    var currentOuterIndex: [DataSliceSubscript] = (outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]})).map({0..<$0})
+//
+//public func combine<T: MultidimensionalData>(a: T, outerModesA: [Int], b: T, outerModesB: [Int], combineFunction: @escaping (_ indexA: [DataSliceSubscript], _ indexB: [DataSliceSubscript], _ outerIndex: [DataSliceSubscript]) -> ()) {
+//    
+//    let outerModeCount = outerModesA.count + outerModesB.count
+//    var currentIndexA: [DataSliceSubscript] = a.modeSizes.map({0..<$0})
+//    var currentIndexB: [DataSliceSubscript] = b.modeSizes.map({0..<$0})
+//    var currentOuterIndex: [DataSliceSubscript] = (outerModesA.map({a.modeSizes[$0]}) + outerModesB.map({b.modeSizes[$0]})).map({0..<$0})
+//
+//    func actionRecurse(_ indexNumber: Int) {
+//        if(indexNumber < outerModeCount) {
+//            if(indexNumber < outerModesA.count) {
+//                let currentMode = outerModesA[indexNumber]
+//                for i in 0..<a.modeSizes[currentMode] {
+//                    currentIndexA[currentMode] = i...i
+//                    currentOuterIndex[indexNumber] = i...i
+//                    actionRecurse(indexNumber + 1)
+//                }
+//            } else {
+//                let currentMode = outerModesB[indexNumber - outerModesA.count]
+//                for i in 0..<b.modeSizes[currentMode] {
+//                    currentIndexB[currentMode] = i...i
+//                    currentOuterIndex[indexNumber] = i...i
+//                    actionRecurse(indexNumber + 1)
+//                }
+//            }
+//        } else {
+//            let aIndex = currentIndexA
+//            let bIndex = currentIndexB
+//            let outerIndex = currentOuterIndex
+//            combineFunction(aIndex, bIndex, outerIndex)
+//        }
+//    }
+//    
+//    actionRecurse(0)
+//}
 
-    func actionRecurse(indexNumber: Int) {
-        if(indexNumber < outerModeCount) {
-            if(indexNumber < outerModesA.count) {
-                let currentMode = outerModesA[indexNumber]
-                for i in 0..<a.modeSizes[currentMode] {
-                    currentIndexA[currentMode] = i...i
-                    currentOuterIndex[indexNumber] = i...i
-                    actionRecurse(indexNumber + 1)
-                }
-            } else {
-                let currentMode = outerModesB[indexNumber - outerModesA.count]
-                for i in 0..<b.modeSizes[currentMode] {
-                    currentIndexB[currentMode] = i...i
-                    currentOuterIndex[indexNumber] = i...i
-                    actionRecurse(indexNumber + 1)
-                }
-            }
-        } else {
-            let aIndex = currentIndexA
-            let bIndex = currentIndexB
-            let outerIndex = currentOuterIndex
-            combineFunction(indexA: aIndex, indexB: bIndex, outerIndex: outerIndex)
-        }
-    }
+public func combine<T: MultidimensionalData>(_ a: T, forOuterModes outerModesA: [Int], with b: T, forOuterModes outerModesB: [Int], outputData: inout [T],
+                    calculate: @escaping (_ indexA: [DataSliceSubscript], _ indexB: [DataSliceSubscript], _ outerIndex: [DataSliceSubscript], _ sourceA: T, _ sourceB: T) -> [T],
+                    writeOutput: @escaping (_ indexA: [DataSliceSubscript], _ indexB: [DataSliceSubscript], _ outerIndex: [DataSliceSubscript], _ inputData: [T], _ outputData: inout [T]) -> ()) {
     
-    actionRecurse(0)
-}
-
-public func combine<T: MultidimensionalData>(a: T, forOuterModes outerModesA: [Int], with b: T, forOuterModes outerModesB: [Int], inout outputData: [T],
-                    calculate: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], sourceA: T, sourceB: T) -> [T],
-                    writeOutput: (indexA: [DataSliceSubscript], indexB: [DataSliceSubscript], outerIndex: [DataSliceSubscript], inputData: [T], inout outputData: [T]) -> ()) {
-    
-    let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-    let group = dispatch_group_create()
+    let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
+    let group = DispatchGroup()
     let sync = NSObject()
     
     let outerModeCount = outerModesA.count + outerModesB.count
     
-    func actionRecurse(modeNumber: Int, currentIndexA: [DataSliceSubscript], currentIndexB: [DataSliceSubscript], currentOuterIndex: [DataSliceSubscript]) {
+    var shadowOutputData = outputData; defer { outputData = shadowOutputData } //don't know if this works...
+    
+    func actionRecurse(_ modeNumber: Int, currentIndexA: [DataSliceSubscript], currentIndexB: [DataSliceSubscript], currentOuterIndex: [DataSliceSubscript]) {
         if(modeNumber < outerModeCount) {
             if(modeNumber < outerModesA.count) {
                 let currentModeA = outerModesA[modeNumber]
@@ -582,10 +587,15 @@ public func combine<T: MultidimensionalData>(a: T, forOuterModes outerModesA: [I
                 
             }
         } else {
-            dispatch_group_async(group, queue, {
-                let result = calculate(indexA: currentIndexA, indexB: currentIndexB, outerIndex: currentOuterIndex, sourceA: a, sourceB: b)
+            queue.async(group: group, execute: {
+                let result = calculate(currentIndexA, currentIndexB, currentOuterIndex, a, b)
                 objc_sync_enter(sync)
-                writeOutput(indexA: currentIndexA, indexB: currentIndexB, outerIndex: currentOuterIndex, inputData: result, outputData: &outputData)
+                
+                
+                
+                
+                writeOutput(currentIndexA, currentIndexB, currentOuterIndex, result, &shadowOutputData)
+                
                 objc_sync_exit(sync)
             })
         }
@@ -597,10 +607,10 @@ public func combine<T: MultidimensionalData>(a: T, forOuterModes outerModesA: [I
     
     actionRecurse(0, currentIndexA: startIndexA, currentIndexB: startIndexB, currentOuterIndex: startOuterIndex)
     
-    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+    group.wait(timeout: DispatchTime.distantFuture)
 }
 
-public func concatenate<T: MultidimensionalData>(a: T, b: T, alongMode: Int) -> T {
+public func concatenate<T: MultidimensionalData>(_ a: T, b: T, alongMode: Int) -> T {
     var newModeSizes: [Int]
     var sliceA: [DataSliceSubscript]
     var sliceB: [DataSliceSubscript]
@@ -608,23 +618,23 @@ public func concatenate<T: MultidimensionalData>(a: T, b: T, alongMode: Int) -> 
     if(a.modeCount == b.modeCount) {
         sliceA = a.modeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: b.modeSizes[alongMode])
+        sliceB[alongMode] = CountableRange(start: a.modeSizes[alongMode], distance: b.modeSizes[alongMode])
         
         newModeSizes = a.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + b.modeSizes[alongMode]
     } else if(a.modeCount == b.modeCount+1) {
         sliceA = a.modeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: 1)
+        sliceB[alongMode] = CountableRange(start: a.modeSizes[alongMode], distance: 1)
         
         newModeSizes = a.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + 1
     } else if(a.modeCount == b.modeCount-1) {
         var aModeSizes = a.modeSizes
-        aModeSizes.insert(1, atIndex: alongMode)
+        aModeSizes.insert(1, at: alongMode)
         sliceA = aModeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: 1, distance: b.modeSizes[alongMode])
+        sliceB[alongMode] = CountableRange(start: 1, distance: b.modeSizes[alongMode])
         newModeSizes = b.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + 1
     } else {

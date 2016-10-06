@@ -18,7 +18,7 @@ import Foundation
 /// - Returns:
 /// `projectedData`: <br> The data projected to a subspace with the given mode sizes. <br>
 /// `projectionMatrices`: <br> One matrix for each sample mode
-public func multilinearPCA(inputData: Tensor<Float>, projectionModeSizes: [Int]) -> (projectedData: Tensor<Float>, projectionMatrices: [Tensor<Float>]) {
+public func multilinearPCA(_ inputData: Tensor<Float>, projectionModeSizes: [Int]) -> (projectedData: Tensor<Float>, projectionMatrices: [Tensor<Float>]) {
     
     //Initialization
     let data = inputData.uniquelyIndexed()
@@ -61,7 +61,7 @@ public func multilinearPCA(inputData: Tensor<Float>, projectionModeSizes: [Int])
     return (projectedData, projectionMatrices)
 }
 
-private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProjectionMatrices: [Tensor<Float>]) -> [Tensor<Float>] {
+private func constructNewProjectionMatrices(data: Tensor<Float>, oldProjectionMatrices: [Tensor<Float>]) -> [Tensor<Float>] {
     
     var newProjectionMatrices: [Tensor<Float>] = []
     
@@ -74,8 +74,8 @@ private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProject
         let thisModeSize = data.modeSizes[n+1]
         let (eigenvalues, eigenvectors) = eigendecomposition(sampleCovariance.values, size: MatrixSize(rows: thisModeSize, columns: thisModeSize))
         
-        let evSum = eigenvalues.reduce(0, combine: {$0 + $1})
-        let capturedSum = eigenvalues[0..<oldProjectionMatrices[n].modeSizes[0]].reduce(0, combine: {$0 + $1})
+        let evSum = eigenvalues.reduce(0, {$0 + $1})
+        let capturedSum = eigenvalues[0..<oldProjectionMatrices[n].modeSizes[0]].reduce(0, {$0 + $1})
         let energyPercentage = capturedSum / evSum
         print("Energy captured in mode \(n): \(energyPercentage*100)%")
         
@@ -95,7 +95,7 @@ private func constructNewProjectionMatrices(data data: Tensor<Float>, oldProject
 /// - Parameter doNotProjectModes: The projection of these modes will be skipped. Although the content does not matter, a projection matrix is required nonetheless for these modes. The default value is an empty array.
 ///
 /// - Returns: The data projected with the given projection matrices.
-public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrices: [Tensor<Float>], doNotProjectModes: [Int] = []) -> Tensor<Float> {
+public func multilinearPCAProjection(data: Tensor<Float>, projectionMatrices: [Tensor<Float>], doNotProjectModes: [Int] = []) -> Tensor<Float> {
     
     var currentData = data
     for n in 0..<data.modeCount-1 {
@@ -117,13 +117,13 @@ public func multilinearPCAProjection(data data: Tensor<Float>, projectionMatrice
 }
 
 /// Generate the reconstruction matrices of a MPCA by calculating the pseudoinverse of the projection matrices.
-public func multilinearPCAReconstructionMatrices(projectionMatrices: [Tensor<Float>]) -> [Tensor<Float>] {
+public func multilinearPCAReconstructionMatrices(_ projectionMatrices: [Tensor<Float>]) -> [Tensor<Float>] {
     var reconstructionMatrices: [Tensor<Float>] = []
     for thisMatrix in projectionMatrices {
         let size = MatrixSize(rows: thisMatrix.modeSizes[0], columns: thisMatrix.modeSizes[1])
         let values = pseudoInverse(thisMatrix.values, size: size)
         var thisReconstructionMatrix = Tensor<Float>(modeSizes: [size.columns, size.rows], values: values)
-        thisReconstructionMatrix.indices = thisMatrix.indices.reverse()
+        thisReconstructionMatrix.indices = thisMatrix.indices.reversed()
         reconstructionMatrices.append(thisReconstructionMatrix)
     }
     return reconstructionMatrices

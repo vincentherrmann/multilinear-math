@@ -28,7 +28,7 @@ public extension Plotting2D {
         }
     }
     
-    func transformParameters(from: NSRect, to: NSRect) -> Transform {
+    func transformParameters(_ from: NSRect, to: NSRect) -> Transform {
         let scaleX = to.width / from.width
         let scaleY = to.height / from.height
         let translateX = -from.minX * scaleX + to.minX
@@ -36,22 +36,22 @@ public extension Plotting2D {
         return (scaleX, scaleY, translateX, translateY)
     }
     
-    func convertFromPlotToScreen(point: CGPoint) -> CGPoint {
+    func convertFromPlotToScreen(_ point: CGPoint) -> CGPoint {
         let t = transformParameters(plottingBounds, to: screenBounds)
         return CGPoint(x: point.x * t.scaleX + t.translateX, y: point.y * t.scaleY + t.translateY)
     }
     
-    func convertFromScreenToPlot(point: CGPoint) -> CGPoint {
+    func convertFromScreenToPlot(_ point: CGPoint) -> CGPoint {
         let t = transformParameters(screenBounds, to: plottingBounds)
         return CGPoint(x: point.x * t.scaleX + t.translateX, y: point.y * t.scaleY + t.translateY)
     }
     
-    mutating func addPlottable(newPlottable: PlottableIn2D) {
+    mutating func addPlottable(_ newPlottable: PlottableIn2D) {
         newPlottable.fitTo(self)
         plots.append(newPlottable)
     }
     
-    mutating func setPlottingBounds(newBounds: NSRect) {
+    mutating func setPlottingBounds(_ newBounds: NSRect) {
         plottingBounds = newBounds
         if(newBounds.width == 0) {
             plottingBounds.origin.x += -0.5
@@ -72,5 +72,5 @@ public extension Plotting2D {
 
 public protocol PlottableIn2D {
     func draw()
-    func fitTo(plotting: Plotting2D)
+    func fitTo(_ plotting: Plotting2D)
 }

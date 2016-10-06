@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class LogisticRegressionEstimator: ParametricTensorFunction {
-    public var parameters: [Tensor<Float>]
+open class LogisticRegressionEstimator: ParametricTensorFunction {
+    open var parameters: [Tensor<Float>]
     var currentInput: Tensor<Float> = zeros()
     var currentPreactivations: Tensor<Float> = zeros()
     
-    private let example = TensorIndex.a
-    private let feature = TensorIndex.b
+    fileprivate let example = TensorIndex.a
+    fileprivate let feature = TensorIndex.b
     
     
     public init(featureCount: Int) {
@@ -22,7 +22,7 @@ public class LogisticRegressionEstimator: ParametricTensorFunction {
         parameters[0].indices = [feature]
     }
     
-    public func output(input: Tensor<Float>) -> Tensor<Float> {
+    open func output(_ input: Tensor<Float>) -> Tensor<Float> {
         if(input.modeCount == 1) {
             currentInput = Tensor<Float>(modeSizes: [1, input.modeSizes[0]], values: input.values)
             currentInput.indices = [example, feature]
@@ -35,7 +35,7 @@ public class LogisticRegressionEstimator: ParametricTensorFunction {
         return currentHypothesis
     }
     
-    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+    open func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
         let sigmoidGradient = Sigmoid().derivative(currentPreactivations)
         let preactivationGradient = sigmoidGradient °* gradientWrtOutput
         let parameter0Gradient = preactivationGradient * currentInput
@@ -45,22 +45,22 @@ public class LogisticRegressionEstimator: ParametricTensorFunction {
         return (inputGradient, [parameter0Gradient, parameter1Gradient])
     }
     
-    public func updateParameters(subtrahends: [Tensor<Float>]) {
+    open func updateParameters(_ subtrahends: [Tensor<Float>]) {
         parameters[0] = parameters[0] - subtrahends[0]
         parameters[1] = parameters[1] - subtrahends[1]
     }
 }
 
 /// Negative log likelihood cost for logistic regression
-public class LogisticRegressionCost: CostFunction {
-    public var estimator: ParametricTensorFunction
-    public var regularizers: [ParameterRegularizer?] = [nil, nil]
+open class LogisticRegressionCost: CostFunction {
+    open var estimator: ParametricTensorFunction
+    open var regularizers: [ParameterRegularizer?] = [nil, nil]
     
     public init(featureCount: Int) {
         estimator = LogisticRegressionEstimator(featureCount: featureCount)
     }
     
-    public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+    open func costForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
         let exampleCount = Float(target.elementCount)
         
         let t1 = -target °* log(estimate)
@@ -70,7 +70,7 @@ public class LogisticRegressionCost: CostFunction {
         return cost
     }
     
-    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+    open func gradientForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
         if(estimate.indices != target.indices) {
             print("abstract indices of estimate and target should be the same!")
         }

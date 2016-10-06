@@ -73,7 +73,7 @@ public func -(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     return difference
 }
 
-infix operator °* {}
+infix operator °*
 public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     
     let commonIndices = lhs.commonIndicesWith(rhs)
@@ -87,7 +87,7 @@ public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     return product
 }
 
-infix operator °/ {}
+infix operator °/
 public func °/(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
     
     let commonIndices = lhs.commonIndicesWith(rhs)

@@ -46,7 +46,7 @@ public struct ElementaryMultilinearProjection {
         }
     }
     
-    public func project(tensor: Tensor<Float>, skipProjectionModes: [Int] = []) -> Tensor<Float> {
+    public func project(_ tensor: Tensor<Float>, skipProjectionModes: [Int] = []) -> Tensor<Float> {
         var currentProjection = tensor
         for m in modeArray.removeValues(skipProjectionModes) {
             currentProjection = currentProjection * projectionVectors[m]
@@ -63,14 +63,14 @@ public struct ElementaryMultilinearProjection {
 /// :
 /// `projectedData`: <br> Each sample projected to a vector of uncorrelated features. <br>
 /// `projections`: <br> Array of elementary multilinear projections, one for each resulting feature.
-public func uncorrelatedMPCA(inputData: Tensor<Float>, featureCount: Int) -> (projectedData: Tensor<Float>, projections: [ElementaryMultilinearProjection]) {
+public func uncorrelatedMPCA(_ inputData: Tensor<Float>, featureCount: Int) -> (projectedData: Tensor<Float>, projections: [ElementaryMultilinearProjection]) {
     
     let data = inputData.uniquelyIndexed()
     let additionalIndices = TensorIndex.uniqueIndexArray(5, excludedIndices: data.indices)
     let (sample, feature, featureT, nMode, nModeT, nModeT2) = (data.indices[0], additionalIndices[0], additionalIndices[1], additionalIndices[2], additionalIndices[3], additionalIndices[4])
     
     //upper bound for featureCount: min(data.modeSizes)
-    let maxFeatureCount = data.modeSizes.minElement()!
+    let maxFeatureCount = data.modeSizes.min()!
     assert(featureCount <= maxFeatureCount, "Cannot construct \(featureCount) uncorrelated features from data tensor with mode sizes \(data.modeSizes)")
     
     //data: [m, d0, d1, ...]
@@ -137,7 +137,7 @@ public func uncorrelatedMPCA(inputData: Tensor<Float>, featureCount: Int) -> (pr
         
         print("final projectionScatter of feature \(p): \(newScatter)")
         projectedData.modeSizes[0] = p+1
-        projectedData.values.appendContentsOf(currentG.values)
+        projectedData.values.append(contentsOf: currentG.values)
         projections.append(currentEMP)
         
     } // p-loop
@@ -146,7 +146,7 @@ public func uncorrelatedMPCA(inputData: Tensor<Float>, featureCount: Int) -> (pr
 }
 
 /// Project multidimensional data to vectors using multiple independent elementary multilinear projections
-public func uncorrelatedMPCAProject(data: Tensor<Float>, projections: [ElementaryMultilinearProjection]) -> Tensor<Float> {
+public func uncorrelatedMPCAProject(_ data: Tensor<Float>, projections: [ElementaryMultilinearProjection]) -> Tensor<Float> {
     
     let featureCount = projections.count
     var projectedData = Tensor<Float>(modeSizes: [data.modeSizes[0], featureCount], repeatedValue: 0)
@@ -160,7 +160,7 @@ public func uncorrelatedMPCAProject(data: Tensor<Float>, projections: [Elementar
 }
 
 /// Reconstruct data from vectors using the elementary multilinear projections that created them
-public func uncorrelatedMPCAReconstruct(projectedData: Tensor<Float>, projections: [ElementaryMultilinearProjection]) -> Tensor<Float> {
+public func uncorrelatedMPCAReconstruct(_ projectedData: Tensor<Float>, projections: [ElementaryMultilinearProjection]) -> Tensor<Float> {
     
     let featureCount = projections.count
     var currentReconstruction: Tensor<Float> = Tensor<Float>(modeSizes: [projectedData.modeSizes[0]] + projections[0].modeSizes, repeatedValue: 0)

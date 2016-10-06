@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func linearRegression(x x: Tensor<Float>, y: Tensor<Float>) -> Tensor<Float> {
+public func linearRegression(x: Tensor<Float>, y: Tensor<Float>) -> Tensor<Float> {
     
     let example = TensorIndex.a
     let feature = TensorIndex.b
@@ -27,19 +27,19 @@ public func linearRegression(x x: Tensor<Float>, y: Tensor<Float>) -> Tensor<Flo
     return parameters
 }
 
-public class LinearRegressionEstimator: ParametricTensorFunction {
-    public var parameters: [Tensor<Float>]
+open class LinearRegressionEstimator: ParametricTensorFunction {
+    open var parameters: [Tensor<Float>]
     var currentInput: Tensor<Float> = zeros()
     
-    private let example = TensorIndex.a
-    private let feature = TensorIndex.b
+    fileprivate let example = TensorIndex.a
+    fileprivate let feature = TensorIndex.b
     
     public init(featureCount: Int) {
         parameters = [zeros(featureCount), zeros()]
         parameters[0].indices = [feature]
     }
     
-    public func output(input: Tensor<Float>) -> Tensor<Float> {
+    open func output(_ input: Tensor<Float>) -> Tensor<Float> {
         if(input.modeCount == 1) {
             currentInput = Tensor<Float>(modeSizes: [1, input.modeSizes[0]], values: input.values)
             currentInput.indices = [example, feature]
@@ -51,7 +51,7 @@ public class LinearRegressionEstimator: ParametricTensorFunction {
         return hypothesis
     }
     
-    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+    open func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
         let parameter0Gradient = gradientWrtOutput * currentInput
         let parameter1Gradient = sum(gradientWrtOutput, overModes: [0])
         let inputGradient = sum(gradientWrtOutput * parameters[0], overModes: [0])
@@ -59,22 +59,22 @@ public class LinearRegressionEstimator: ParametricTensorFunction {
         return (inputGradient, [parameter0Gradient, parameter1Gradient])
     }
     
-    public func updateParameters(subtrahends: [Tensor<Float>]) {
+    open func updateParameters(_ subtrahends: [Tensor<Float>]) {
         parameters[0] = parameters[0] - subtrahends[0]
         parameters[1] = parameters[1] - subtrahends[1]
     }
 }
 
 /// Squared error cost for linear regression
-public class LinearRegressionCost: CostFunction {
-    public var estimator: ParametricTensorFunction
-    public var regularizers: [ParameterRegularizer?] = [nil, nil]
+open class LinearRegressionCost: CostFunction {
+    open var estimator: ParametricTensorFunction
+    open var regularizers: [ParameterRegularizer?] = [nil, nil]
     
     public init(featureCount: Int) {
         estimator = LinearRegressionEstimator(featureCount: featureCount)
     }
     
-    public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+    open func costForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
         let exampleCount = Float(target.elementCount)
         
         let distance = estimate - target
@@ -83,7 +83,7 @@ public class LinearRegressionCost: CostFunction {
         return cost.values[0]
     }
     
-    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+    open func gradientForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
         if(estimate.indices != target.indices) {
             print("abstract indices of estimate and target should be the same!")
         }

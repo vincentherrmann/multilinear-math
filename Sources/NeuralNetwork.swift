@@ -9,13 +9,13 @@
 import Foundation
 
 /// Base class of a neural net layer. Can be used as an input layer.
-public class NeuralNetLayer: ParametricTensorFunction {
+open class NeuralNetLayer: ParametricTensorFunction {
     /// Cached preactivations of this layer of the last forward propagation, for being used in backpropagation of the gradients. Can be a minibatch.
     var currentPreactivations: Tensor<Float> = zeros()
     /// Cached activations of this layer of the last forward propagation, for being used in backpropagation of the gradients. Can be a minibatch.
     var currentActivations: Tensor<Float> = zeros()
     
-    public var activationFunction: ActivationFunction
+    open var activationFunction: ActivationFunction
     
     var previousLayer: NeuralNetLayer?
     var nextLayer: NeuralNetLayer?
@@ -27,7 +27,7 @@ public class NeuralNetLayer: ParametricTensorFunction {
     /// mode for neurons in this layer
     let this = TensorIndex.c
     
-    public var parameters: [Tensor<Float>] = []
+    open var parameters: [Tensor<Float>] = []
     
     init(previousLayer: NeuralNetLayer? = nil, nextLayer: NeuralNetLayer? = nil, activationFunction: ActivationFunction = Sigmoid()) {
         self.previousLayer = previousLayer
@@ -41,27 +41,27 @@ public class NeuralNetLayer: ParametricTensorFunction {
         }
     }
     
-    public func output(input: Tensor<Float>) -> Tensor<Float> {
+    open func output(_ input: Tensor<Float>) -> Tensor<Float> {
         currentPreactivations = input[batch, this]
         currentActivations = activationFunction.output(currentPreactivations)
         return currentActivations // [batch, this]
     }
     
-    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+    open func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
         let preactivationGradient = activationFunction.derivative(currentPreactivations) °* gradientWrtOutput[batch, this] // [batch, this]
         return (preactivationGradient, [])
     }
     
-    public func updateParameters(subtrahends: [Tensor<Float>]) {}
+    open func updateParameters(_ subtrahends: [Tensor<Float>]) {}
 }
 
 /// One layer of a feedforward neural net
-public class FeedforwardLayer: NeuralNetLayer {
+open class FeedforwardLayer: NeuralNetLayer {
     
     var weights: Tensor<Float>!
     var bias: Tensor<Float>!
     
-    override public var parameters: [Tensor<Float>] {
+    override open var parameters: [Tensor<Float>] {
         get {
             return [weights, bias]
         }
@@ -77,14 +77,14 @@ public class FeedforwardLayer: NeuralNetLayer {
         self.bias = bias[this]
     }
     
-    func feedforward(inputActivations: Tensor<Float>) -> Tensor<Float> {
+    func feedforward(_ inputActivations: Tensor<Float>) -> Tensor<Float> {
         let activationProduct = inputActivations[batch, prev] * weights
         currentPreactivations = activationProduct + bias // [batch, this]
         currentActivations = activationFunction.output(currentPreactivations)
         return currentActivations // [batch, this]
     }
     
-    override public func output(input: Tensor<Float>) -> Tensor<Float> {
+    override open func output(_ input: Tensor<Float>) -> Tensor<Float> {
         return feedforward(input)
     }
     
@@ -93,7 +93,7 @@ public class FeedforwardLayer: NeuralNetLayer {
     /// - Returns:
     /// `wrtInput`: <br> The gradient of the target function with respect to the input of this layer. Should be used as input to this function of the preceding layer during backpropagation. <br>
     /// `wrtParameters`: <br> The gradient of the target function with respect to the parameters of this layer (i.e. [wrtWeights, wrtBias]).  <br>
-    override public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+    override open func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
     
         let activationDerivative = activationFunction.derivative(currentPreactivations)[batch, this]
         let preactivationGradient = gradientWrtOutput[batch, this] °* activationDerivative // [batch, this]
@@ -107,16 +107,16 @@ public class FeedforwardLayer: NeuralNetLayer {
     
 
     
-    override public func updateParameters(substrahends: [Tensor<Float>]) {
+    override open func updateParameters(_ substrahends: [Tensor<Float>]) {
         weights = weights - substrahends[0]
         bias = bias - substrahends[1]
     }
 }
 
-public class NeuralNet: ParametricTensorFunction {
-    public var layers: [NeuralNetLayer]
+open class NeuralNet: ParametricTensorFunction {
+    open var layers: [NeuralNetLayer]
     
-    public var parameters: [Tensor<Float>] {
+    open var parameters: [Tensor<Float>] {
         get {
             return layers.flatMap({$0.parameters})
         }
@@ -146,27 +146,27 @@ public class NeuralNet: ParametricTensorFunction {
         }
     }
     
-    public func output(input: Tensor<Float>) -> Tensor<Float> {
-        return layers.reduce(input, combine: {$1.output($0)})
+    open func output(_ input: Tensor<Float>) -> Tensor<Float> {
+        return layers.reduce(input, {$1.output($0)})
     }
     
-    public func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
+    open func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>]) {
         //backpropagation
         var gradientWrtParameters: [Tensor<Float>] = []
-        let gradientWrtInput = layers.reverse().reduce(gradientWrtOutput) { (currentGradientWrtOutput, currentLayer) -> Tensor<Float> in
+        let gradientWrtInput = layers.reversed().reduce(gradientWrtOutput) { (currentGradientWrtOutput, currentLayer) -> Tensor<Float> in
             let gradients = currentLayer.gradients(currentGradientWrtOutput)
-            gradientWrtParameters.insertContentsOf(gradients.wrtParameters, at: 0)
+            gradientWrtParameters.insert(contentsOf: gradients.wrtParameters, at: 0)
             return gradients.wrtInput
         }
         
         return (gradientWrtInput, gradientWrtParameters)
     }
     
-    public func updateParameters(subtrahends: [Tensor<Float>]) {
+    open func updateParameters(_ subtrahends: [Tensor<Float>]) {
         var currentParameter = 0
         for l in layers {
             let parameterCount = l.parameters.count
-            l.updateParameters(Array(subtrahends[Range(start: currentParameter, distance: parameterCount)]))
+            l.updateParameters(Array(subtrahends[CountableRange(start: currentParameter, distance: parameterCount)]))
             currentParameter += parameterCount
         }
     }

@@ -67,7 +67,7 @@ public enum TensorIndex: Int {
     case ω
     
     /// - Returns: An array of unique tensor indices that does not containt any of the excluded indices.
-    static public func uniqueIndexArray(count: Int, excludedIndices: [TensorIndex] = []) -> [TensorIndex] {
+    static public func uniqueIndexArray(_ count: Int, excludedIndices: [TensorIndex] = []) -> [TensorIndex] {
         let allPossibleIndices = Array(1...(count + excludedIndices.count))
         let withoutExcludedIndices = allPossibleIndices.removeValues(excludedIndices.map({$0.rawValue}))
         
@@ -120,13 +120,13 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     }
     
     public init(modeSizes: [Int], values: [T]) {
-        let elementCount = modeSizes.reduce(1, combine: {$0*$1})
+        let elementCount = modeSizes.reduce(1, {$0*$1})
         assert(elementCount == values.count, "Cannot initialize a tensor with \(elementCount) elements with \(values.count) values")
         
         self.modeSizes = modeSizes
         self.values = values
-        self.indices = [TensorIndex](count: modeSizes.count, repeatedValue: .notIndexed)
-        self.variances = [TensorVariance](count: modeSizes.count, repeatedValue: .contravariant)
+        self.indices = [TensorIndex](repeating: .notIndexed, count: modeSizes.count)
+        self.variances = [TensorVariance](repeating: .contravariant, count: modeSizes.count)
         
 //        print("new tensor with modeSized \(modeSizes)")
         
@@ -136,12 +136,12 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     }
     
     public init(modeSizes: [Int], repeatedValue: T) {
-        let elementCount = modeSizes.reduce(1, combine: {$0*$1})
+        let elementCount = modeSizes.reduce(1, {$0*$1})
         
         self.modeSizes = modeSizes
-        self.values = [T](count: elementCount, repeatedValue: repeatedValue)
-        self.indices = [TensorIndex](count: modeSizes.count, repeatedValue: .notIndexed)
-        self.variances = [TensorVariance](count: modeSizes.count, repeatedValue: .contravariant)
+        self.values = [T](repeating: repeatedValue, count: elementCount)
+        self.indices = [TensorIndex](repeating: .notIndexed, count: modeSizes.count)
+        self.variances = [TensorVariance](repeating: .contravariant, count: modeSizes.count)
         
         if(values.count == 0) {
             print("ERROR: value.count = 0!!!")
@@ -156,13 +156,13 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
             return
         }
         
-        let elementCount = modeSizes.reduce(1, combine: {$0*$1})
+        let elementCount = modeSizes.reduce(1, {$0*$1})
         let modeCount = modeSizes.count
-        let diagonalLength: Int = modeSizes.count > 0 ? modeSizes.minElement()! : 1
-        var values = [T](count: elementCount, repeatedValue:T(0))
+        let diagonalLength: Int = modeSizes.count > 0 ? modeSizes.min()! : 1
+        var values = [T](repeating: T(0), count: elementCount)
         
         for i in 0..<diagonalLength {
-            let index = [Int](count: modeCount, repeatedValue: i)
+            let index = [Int](repeating: i, count: modeCount)
             var thisFlatIndex = 0
             for d in 0..<modeCount {
                 thisFlatIndex = thisFlatIndex * modeSizes[d] + index[d]
@@ -183,24 +183,24 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     
     ///Init with a CSV file
     public init(valuesFromFileAtPath path: String, modeSizes: [Int]? = nil) {
-        guard let data = NSData(contentsOfFile: path) else {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
             print("cannot load file at path \(path)")
             self.init(modeSizes: [], values: [T(0)])
             return
         }
         
-        guard let content = NSString(data: data, encoding: NSUTF8StringEncoding) else {
+        guard let content = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else {
             print("cannot load file at path \(path)")
             self.init(modeSizes: [], values: [T(0)])
             return
         }
         
-        let lines = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+        let lines = content.components(separatedBy: CharacterSet.newlines)
         var values = [T]()
         
         for line in lines {
-            let theseValues = line.componentsSeparatedByString(",")
-            values.appendContentsOf(theseValues.map({T(($0 as NSString).doubleValue)}))
+            let theseValues = line.components(separatedBy: ",")
+            values.append(contentsOf: theseValues.map({T(($0 as NSString).doubleValue)}))
         }
         
         var actualModeSizes: [Int]
@@ -210,7 +210,7 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
             actualModeSizes = [lines.count, values.count/lines.count]
         }
         
-        if(values.count > actualModeSizes.reduce(1, combine: *)) {
+        if(values.count > actualModeSizes.reduce(1, *)) {
             if(values.last == T(0)) {
                 values.removeLast()
             }
@@ -247,24 +247,24 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         
         // concatenating these arrays with "+" seems to provoke long compile times
         var combinedModeSizes: [Int] = []
-        combinedModeSizes.appendContentsOf(outerModesA.map({a.modeSizes[$0]}))
-        combinedModeSizes.appendContentsOf(outerModesB.map({b.modeSizes[$0]}))
-        combinedModeSizes.appendContentsOf(innerModesA.map({a.modeSizes[$0]}))
-        combinedModeSizes.appendContentsOf(innerModesB.map({b.modeSizes[$0]}))
+        combinedModeSizes.append(contentsOf: outerModesA.map({a.modeSizes[$0]}))
+        combinedModeSizes.append(contentsOf: outerModesB.map({b.modeSizes[$0]}))
+        combinedModeSizes.append(contentsOf: innerModesA.map({a.modeSizes[$0]}))
+        combinedModeSizes.append(contentsOf: innerModesB.map({b.modeSizes[$0]}))
         self.modeSizes = combinedModeSizes
         
         var combinedIndices: [TensorIndex] = []
-        combinedIndices.appendContentsOf(outerModesA.map({a.indices[$0]}))
-        combinedIndices.appendContentsOf(outerModesB.map({b.indices[$0]}))
-        combinedIndices.appendContentsOf(innerModesA.map({a.indices[$0]}))
-        combinedIndices.appendContentsOf(innerModesB.map({b.indices[$0]}))
+        combinedIndices.append(contentsOf: outerModesA.map({a.indices[$0]}))
+        combinedIndices.append(contentsOf: outerModesB.map({b.indices[$0]}))
+        combinedIndices.append(contentsOf: innerModesA.map({a.indices[$0]}))
+        combinedIndices.append(contentsOf: innerModesB.map({b.indices[$0]}))
         self.indices = combinedIndices
         
         var combinedVariances: [TensorVariance] = []
-        combinedVariances.appendContentsOf(outerModesA.map({a.variances[$0]}))
-        combinedVariances.appendContentsOf(outerModesB.map({b.variances[$0]}))
-        combinedVariances.appendContentsOf(innerModesA.map({a.variances[$0]}))
-        combinedVariances.appendContentsOf(innerModesB.map({b.variances[$0]}))
+        combinedVariances.append(contentsOf: outerModesA.map({a.variances[$0]}))
+        combinedVariances.append(contentsOf: outerModesB.map({b.variances[$0]}))
+        combinedVariances.append(contentsOf: innerModesA.map({a.variances[$0]}))
+        combinedVariances.append(contentsOf: innerModesB.map({b.variances[$0]}))
         self.variances = combinedVariances
         if(a.isCartesian && b.isCartesian) {
             self.isCartesian = true
@@ -272,22 +272,22 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
             self.isCartesian = false
         }
         
-        let elementCount = modeSizes.reduce(1, combine: {$0*$1})
-        self.values = [T](count: elementCount, repeatedValue: repeatedValue)
+        let elementCount = modeSizes.reduce(1, {$0*$1})
+        self.values = [T](repeating: repeatedValue, count: elementCount)
     }
     
     public init(fromFileAt: String) {
-        guard let data = NSData(contentsOfFile: fromFileAt) else {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fromFileAt)) else {
             print("could not load file \(fromFileAt)")
             self.init(scalar: T(0))
             return
         }
         
-        let intSize = sizeof(Int)
+        let intSize = MemoryLayout<Int>.size
         var currentLocation: Int = 0
         
         var dataType: Int = 0
-        data.getBytes(&dataType, range: NSRange(location: currentLocation, length: intSize))
+        (data as NSData).getBytes(&dataType, range: NSRange(location: currentLocation, length: intSize))
         currentLocation += intSize
         
         guard dataType == 1 else {
@@ -297,23 +297,23 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         }
         
         var fileModeCount: Int = 0
-        data.getBytes(&fileModeCount, range: NSRange(location: currentLocation, length: intSize))
+        (data as NSData).getBytes(&fileModeCount, range: NSRange(location: currentLocation, length: intSize))
         currentLocation += intSize
         
         var fileModeSizes: [Int] = []
         for _ in 0..<fileModeCount {
             var thisSize: Int = 0
-            data.getBytes(&thisSize, range: NSRange(location: currentLocation, length: intSize))
+            (data as NSData).getBytes(&thisSize, range: NSRange(location: currentLocation, length: intSize))
             currentLocation += intSize
             fileModeSizes.append(thisSize)
         }
         
         self.init(modeSizes: fileModeSizes, repeatedValue: T(0))
         
-        data.getBytes(&values, range: NSRange(location: currentLocation, length: sizeof(T) * elementCount))
+        (data as NSData).getBytes(&values, range: NSRange(location: currentLocation, length: MemoryLayout<T>.size * elementCount))
     }
     
-    public func writeToFile(path: String) {
+    public func writeToFile(_ path: String) {
         //file format:
         // 8 bytes: data type (1 == Float32)
         // 8 bytes: modeCount (Int)
@@ -326,36 +326,36 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         let elementTypeCode: Int = (Element.self == Float.self) ? 1 : 0
         propertiesArray.append(elementTypeCode)
         propertiesArray.append(modeCount)
-        propertiesArray.appendContentsOf(modeSizes)
+        propertiesArray.append(contentsOf: modeSizes)
         
-        let data = NSMutableData(bytes: &propertiesArray, length: sizeof(Int)*propertiesArray.count)
-        data.appendBytes(values, length: sizeof(Element) * elementCount)
+        let data = NSMutableData(bytes: &propertiesArray, length: MemoryLayout<Int>.size*propertiesArray.count)
+        data.append(values, length: MemoryLayout<Element>.size * elementCount)
         
-        data.writeToFile(path, atomically: true)
+        data.write(toFile: path, atomically: true)
     }
     
     /// - Returns: The number of seperate copy streaks that would be necessary for this reordering of indices
-    public func reorderComplexityOf(newIndices: [TensorIndex]) -> Int {
+    public func reorderComplexityOf(_ newIndices: [TensorIndex]) -> Int {
         assert(indices.count == newIndices.count, "Cannot reorder indices \(indices) to \(newIndices)")
         
         let hasToChange = indices.combineWith(newIndices, combineFunction: { (oldIndex, newIndex) -> Bool in
             return oldIndex != newIndex
         })
-        if let lastMode = Array(hasToChange.reverse()).indexOf({$0}) { //last mode that has to change
-            return modeSizes[0...(modeCount-1-lastMode)].reduce(1, combine: {$0*$1})
+        if let lastMode = Array(hasToChange.reversed()).index(where: {$0}) { //last mode that has to change
+            return modeSizes[0...(modeCount-1-lastMode)].reduce(1, {$0*$1})
         } else {
             return 0
         }
     }
     
-    mutating public func newModeOrder(newToOld: [Int], oldData: Tensor) {
+    mutating public func newModeOrder(_ newToOld: [Int], oldData: Tensor) {
         indices = newToOld.map({oldData.indices[$0]})
         variances = newToOld.map({oldData.variances[$0]})
     }
     
     /// - Returns: A suggestion for an order of the indices that contains the given continous index streak while leaving as many modes in place as possible, the number of modes left of the streak and the number of modes after the streak
-    public func suggestOrderForIndexStreak(streak: [TensorIndex]) -> (indices: [TensorIndex], modesBeforeStreak: Int, modesAfterStreak: Int) {
-        let modeOfLastStreakIndex = indices.indexOf(streak.last!)!
+    public func suggestOrderForIndexStreak(_ streak: [TensorIndex]) -> (indices: [TensorIndex], modesBeforeStreak: Int, modesAfterStreak: Int) {
+        let modeOfLastStreakIndex = indices.index(of: streak.last!)!
         let nonStreakIndicesRight = indices[modeOfLastStreakIndex+1..<modeCount].removeValues(streak)
         let nonStreakIndicesLeft = indices[0..<modeOfLastStreakIndex].removeValues(streak)
         
@@ -364,7 +364,7 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         return (newOrder, nonStreakIndicesLeft.count, nonStreakIndicesRight.count)
     }
     
-    public func optimalOrderForModeStreak(streak: [Int]) -> (newToOld: [Int], oldToNew: [Int], streakRange: Range<Int>) {
+    public func optimalOrderForModeStreak(_ streak: [Int]) -> (newToOld: [Int], oldToNew: [Int], streakRange: CountableRange<Int>) {
         if(streak.count == 0) {
             return (modeArray, modeArray, 0..<0)
         }
@@ -388,8 +388,8 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
         
         let newOrder = nonStreakModesLeft + streak + nonStreakModesRight
         assert(newOrder.count == modeCount, "Cannot sort \(modeCount) modes to have a order \(streak)")
-        let streakRange = Range<Int>(start: nonStreakModesLeft.count, distance: streak.count)
-        let oldToNew = (0..<modeCount).map({newOrder.indexOf($0)!})
+        let streakRange = CountableRange<Int>(start: nonStreakModesLeft.count, distance: streak.count)
+        let oldToNew = (0..<modeCount).map({newOrder.index(of: $0)!})
         
         return (newOrder, oldToNew, streakRange)
     }
@@ -406,7 +406,7 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     }
     
     /// - Returns: A tensor with automatically created unique indices. If the indices were already unique, nothing changes.
-    public func uniquelyIndexed(excludedIndices: [TensorIndex] = []) -> Tensor<T> {
+    public func uniquelyIndexed(_ excludedIndices: [TensorIndex] = []) -> Tensor<T> {
         //see if there are any duplicates
         let indexSet = Set(indices + excludedIndices) //Set() removes duplicates
         if(indexSet.count == (indices.count + excludedIndices.count)) {
@@ -419,12 +419,12 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
     }
     
     /// - Returns: The number of the mode indexed with the given letter, or nil
-    public func modeWithIndex(index: TensorIndex) -> Int? {
-        return indices.indexOf(index)
+    public func modeWithIndex(_ index: TensorIndex) -> Int? {
+        return indices.index(of: index)
     }
     
     /// - Returns: Size of the mode with the given index
-    public func sizeOfModeWithIndex(index: TensorIndex) -> Int? {
+    public func sizeOfModeWithIndex(_ index: TensorIndex) -> Int? {
         if let mode = modeWithIndex(index) {
             return modeSizes[mode]
         } else {
@@ -440,20 +440,20 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
 //    }
     
     /// - Returns: The indices that this tensor has in common with the given tensor, the corresponding modes in this tensor and the corresponding modes in the given tensor. Modes with the default index `.notIndexed` cannot be common modes.
-    public func commonIndicesWith(otherTensor: Tensor<T>) -> ([CommonTensorIndex]) {
+    public func commonIndicesWith(_ otherTensor: Tensor<T>) -> ([CommonTensorIndex]) {
         let commonIndices = indices.filter({otherTensor.indices.contains($0)})
         var result: [CommonTensorIndex] = []
         for thisIndex in commonIndices {
             if(thisIndex == .notIndexed) {
                 continue
             }
-            result.append(CommonTensorIndex(index: thisIndex, modeA: indices.indexOf(thisIndex)!, modeB: otherTensor.indices.indexOf(thisIndex)!))
+            result.append(CommonTensorIndex(index: thisIndex, modeA: indices.index(of: thisIndex)!, modeB: otherTensor.indices.index(of: thisIndex)!))
         }
         return result
     }
     
     public func customMirror() -> Mirror {
-        let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .Tuple)
+        let mirror = Mirror.init(self, children: ["indices": self.indices, "mode sizes": self.modeSizes, "values": self.values], displayStyle: .tuple)
         return mirror
     }
 }
@@ -461,23 +461,23 @@ public struct Tensor<T: Number>: MultidimensionalData, CustomReflectable {
 
 
 // MARK: - Quick initializers
-public func zeros(modeSizes: Int...) -> Tensor<Float> {
+public func zeros(_ modeSizes: Int...) -> Tensor<Float> {
     return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 0)
 }
 
-public func ones(modeSizes: Int...) -> Tensor<Float> {
+public func ones(_ modeSizes: Int...) -> Tensor<Float> {
     return Tensor<Float>(modeSizes: modeSizes, repeatedValue: 1)
 }
 
-public func randomTensor(min min: Float = 0, max: Float = 1, modeSizes: Int...) -> Tensor<Float> {
-    let elementCount = modeSizes.reduce(1, combine: {$0*$1})
+public func randomTensor(min: Float = 0, max: Float = 1, modeSizes: Int...) -> Tensor<Float> {
+    let elementCount = modeSizes.reduce(1, {$0*$1})
     let distance = max - min
     let values = (0..<elementCount).map({_ in (Float(arc4random()) / Float(UINT32_MAX)) * distance + min})
     return Tensor<Float>(modeSizes: modeSizes, values: values)
 }
 
 public extension Array where Element: Number {
-    func tensor(modeSizes: [Int]) -> Tensor<Element> {
+    func tensor(_ modeSizes: [Int]) -> Tensor<Element> {
         return Tensor<Element>(modeSizes: modeSizes, values: self)
     }
 }

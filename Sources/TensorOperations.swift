@@ -12,7 +12,7 @@ import Foundation
 
 /// sum tensor over the given modes
 /// - Returns: a tensor with only the modes that were not summed over
-public func sum(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
+public func sum(_ tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
     let remainingModes = tensor.modeArray.removeValues(overModes)
     var outputData = [Tensor<Float>(withPropertiesOf: tensor, onlyModes: remainingModes)]
     
@@ -33,7 +33,7 @@ public func sum(tensor: Tensor<Float>, overModes: [Int]) -> Tensor<Float> {
 /// `normalizedTensor`: <br> Normalized version of the given tensor, the elements along the given modes together have mean zero and a standard devation of one <br>
 /// `meanTensor`: <br> Mean of the given tensor, itself a tensor with only the modes that were not normalized over <br>
 /// `deviationTensor`: <br> Standard deviation of the given tensor, itself a tensor with only the modes that were not normalized over
-public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
+public func normalize(_ tensor: Tensor<Float>, overModes normalizeModes: [Int]) -> (normalizedTensor: Tensor<Float>, mean: Tensor<Float>, standardDeviation: Tensor<Float>) {
     
     let remainingModes = tensor.modeArray.removeValues(normalizeModes)
     
@@ -62,7 +62,7 @@ public func normalize(tensor: Tensor<Float>, overModes normalizeModes: [Int]) ->
 }
 
 /// Normalize the elements of a tensor over the given modes with fixed mean and standard deviation
-public func normalize(tensor: Tensor<Float>, overModes: [Int], withMean mean: Tensor<Float>, deviation: Tensor<Float>) -> Tensor<Float> {
+public func normalize(_ tensor: Tensor<Float>, overModes: [Int], withMean mean: Tensor<Float>, deviation: Tensor<Float>) -> Tensor<Float> {
     
     let commonModes = tensor.modeArray.removeValues(overModes)
     //let deviationInverse = 1/deviation
@@ -76,7 +76,7 @@ public func normalize(tensor: Tensor<Float>, overModes: [Int], withMean mean: Te
 }
 
 /// Inverse two modes with same size of a tensor
-public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Tensor<Float> {
+public func inverse(_ tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Tensor<Float> {
     assert(rowMode != columnMode, "rowMode and columnMode cannot be the same")
     let remainingModes = tensor.modeArray.filter({$0 != rowMode && $0 != columnMode})
     
@@ -98,25 +98,25 @@ public func inverse(tensor: Tensor<Float>, rowMode: Int, columnMode: Int) -> Ten
 }
 
 /// Exponential of every element of the tensor
-public func exp(tensor: Tensor<Float>) -> Tensor<Float> {
+public func exp(_ tensor: Tensor<Float>) -> Tensor<Float> {
     let exp = Tensor<Float>(withPropertiesOf: tensor, values: vectorExponential(tensor.values))
     return exp
 }
 
 /// Natural logarithm of every element of the tensor
-public func log(tensor: Tensor<Float>) -> Tensor<Float> {
+public func log(_ tensor: Tensor<Float>) -> Tensor<Float> {
     let log = Tensor<Float>(withPropertiesOf: tensor, values: vectorLogarithm(tensor.values))
     return log
 }
 
 //Should be a function for all MuldimensionalData, but the generics don't seem to work!
 /// Change the order of one mode in a tensor
-public func changeOrderOfModeIn(tensor: Tensor<Float>, mode: Int, newOrder: [Int]) -> Tensor<Float> {
+public func changeOrderOfModeIn(_ tensor: Tensor<Float>, mode: Int, newOrder: [Int]) -> Tensor<Float> {
     let outerModes = [mode]
     var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
     
     tensor.performForOuterModes(outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
-        let indexPosition = (currentIndex[mode] as! Range<Int>).startIndex
+        let indexPosition = (currentIndex[mode] as! CountableRange<Int>).startIndex
         var newCurrentIndex = currentIndex
         newCurrentIndex[mode] = newOrder[indexPosition]...newOrder[indexPosition]
         let currentSlice = sourceData[slice: newCurrentIndex]
@@ -129,13 +129,13 @@ public func changeOrderOfModeIn(tensor: Tensor<Float>, mode: Int, newOrder: [Int
 }
 
 /// - Returns: The index (as Float) of the maximum element in the given mode
-public func findMaximumElementOf(tensor: Tensor<Float>, inMode: Int) -> Tensor<Float> {
+public func findMaximumElementOf(_ tensor: Tensor<Float>, inMode: Int) -> Tensor<Float> {
     let outerModes = tensor.modeArray.removeValues([inMode])
     var outputData = [Tensor<Float>(withPropertiesOf: tensor, onlyModes: outerModes)]
     
     tensor.performForOuterModes(outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> [Tensor<Float>] in
         let slice = sourceData[slice: currentIndex]
-        let maxIndex = slice.values.indexOf((slice.values.maxElement()!))!
+        let maxIndex = slice.values.index(of: (slice.values.max()!))!
         return [Tensor<Float>(scalar: Float(maxIndex))]
     }), writeOutput: ({ (currentIndex, outerIndex, inputData, outputData) in
         outputData[0][slice: outerIndex] = inputData[0]
@@ -145,7 +145,7 @@ public func findMaximumElementOf(tensor: Tensor<Float>, inMode: Int) -> Tensor<F
 }
 
 /// Zero padding for greater sizes, cutting away for smaller sizes
-public func changeModeSizes(tensor: Tensor<Float>, targetSizes: [Int]) -> Tensor<Float> {
+public func changeModeSizes(_ tensor: Tensor<Float>, targetSizes: [Int]) -> Tensor<Float> {
     if(tensor.modeSizes == targetSizes) {
         return tensor
     }
@@ -163,7 +163,7 @@ public func changeModeSizes(tensor: Tensor<Float>, targetSizes: [Int]) -> Tensor
 
 // MARK: - Operations combining two tensors
 /// Concatenate two tensors. The content of tensor `b` gets appended to `a` in direction of the given mode. Both `a` and `b` must have the same mode sizes in all modes but `alongMode`. One of the tensors may have one mode less than the other, then the additional `alongMode` of size one is amended.
-public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) -> Tensor<Float> {
+public func concatenate(a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) -> Tensor<Float> {
     var newModeSizes: [Int]
     var sliceA: [DataSliceSubscript]
     var sliceB: [DataSliceSubscript]
@@ -171,23 +171,23 @@ public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) ->
     if(a.modeCount == b.modeCount) {
         sliceA = a.modeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: b.modeSizes[alongMode])
+        sliceB[alongMode] = CountableRange(start: a.modeSizes[alongMode], distance: b.modeSizes[alongMode])
         
         newModeSizes = a.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + b.modeSizes[alongMode]
     } else if(a.modeCount == b.modeCount+1) {
         sliceA = a.modeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: a.modeSizes[alongMode], distance: 1)
+        sliceB[alongMode] = CountableRange(start: a.modeSizes[alongMode], distance: 1)
         
         newModeSizes = a.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + 1
     } else if(a.modeCount == b.modeCount-1) {
         var aModeSizes = a.modeSizes
-        aModeSizes.insert(1, atIndex: alongMode)
+        aModeSizes.insert(1, at: alongMode)
         sliceA = aModeSizes.map({0..<$0})
         sliceB = sliceA
-        sliceB[alongMode] = Range(start: 1, distance: b.modeSizes[alongMode])
+        sliceB[alongMode] = CountableRange(start: 1, distance: b.modeSizes[alongMode])
         newModeSizes = b.modeSizes
         newModeSizes[alongMode] = newModeSizes[alongMode] + 1
     } else {
@@ -203,7 +203,7 @@ public func concatenate(a a: Tensor<Float>, b: Tensor<Float>, alongMode: Int) ->
 }
 
 
-public func add(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
+public func add(a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     
     let (commonA, outerA) = a.inferModes(commonModes: commonModesA, outerModes: outerModesA)
     let (commonB, outerB) = b.inferModes(commonModes: commonModesB, outerModes: outerModesB)
@@ -224,7 +224,7 @@ public func add(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [In
     return sum[0]
 }
 
-public func substract(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
+public func substract(a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     
     let (commonA, outerA) = a.inferModes(commonModes: commonModesA, outerModes: outerModesA)
     let (commonB, outerB) = b.inferModes(commonModes: commonModesB, outerModes: outerModesB)
@@ -245,7 +245,7 @@ public func substract(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModes
     return difference[0]
 }
 
-public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
+public func multiplyElementwise(a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     
     let (commonA, outerA) = a.inferModes(commonModes: commonModesA, outerModes: outerModesA)
     let (commonB, outerB) = b.inferModes(commonModes: commonModesB, outerModes: outerModesB)
@@ -266,7 +266,7 @@ public func multiplyElementwise(a a: Tensor<Float>, commonModesA: [Int]? = nil, 
     return product[0]
 }
 
-public func divide(a a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
+public func divide(a: Tensor<Float>, commonModesA: [Int]? = nil, outerModesA: [Int]? = nil, b: Tensor<Float>, commonModesB: [Int]? = nil, outerModesB: [Int]? = nil) -> Tensor<Float> {
     
     let (commonA, outerA) = a.inferModes(commonModes: commonModesA, outerModes: outerModesA)
     let (commonB, outerB) = b.inferModes(commonModes: commonModesB, outerModes: outerModesB)

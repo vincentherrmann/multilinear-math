@@ -25,7 +25,7 @@ import Foundation
 //    }
 //}
 
-public func stochasticGradientDescent(objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.00001, maxLoops: Int = Int.max, minibatchSize: Int = 16, validationCallback: (currentEpoch: Int, currentEstimator: ParametricTensorFunction) -> (Bool) = {(epoch, _) in print("epoch \(epoch)"); return false}) {
+public func stochasticGradientDescent(_ objective: CostFunction, inputs: Tensor<Float>, targets: Tensor<Float>, updateRate: Float, convergenceThreshold: Float = 0.00001, maxLoops: Int = Int.max, minibatchSize: Int = 16, validationCallback: (_ currentEpoch: Int, _ currentEstimator: ParametricTensorFunction) -> (Bool) = {(epoch, _) in print("epoch \(epoch)"); return false}) {
     
     var cost = FLT_MAX
     var epoch = 0
@@ -41,7 +41,7 @@ public func stochasticGradientDescent(objective: CostFunction, inputs: Tensor<Fl
         var minibatch: Tensor<Float>
         var minibatchTargets: Tensor<Float>
         if(currentIndex + minibatchSize < currentBatch.modeSizes[0]) {
-            let minibatchRange = Range(start: currentIndex, distance: minibatchSize)
+            let minibatchRange = CountableRange(start: currentIndex, distance: minibatchSize)
             
             minibatch = currentBatch[minibatchRange, all]
             minibatchTargets = currentBatchTargets[minibatchRange, all]
@@ -49,7 +49,7 @@ public func stochasticGradientDescent(objective: CostFunction, inputs: Tensor<Fl
             currentIndex += minibatchSize
         } else {
             //call validiation callback, if it returns true, break the optimization loop
-            if(validationCallback(currentEpoch: epoch, currentEstimator: objective.estimator)) {
+            if(validationCallback(epoch, objective.estimator)) {
                 break
             }
             

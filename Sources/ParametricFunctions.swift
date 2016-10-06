@@ -11,22 +11,22 @@ import Foundation
 public protocol ParametricTensorFunction {
     var parameters: [Tensor<Float>] {get set}
     
-    func output(input: Tensor<Float>) -> Tensor<Float>
-    func gradients(gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>])
+    func output(_ input: Tensor<Float>) -> Tensor<Float>
+    func gradients(_ gradientWrtOutput: Tensor<Float>) -> (wrtInput: Tensor<Float>, wrtParameters: [Tensor<Float>])
     /// Substract the given values from the parameters. For gradient descent optimization algorithms
-    mutating func updateParameters(subtrahends: [Tensor<Float>])
+    mutating func updateParameters(_ subtrahends: [Tensor<Float>])
 }
 
 public protocol CostFunction: class {
     var estimator: ParametricTensorFunction {get set}
     var regularizers: [ParameterRegularizer?] {get}
     
-    func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float
-    func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float>
+    func costForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float
+    func gradientForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float>
 }
 
 public extension CostFunction {
-    func updateParameters(subtrahends: [Tensor<Float>]) {
+    func updateParameters(_ subtrahends: [Tensor<Float>]) {
         let parameterRegularizations = estimator.parameters.combineWith(regularizers, combineFunction: { (parameter, regularizer) -> Tensor<Float> in
             if let r = regularizer {
                 return r.regularizationGradient(parameter)
@@ -38,18 +38,18 @@ public extension CostFunction {
         estimator.updateParameters(subtrahends.combineWith(parameterRegularizations, combineFunction: {add(a: $0, outerModesA: [], b: $1, outerModesB: [])}))
     }
     
-    func regularizedCostForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+    func regularizedCostForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
         let cost = self.costForEstimate(estimate, target: target)
         
         let regularizationCosts = estimator.parameters.combineWith(regularizers, combineFunction: { (parameter, regularizer) -> Float in
             return (regularizer != nil) ? regularizer!.regularizationCost(parameter) : 0
         })
         
-        return cost + regularizationCosts.reduce(0, combine: {$0 + $1})
+        return cost + regularizationCosts.reduce(0, {$0 + $1})
     }
     
     
-    public func numericalGradients(input: Tensor<Float>, target: Tensor<Float>, epsilon: Float = 0.01) -> [Tensor<Float>] {
+    public func numericalGradients(_ input: Tensor<Float>, target: Tensor<Float>, epsilon: Float = 0.01) -> [Tensor<Float>] {
         let estimate = estimator.output(input)
         let cost = costForEstimate(estimate, target: target)
         
@@ -88,8 +88,8 @@ public extension CostFunction {
 }
 
 public protocol ParameterRegularizer {
-    func regularizationCost(parameter: Tensor<Float>) -> Float
-    func regularizationGradient(parameter: Tensor<Float>) -> Tensor<Float>
+    func regularizationCost(_ parameter: Tensor<Float>) -> Float
+    func regularizationGradient(_ parameter: Tensor<Float>) -> Tensor<Float>
 }
 
 public struct ParameterDecay: ParameterRegularizer {
@@ -99,24 +99,24 @@ public struct ParameterDecay: ParameterRegularizer {
         regularizationParameter = decayRate
     }
     
-    public func regularizationCost(parameter: Tensor<Float>) -> Float {
+    public func regularizationCost(_ parameter: Tensor<Float>) -> Float {
         return multiply(a: parameter, remainingModesA: [], b: parameter, remainingModesB: []).values[0] * regularizationParameter
     }
-    public func regularizationGradient(parameter: Tensor<Float>) -> Tensor<Float> {
+    public func regularizationGradient(_ parameter: Tensor<Float>) -> Tensor<Float> {
         return parameter * regularizationParameter
     }
 }
 
-public class SquaredErrorCost: CostFunction {
-    public var estimator: ParametricTensorFunction
-    public var regularizers: [ParameterRegularizer?]
+open class SquaredErrorCost: CostFunction {
+    open var estimator: ParametricTensorFunction
+    open var regularizers: [ParameterRegularizer?]
     
     public init(forEstimator: ParametricTensorFunction) {
         estimator = forEstimator
-        regularizers = [ParameterRegularizer?](count: estimator.parameters.count, repeatedValue: nil)
+        regularizers = [ParameterRegularizer?](repeating: nil, count: estimator.parameters.count)
     }
     
-    public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+    open func costForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
         let exampleCount = Float(target.modeCount > 1 ? target.modeSizes[0] : 1)
         
         let error = substract(a: target, outerModesA: [], b: estimate, outerModesB: [])
@@ -126,17 +126,17 @@ public class SquaredErrorCost: CostFunction {
         return cost.values[0] / exampleCount
     }
     
-    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+    open func gradientForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
         let gradient = 2 * substract(a: estimate, outerModesA: [], b: target, outerModesB: [])
         return gradient
     }
 }
 
-public class NegLogClassificationCost: CostFunction {
-    public var estimator: ParametricTensorFunction
-    public var regularizers: [ParameterRegularizer?] {
+open class NegLogClassificationCost: CostFunction {
+    open var estimator: ParametricTensorFunction
+    open var regularizers: [ParameterRegularizer?] {
         get {
-            return [ParameterRegularizer?](count: estimator.parameters.count, repeatedValue: nil)
+            return [ParameterRegularizer?](repeating: nil, count: estimator.parameters.count)
         }
     }
     
@@ -144,7 +144,7 @@ public class NegLogClassificationCost: CostFunction {
         estimator = forEstimator
     }
     
-    public func costForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
+    open func costForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Float {
         let exampleCount = Float(target.modeCount > 1 ? target.modeSizes[0] : 1)
         
         let t1 = -target °* log(estimate)
@@ -154,7 +154,7 @@ public class NegLogClassificationCost: CostFunction {
         return cost
     }
     
-    public func gradientForEstimate(estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
+    open func gradientForEstimate(_ estimate: Tensor<Float>, target: Tensor<Float>) -> Tensor<Float> {
         let g1 = target °* (1/estimate)
         let g2 = (1-target) °* (1 / (1-estimate))
         let gradient = -(g1 - g2)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func createWaveletFromCoefficients(coefficients: [Float], levels: Int) -> [Float] {
+public func createWaveletFromCoefficients(_ coefficients: [Float], levels: Int) -> [Float] {
     var wavelet = calculateIntegerWaveletValues(coefficients)
     for _ in 0..<levels {
         wavelet = newWaveletApproximation(wavelet, coefficients: coefficients)
@@ -17,7 +17,7 @@ public func createWaveletFromCoefficients(coefficients: [Float], levels: Int) ->
 }
 
 /// calculate the values of the wavelet function on the integer position from the filter coefficients. This is done by solving a system of linear equations constructed from the dilation equation
-public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
+public func calculateIntegerWaveletValues(_ coefficients: [Float]) -> [Float] {
     let count = coefficients.count
     
     //calculate factor matrix (left side of the equation system)
@@ -38,7 +38,7 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
         factorMatrix[r, r] += -1
     }
     factorMatrix = factorMatrix + 1
-    let results = [Float](count: count-1, repeatedValue: 1) + [1]
+    let results = [Float](repeating: 1, count: count-1) + [1]
     
     print("count: \(count)")
     print("factor matrix: \(factorMatrix.values)")
@@ -51,9 +51,9 @@ public func calculateIntegerWaveletValues(coefficients: [Float]) -> [Float] {
     return solution
 }
 
-public func newWaveletApproximation(currentApproximation: [Float], coefficients: [Float]) -> [Float] {
+public func newWaveletApproximation(_ currentApproximation: [Float], coefficients: [Float]) -> [Float] {
     let newLevel = 2 * (currentApproximation.count-1) / (coefficients.count-1)
-    var newApproximation = [Float](count: (coefficients.count-1) * newLevel + 1, repeatedValue: 0)
+    var newApproximation = [Float](repeating: 0, count: (coefficients.count-1) * newLevel + 1)
     let newValueCount = (coefficients.count-1) * (newLevel/2)
     print("new level: \(newLevel), value count: \(newApproximation.count), new values: \(newValueCount)")
     
@@ -73,9 +73,9 @@ public func newWaveletApproximation(currentApproximation: [Float], coefficients:
     return newApproximation
 }
 
-public func newFilterApproximation(currentApproximation: [Float], coefficients: [Float]) -> [Float] {
+public func newFilterApproximation(_ currentApproximation: [Float], coefficients: [Float]) -> [Float] {
     let newValueCount = 2*currentApproximation.count + coefficients.count - 2
-    var newApproximation = [Float](count: newValueCount, repeatedValue: 0)
+    var newApproximation = [Float](repeating: 0, count: newValueCount)
     
     for j in 0..<newValueCount {
         var currentValue: Float = 0
