@@ -23,10 +23,10 @@ class NeuralNetTests: XCTestCase {
         let validationData = data[50000..<60000, all]
         let validationLabels = rawLabels[50000..<60000].map({Float($0)})
         
-        var estimator =  NeuralNet(layerSizes: [28*28, 40, 10])
+        let estimator =  NeuralNet(layerSizes: [28*28, 40, 10])
         estimator.layers[0].activationFunction = ReLU(secondarySlope: 0.01)
         estimator.layers[1].activationFunction = ReLU(secondarySlope: 0.01)
-        var neuralNetCost = SquaredErrorCost(forEstimator: estimator)
+        let neuralNetCost = SquaredErrorCost(forEstimator: estimator)
         let regularizer = ParameterDecay(decayRate: 0.0001)
         neuralNetCost.regularizers[0] = regularizer
         neuralNetCost.regularizers[2] = regularizer

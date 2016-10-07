@@ -155,6 +155,10 @@ public extension MultidimensionalData {
                 newSubscripts[m] = 0..<modeSizes[m]
             }
             
+            if let n = newSubscripts[m] as? CountableClosedRange<Int> {
+                newSubscripts[m] = n.lowerBound..<n.upperBound+1
+            }
+            
             //replace a range of size 1 with the corresponding array, this is faster in most cases
             if(subscripts[m].sliceSize == 1) {
                 newSubscripts[m] = subscripts[m].sliceIndices()

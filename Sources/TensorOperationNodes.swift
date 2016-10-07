@@ -17,7 +17,7 @@ public protocol TensorOperationNode {
 }
 
 protocol TensorFourierTransform {
-    static var transformSetup: (vDSP_DFT_Setup, vDSP_Length) -> OpaquePointer {get}
+    static var transformSetup: (vDSP_DFT_Setup?, vDSP_Length) -> OpaquePointer {get}
     static var transformFunction: (OpaquePointer, UnsafePointer<Float>, UnsafePointer<Float>, UnsafeMutablePointer<Float>, UnsafeMutablePointer<Float>) -> () {get}
     var modeSizes: [Int] {get}
     var transformSizes: [Int]! {get set}
@@ -34,7 +34,7 @@ extension TensorFourierTransform {
         dftSetups = []
         var currentSetup: OpaquePointer? = nil
         for size in transformSizes {
-            currentSetup = Self.transformSetup(currentSetup!, UInt(size))
+            currentSetup = Self.transformSetup(currentSetup, UInt(size))
             dftSetups.append(currentSetup!)
         }
     }
@@ -89,7 +89,7 @@ public struct FourierTransform: TensorFourierTransform, TensorOperationNode {
     public static var inputCount = 1
     public static var outputCount = 1
     
-    static var transformSetup: (vDSP_DFT_Setup, vDSP_Length) -> OpaquePointer = {(prevSetup, length) -> OpaquePointer in
+    static var transformSetup: (vDSP_DFT_Setup?, vDSP_Length) -> OpaquePointer = {(prevSetup, length) -> OpaquePointer in
         return vDSP_DFT_zop_CreateSetup(prevSetup, length, vDSP_DFT_Direction.FORWARD)!
     }
     static var transformFunction = {(setup, realIn, imagIn, realOut, imagOut) -> () in
@@ -122,7 +122,7 @@ public struct InverseFourierTransform: TensorFourierTransform, TensorOperationNo
     public static var inputCount = 1
     public static var outputCount = 1
     
-    static var transformSetup: (vDSP_DFT_Setup, vDSP_Length) -> OpaquePointer = {(prevSetup, length) -> OpaquePointer in
+    static var transformSetup: (vDSP_DFT_Setup?, vDSP_Length) -> OpaquePointer = {(prevSetup, length) -> OpaquePointer in
         return vDSP_DFT_zop_CreateSetup(prevSetup, length, vDSP_DFT_Direction.INVERSE)!
     }
     static var transformFunction = {(setup, realIn, imagIn, realOut, imagOut) -> () in

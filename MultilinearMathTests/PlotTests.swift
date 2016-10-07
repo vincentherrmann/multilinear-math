@@ -24,7 +24,7 @@ class PlotTests: XCTestCase {
     func testQuickLook() {
         let a: [Float] = [2.0, -1.0, 4.0, 1.0]
         let quickLook = QuickArrayPlot(array: a)
-        let q = quickLook.customPlaygroundQuickLook()
+        let q = quickLook.customPlaygroundQuickLook
     }
 
     func testExample() {
@@ -34,7 +34,7 @@ class PlotTests: XCTestCase {
 
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }

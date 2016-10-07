@@ -44,22 +44,22 @@ class ExampleTests: XCTestCase {
     }
     
     func testMPCAwithLargeDataset() {
-        print("load data... \(NSDate())")
+        print("load data... \(Date())")
         let faces = Tensor<Float>(valuesFromFileAtPath: "/Users/vincentherrmann/Documents/Software/MachineLearningMOOC/machine-learning-ex7/ex7/ex7faces.csv", modeSizes: [5000, 32, 32])
         
-        print("normalize data... \(NSDate())")
+        print("normalize data... \(Date())")
         let (facesNorm, mean, deviation) = normalize(faces, overModes: [0])
-        print("denormalize data... \(NSDate())")
+        print("denormalize data... \(Date())")
         let facesWithDeviation = multiplyElementwise(a: facesNorm, commonModesA: [1, 2], outerModesA: [0], b: deviation, commonModesB: [0, 1], outerModesB: [])
         let facesWithMean = add(a: facesWithDeviation, commonModesA: [1, 2], outerModesA: [0], b: mean, commonModesB: [0, 1], outerModesB: [])
         
-        print("calculate UMPCA... \(NSDate())")
+        print("calculate UMPCA... \(Date())")
         let (uFaces, uEMPs) = uncorrelatedMPCA(facesNorm, featureCount: 8)
-        print("reconstruct data... \(NSDate())")
+        print("reconstruct data... \(Date())")
         let reconstructeduFaces = uncorrelatedMPCAReconstruct(uFaces, projections: uEMPs)
         
         
-        print("calculate MPCA... \(NSData())")
+        print("calculate MPCA... \(Data())")
         let mFaces = multilinearPCA(facesNorm, projectionModeSizes: [10, 10])
         
         //debug: 345 seconds
@@ -93,7 +93,7 @@ class ExampleTests: XCTestCase {
         let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         let testTensor = Tensor<Float>(modeSizes: [2], values: [2100.0, 3.0])
         
-        var costFunction: CostFunction = LinearRegressionCost(featureCount: 2)
+        let costFunction: CostFunction = LinearRegressionCost(featureCount: 2)
         
         stochasticGradientDescent(costFunction, inputs: xNorm, targets: y, updateRate: 5.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 47)
         print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
@@ -128,7 +128,7 @@ class ExampleTests: XCTestCase {
         
         let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         
-        var costFunction: CostFunction = LogisticRegressionCost(featureCount: 2)
+        let costFunction: CostFunction = LogisticRegressionCost(featureCount: 2)
         
         stochasticGradientDescent(costFunction, inputs: xNorm, targets: y, updateRate: 1.0, convergenceThreshold: 0.001, maxLoops: 200, minibatchSize: 25)
         print("parameters: \(costFunction.estimator.parameters[0].values + costFunction.estimator.parameters[1].values)")
@@ -146,7 +146,7 @@ class ExampleTests: XCTestCase {
         
         let (xNorm, mean, deviation) = normalize(x, overModes: [0])
         
-        var neuralNetCostFunction: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [2, 3, 3, 1]))
+        let neuralNetCostFunction: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [2, 3, 3, 1]))
         stochasticGradientDescent(neuralNetCostFunction, inputs: xNorm, targets: y, updateRate: 10.0, convergenceThreshold: 0.0001, maxLoops: 200, minibatchSize: 25)
         
         //let testValues = normalize(Tensor<Float>(modeSizes: [3, 2], values: [40, 50, 70, 60, 90, 90]), overModes: [1], withMean: mean, deviation: deviation)
@@ -157,7 +157,7 @@ class ExampleTests: XCTestCase {
     }
     
     func testNeuralNetGradient() {
-        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [4, 6, 5, 3]))
+        let neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [4, 6, 5, 3]))
         let input = randomTensor(min: -1, max: 1, modeSizes: 10, 4)
         let target = randomTensor(min: 0, max: 1, modeSizes: 10, 3)
         let estimate = neuralNetCost.estimator.output(input)
@@ -178,7 +178,7 @@ class ExampleTests: XCTestCase {
     }
     
     func testMNISTGradient() {
-        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 15, 10]))
+        let neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 15, 10]))
         
         let x_values = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
         let x = Tensor<Float>(modeSizes: [x_values.modeSizes[0], 28*28], values: x_values.values) - 0.5
@@ -208,10 +208,10 @@ class ExampleTests: XCTestCase {
     
     func testNeuralNetworkMNIST() {
         //var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: NeuralNet(layerSizes: [28*28, 25, 10]))
-        var estimator =  NeuralNet(layerSizes: [28*28, 25, 10])
+        let estimator =  NeuralNet(layerSizes: [28*28, 25, 10])
         estimator.layers[0].activationFunction = ReLU(secondarySlope: 0.01)
         estimator.layers[1].activationFunction = ReLU(secondarySlope: 0.01)
-        var neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: estimator)
+        let neuralNetCost: CostFunction = SquaredErrorCost(forEstimator: estimator)
         
         let x_values = loadMNISTImageFile("/Users/vincentherrmann/Documents/Software/DataSets/MNIST/t10k-images.idx3-ubyte")
         print("normalize...")

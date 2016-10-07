@@ -45,7 +45,7 @@ class TensorOperationsTests: XCTestCase {
         t1.indices = [.a, .b, .c]
         t2.indices = [.c, .d, .e]
         product = t1*t2
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...1 {
             for b in 0...1 {
                 for d in 0...1 {
@@ -66,7 +66,7 @@ class TensorOperationsTests: XCTestCase {
         t1.indices = [.a, .b, .c]
         t2.indices = [.b, .c, .d]
         product = t1*t2
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...2 {
             for d in 0...2 {
                 var sum: Float = 0
@@ -84,7 +84,7 @@ class TensorOperationsTests: XCTestCase {
         t2 = Tensor<Float>(modeSizes: [3, 3, 3], values: Array(0..<27).map({return Float($0)}))
         t1.indices = [.a, .b, .c]
         t2.indices = [.c, .b, .d]
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...2 {
             for d in 0...2 {
                 var sum: Float = 0
@@ -103,7 +103,7 @@ class TensorOperationsTests: XCTestCase {
         t2 = Tensor<Float>(modeSizes: [3, 3, 3], values: Array(0..<27).map({return Float($0)}))
         t1.indices = [.a, .b, .c]
         t2.indices = [.d, .c, .b]
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...2 {
             for d in 0...2 {
                 var sum: Float = 0
@@ -122,7 +122,7 @@ class TensorOperationsTests: XCTestCase {
         t2 = Tensor<Float>(modeSizes: [3, 3, 3], values: Array(0..<27).map({return Float($0)}))
         t1.indices = [.a, .b, .c]
         t2.indices = [.c, .d, .b]
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...2 {
             for d in 0...2 {
                 var sum: Float = 0
@@ -147,7 +147,7 @@ class TensorOperationsTests: XCTestCase {
         //        t2 = Tensor<Float>(modeSizes: [3, 3, 3, 3], values: Array(0..<81).map({return Float($0)}))
         //        t1.indexAs([.a, .b, .c, .d])
         //        t2.indexAs([.c, .d, .a, .e])
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for b in 0...2 {
             for e in 0...2 {
                 var sum: Float = 0
@@ -169,7 +169,7 @@ class TensorOperationsTests: XCTestCase {
         t1.indices = [.a, .b, .c, .d]
         t2.indices = [.b, .e]
         product = t1*t2
-        expectedProduct = [Float](count: product.elementCount, repeatedValue: 0)
+        expectedProduct = [Float](repeating: 0, count: product.elementCount)
         for a in 0...2 {
             for c in 0...2 {
                 for d in 0...2 {

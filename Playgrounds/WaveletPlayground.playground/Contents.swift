@@ -35,10 +35,10 @@ let o = db4Wavelet.count / 3
 //let p2 = [Float](count: 2*o, repeatedValue: 0)+db4Wavelet.map({$0*db4[2]}) + [Float](count: 1*o, repeatedValue: 0)
 //let p3 = [Float](count: 3*o, repeatedValue: 0)+db4Wavelet.map({$0*db4[3]})
 
-let p0 = db4Wavelet.map({$0*0.2}) + [Float](count: 3*o, repeatedValue: 0)
-let p1 = [Float](count: 1*o, repeatedValue: 0)+db4Wavelet.map({$0*0.4}) + [Float](count: 2*o, repeatedValue: 0)
-let p2 = [Float](count: 2*o, repeatedValue: 0)+db4Wavelet.map({$0*0.6}) + [Float](count: 1*o, repeatedValue: 0)
-let p3 = [Float](count: 3*o, repeatedValue: 0)+db4Wavelet.map({$0*0.8})
+let p0 = db4Wavelet.map({$0*0.2}) + [Float](repeating: 0, count: 3*o)
+let p1 = [Float](repeating: 0, count: 1*o)+db4Wavelet.map({$0*0.4}) + [Float](repeating: 0, count: 2*o)
+let p2 = [Float](repeating: 0, count: 2*o)+db4Wavelet.map({$0*0.6}) + [Float](repeating: 0, count: 1*o)
+let p3 = [Float](repeating: 0, count: 3*o)+db4Wavelet.map({$0*0.8})
 
 let summandCount = 2 * db4Wavelet.count
 let xArray = Array(0..<summandCount).map({Float($0)*3/Float(summandCount)})
@@ -61,7 +61,7 @@ let s2 = zip(s1, p2).map({$0.0+$0.1})
 let s2p = QuickLinesPlot(x: xArray, y: s2, bounds: CGRect(x: 0, y: -2, width: 4, height: 4))
 let s3 = zip(s2, p3).map({$0.0+$0.1})
 let s3p = QuickLinesPlot(x: xArray, y: s3, bounds: CGRect(x: 0, y: -2, width: 4, height: 4))
-s3p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/summedDB4WaveletW.pdf")
+//s3p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/summedDB4WaveletW.pdf")
 
 //let c1 = newFilterApproximation([1], coefficients: db4)
 //let c1y = Array(0..<c1.count).map({Float($0)/2})

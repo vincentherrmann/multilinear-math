@@ -26,6 +26,8 @@ extension DataSliceSubscript {
             return array.map({$0.value})
         } else if let range = self as? CountableRange<Int> {
             return Array(range).map({$0.value})
+        } else if let range = self as? CountableClosedRange<Int> {
+            return Array(range).map({$0.value})
         } else {
             let emptyArray = [Int]()
             return emptyArray

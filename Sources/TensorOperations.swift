@@ -116,7 +116,7 @@ public func changeOrderOfModeIn(_ tensor: Tensor<Float>, mode: Int, newOrder: [I
     var outputData = [Tensor<Float>(withPropertiesOf: tensor)]
     
     tensor.performForOuterModes(outerModes, outputData: &outputData, calculate: ({ (currentIndex, outerIndex, sourceData) -> ([Tensor<Float>]) in
-        let indexPosition = (currentIndex[mode] as! CountableRange<Int>).startIndex
+        let indexPosition = currentIndex[mode].sliceIndices().first!
         var newCurrentIndex = currentIndex
         newCurrentIndex[mode] = newOrder[indexPosition]...newOrder[indexPosition]
         let currentSlice = sourceData[slice: newCurrentIndex]

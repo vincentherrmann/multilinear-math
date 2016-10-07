@@ -58,7 +58,7 @@ class AccelerateFunctionTests: XCTestCase {
     func testWaveletComputation() {
         let db4: [Float] = [0.6830127, 1.1830127, 0.3169873, -0.1830127]
         let coefficients = db4
-        var count = coefficients.count
+        let count = coefficients.count
         var factorMatrix = Tensor<Float>(modeSizes: [count, count], repeatedValue: 0)
         for r in 0..<count-1 {
             let coeff0Position = 2*r
@@ -74,7 +74,7 @@ class AccelerateFunctionTests: XCTestCase {
         
         //count = 5
         //factorMatrix = randomTensor(min: -1, max: 1, modeSizes: count, count)
-        let results: [Float] = [Float](count: count-1, repeatedValue: 0) + [1]
+        let results: [Float] = [Float](repeating: 0, count: count-1) + [1]
         var solution: [Float] = []
         factorMatrix.values.withUnsafeBufferPointer { (a) -> () in
             results.withUnsafeBufferPointer({ (b) -> () in
@@ -86,7 +86,7 @@ class AccelerateFunctionTests: XCTestCase {
 
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
