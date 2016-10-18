@@ -11,17 +11,17 @@ let db8: [Float] = [0.23037781330885523, 0.7148465705525415, 0.6308807679295904,
 let db6Wavelet = createWaveletFromCoefficients(db6, levels: 6)
 QuickArrayPlot(array: db6Wavelet)
 
-let db6reverse = createWaveletFromCoefficients(db6.reverse(), levels: 6)
+let db6reverse = createWaveletFromCoefficients(db6.reversed(), levels: 6)
 QuickArrayPlot(array: db6reverse)
 
 let o = db6Wavelet.count / 5
 
-let p0 = db6Wavelet + [Float](count: 5*o, repeatedValue: 0)
-let p1 = [Float](count: 1*o, repeatedValue: 0)+db6Wavelet + [Float](count: 4*o, repeatedValue: 0)
-let p2 = [Float](count: 2*o, repeatedValue: 0)+db6Wavelet + [Float](count: 3*o, repeatedValue: 0)
-let p3 = [Float](count: 3*o, repeatedValue: 0)+db6Wavelet + [Float](count: 2*o, repeatedValue: 0)
-let p4 = [Float](count: 4*o, repeatedValue: 0)+db6Wavelet + [Float](count: 1*o, repeatedValue: 0)
-let p5 = [Float](count: 5*o, repeatedValue: 0)+db6Wavelet
+let p0 = db6Wavelet + [Float](repeating: 0, count: 5*o)
+let p1 = [Float](repeating: 0, count: 1*o)+db6Wavelet + [Float](repeating: 0, count: 4*o)
+let p2 = [Float](repeating: 0, count: 2*o)+db6Wavelet + [Float](repeating: 0, count: 3*o)
+let p3 = [Float](repeating: 0, count: 3*o)+db6Wavelet + [Float](repeating: 0, count: 2*o)
+let p4 = [Float](repeating: 0, count: 4*o)+db6Wavelet + [Float](repeating: 0, count: 1*o)
+let p5 = [Float](repeating: 0, count: 5*o)+db6Wavelet
 
 let summandCount = 2 * db6Wavelet.count
 let xArray = Array(0..<summandCount).map({Float($0)*5/Float(summandCount)})
@@ -29,48 +29,49 @@ let xArray = Array(0..<summandCount).map({Float($0)*5/Float(summandCount)})
 
 let f = xArray.map({0.5*pow(1.5*$0-2.5, 2) - 2})
 let fPlot = QuickLinesPlot(x: xArray, y: f, bounds: CGRect(x: 0, y: -2, width: 6, height: 4))
-fPlot.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6SynthFunction.pdf")
+//fPlot.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6SynthFunction.pdf")
 
 
 let scaleFactor = 10 / Float(f.count)
 
-let a0 = zip(f, p0).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+let a0 = zip(f, p0).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a0
-let a1 = zip(f, p1).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+let a1 = zip(f, p1).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a1
-let a2 = zip(f, p2).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+let a2 = zip(f, p2).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a2
-let a3 = zip(f, p3).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+let a3 = zip(f, p3).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a3
-let a4 = zip(f, p4).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+let a4 = zip(f, p4).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a4
-let a5 = zip(f, p5).map({$0.0*$0.1}).reduce(1, combine: {$0+$1})*scaleFactor
+
+let a5 = zip(f, p5).map({$0.0*$0.1}).reduce(1, {$0+$1})*scaleFactor
 a5
 
-let r0 = db6reverse.map({$0*a0}) + [Float](count: 5*o, repeatedValue: 0)
-let r1 = [Float](count: 1*o, repeatedValue: 0)+db6reverse.map({$0*a1}) + [Float](count: 4*o, repeatedValue: 0)
-let r2 = [Float](count: 2*o, repeatedValue: 0)+db6reverse.map({$0*a2}) + [Float](count: 3*o, repeatedValue: 0)
-let r3 = [Float](count: 3*o, repeatedValue: 0)+db6reverse.map({$0*a3}) + [Float](count: 2*o, repeatedValue: 0)
-let r4 = [Float](count: 4*o, repeatedValue: 0)+db6reverse.map({$0*a4}) + [Float](count: 1*o, repeatedValue: 0)
-let r5 = [Float](count: 5*o, repeatedValue: 0)+db6reverse.map({$0*a5})
+let r0 = db6reverse.map({$0*a0}) + [Float](repeating: 0, count: 5*o)
+let r1 = [Float](repeating: 0, count: 1*o)+db6reverse.map({$0*a1}) + [Float](repeating: 0, count: 4*o)
+let r2 = [Float](repeating: 0, count: 2*o)+db6reverse.map({$0*a2}) + [Float](repeating: 0, count: 3*o)
+let r3 = [Float](repeating: 0, count: 3*o)+db6reverse.map({$0*a3}) + [Float](repeating: 0, count: 2*o)
+let r4 = [Float](repeating: 0, count: 4*o)+db6reverse.map({$0*a4}) + [Float](repeating: 0, count: 1*o)
+let r5 = [Float](repeating: 0, count: 5*o)+db6reverse.map({$0*a5})
 
 let p0p = QuickLinesPlot(x: xArray, y: r0, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
 //p0p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF0.pdf")
 
 let p1p = QuickLinesPlot(x: xArray, y: r1, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
-p1p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF1.pdf")
+//p1p.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF1.pdf")
 
 let p2p = QuickLinesPlot(x: xArray, y: r2, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
-p2p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF2.pdf")
+//p2p.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF2.pdf")
 
 let p3p = QuickLinesPlot(x: xArray, y: r3, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
-p3p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF3.pdf")
+//p3p.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF3.pdf")
 
 let p4p = QuickLinesPlot(x: xArray, y: r4, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
-p4p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF4.pdf")
+//p4p.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF4.pdf")
 
 let p5p = QuickLinesPlot(x: xArray, y: r5, bounds: CGRect(x: 0, y: -3, width: 6, height: 4))
-p5p.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF5.pdf")
+//p5p.plotView.writeAsPdfTo(path: "/Users/vincentherrmann/Documents/Projekte/Wavelets/db6WaveletF5.pdf")
 
 
 

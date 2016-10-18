@@ -37,9 +37,24 @@ public struct FIRFilter {
     
 }
 
+public func addComplex(a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
+    return (a.0 + b.0, a.1 + b.1)
+}
+
+public func substractComplex(a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
+    return (a.0 - b.0, a.1 - b.1)
+}
+
 public func multiplyComplex(_ a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
     let r = a.0 * b.0 - a.1 * b.1
     let i = a.1 * b.0 + a.0 * b.1
+    return (r, i)
+}
+
+public func divideComplex(a: (Float, Float), b: (Float, Float)) -> (r: Float, i: Float) {
+    let den = b.0 * b.0 + b.1 * b.1
+    let r = (a.0 * b.0 + a.1 * b.1) / den
+    let i = (a.1 * b.0 - a.0 * b.1) / den
     return (r, i)
 }
 

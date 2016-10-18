@@ -61,6 +61,11 @@ class WaveletTests: XCTestCase {
         let impulseResponse = fr.map({$0.r * $0.i})
         print("ir: \(impulseResponse)")
     }
+    
+    func testDaubechiesCoefficients() {
+        let db6 = calculateDaubechiesCoefficients(vanishingMoments: 3)
+        print("daubechies 6 coefficients: \(db6)")
+    }
 
 }
 
