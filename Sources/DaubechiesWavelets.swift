@@ -11,11 +11,11 @@ import Foundation
 public func calculateDaubechiesCoefficients(vanishingMoments: Int) -> [Float] {
 
     //create Q polynomial
-    var summedExpansion: [PolynomialTerm] = [(ComplexNumber(real: 1, imaginary: 0), 0)]
-    let qBase: [PolynomialTerm] = [(ComplexNumber(real: 0.5, imaginary: 0), 0), (ComplexNumber(real: -0.25, imaginary: 0), 1), (ComplexNumber(real: -0.25, imaginary: 0), -1)]
+    var summedExpansion: [PolynomialTerm] = [(1 + 0*i, 0)]
+    let qBase: [PolynomialTerm] = [(0.5 + 0*i, 0), (-0.25 + 0*i, 1), (-0.25 + 0*i, -1)]
     
     for n in 1..<vanishingMoments {
-        var expansion = [[PolynomialTerm]].init(repeating: qBase, count: n).reduce([(ComplexNumber(real: 1, imaginary: 0), 0)], {expandProduct(factor1: $0, factor2: $1)})
+        var expansion = [[PolynomialTerm]].init(repeating: qBase, count: n).reduce([(1 + 0*i, 0)], {expandProduct(factor1: $0, factor2: $1)})
         let factor = Float(binomialCoefficient(vanishingMoments + n - 1, choose: n))
         expansion = expansion.map({($0.coefficient * factor, $0.power)})
 
@@ -37,7 +37,7 @@ public func calculateDaubechiesCoefficients(vanishingMoments: Int) -> [Float] {
     var roots: [ComplexNumber] = []
     
     for s in 0..<100 {
-        let start = ComplexNumber(real: cos(2.6 * Float(s)), imaginary: sin(2.6 * Float(s)))
+        let start = cos(2.6 * Float(s)) + sin(2.6 * Float(s))*i
         if let root = newton.findRoot(from: start) {
             if roots.contains(where: {($0 - root).absoluteValue < 0.001}) {
                 continue
@@ -54,24 +54,36 @@ public func calculateDaubechiesCoefficients(vanishingMoments: Int) -> [Float] {
     }
     
     //create H0 polynomial
-    var h0: [PolynomialTerm] = [(ComplexNumber(real: 2, imaginary: 0), 0)]
+    var h0: [PolynomialTerm] = [(2 + 0*i, 0)]
     
     for _ in 0..<vanishingMoments {
-        h0 = expandProduct(factor1: h0, factor2: [(ComplexNumber(real: 0.5, imaginary: 0), 0), (ComplexNumber(real: 0.5, imaginary: 0), 1)])
+        h0 = expandProduct(factor1: h0, factor2: [(0.5 + 0*i, 0), (0.5 + 0*i, 1)])
     }
+    
+    print("h0_1: \(h0)")
     
     for root in roots {
         let f = 1 / (1-root)
         h0 = expandProduct(factor1: h0, factor2: [(-root*f, 0), (f, 1)])
     }
     
+    print("h0_2: \(h0)")
+    
     let h0Coefficients = h0.map({$0.coefficient.real})
     
     return h0Coefficients
 }
 
+
+/// One term of a complex polynomial, consisting of a `coefficient` and the `power` of the variable
 public typealias PolynomialTerm = (coefficient: ComplexNumber, power: Int)
 
+/// Expand the product of two complex polynomials
+///
+/// - parameter factor1: first polynomial
+/// - parameter factor2: second polynomial
+///
+/// - returns: product
 public func expandProduct(factor1: [PolynomialTerm], factor2: [PolynomialTerm]) -> [PolynomialTerm] {
     
     var expansion: [PolynomialTerm] = []
@@ -90,8 +102,6 @@ public func expandProduct(factor1: [PolynomialTerm], factor2: [PolynomialTerm]) 
     }
     
     expansion.sort(by: {$0.power < $1.power})
-    
-    print("expansion: \(expansion)")
     
     return expansion
 }
@@ -121,7 +131,7 @@ public struct ComplexNewtonApproximator {
             currentPosition = currentPosition - (currentValue / currentDerivative)
             currentValue = polynomial.valueFor(z: currentPosition)
             
-            print("newton currentValue: \(currentValue)")
+            //print("newton currentValue: \(currentValue)")
             
             if(currentValue.absoluteValue < threshold) {
                 print("root at \(currentPosition)")

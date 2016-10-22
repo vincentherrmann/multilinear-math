@@ -64,7 +64,27 @@ class WaveletTests: XCTestCase {
     
     func testDaubechiesCoefficients() {
         let db6 = calculateDaubechiesCoefficients(vanishingMoments: 3)
+        let db6Tensor = Tensor<Float>(modeSizes: [6], values: db6)
+        let target = Tensor<Float>(modeSizes: [6], values: [0.049817, -0.12083, -0.19093, 0.65037, 1.1411, 0.47047])
+        
+        let s = sum(db6Tensor[.a] - target[.a], overModes: [0])
+        
+        XCTAssert(abs(s.values[0]) < 0.01, "wrong daubechies 6 coefficients: \(db6)")
+        
         print("daubechies 6 coefficients: \(db6)")
+    }
+    
+    func testFlatDelayAllpass() {
+        let d3 = flatDelayCoefficients(count: 3, delay: 0.5)
+        print("d3: \(d3)")
+        
+        let d4 = flatDelayCoefficients(count: 4, delay: 0.5)
+        print("d4: \(d4)")
+    }
+    
+    func testComplexWavelet() {
+        let c = calculateComplexWaveletCoefficients(vanishingMoments: 4, delayCoefficients: 2)
+        print("c: \(c)")
     }
 
 }

@@ -23,6 +23,7 @@
 		BA5471AF1CB993D6009BF7E5 /* TensorOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */; };
 		BA5886D41D61B3E500584ECA /* FIRFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5886D31D61B3E400584ECA /* FIRFilter.swift */; };
 		BA5E8B341DB3CAFE00042DFA /* ComplexNumbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E8B331DB3CAFD00042DFA /* ComplexNumbers.swift */; };
+		BA647B261DBA41C300EEE63C /* ComplexWavelets.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA647B251DBA41C300EEE63C /* ComplexWavelets.swift */; };
 		BA860B2E1D04C29E00473436 /* NestedVsMultidimensional.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B291D04C29E00473436 /* NestedVsMultidimensional.jpg */; };
 		BA860B2F1D04C29E00473436 /* MNIST_compression_pca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2A1D04C29E00473436 /* MNIST_compression_pca.jpg */; };
 		BA860B301D04C29E00473436 /* MNIST_compression_umpca.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BA860B2B1D04C29E00473436 /* MNIST_compression_umpca.jpg */; };
@@ -89,6 +90,8 @@
 		BA5471AE1CB993D6009BF7E5 /* TensorOperationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TensorOperationsTests.swift; sourceTree = "<group>"; };
 		BA5886D31D61B3E400584ECA /* FIRFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FIRFilter.swift; path = Sources/FIRFilter.swift; sourceTree = SOURCE_ROOT; };
 		BA5E8B331DB3CAFD00042DFA /* ComplexNumbers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComplexNumbers.swift; path = Sources/ComplexNumbers.swift; sourceTree = SOURCE_ROOT; };
+		BA647B251DBA41C300EEE63C /* ComplexWavelets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComplexWavelets.swift; path = Sources/ComplexWavelets.swift; sourceTree = SOURCE_ROOT; };
+		BA647B271DBB9CC400EEE63C /* ComplexWavelets.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ComplexWavelets.playground; path = Playgrounds/ComplexWavelets.playground; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerateFunctionsFloat.swift; path = Sources/AccelerateFunctionsFloat.swift; sourceTree = SOURCE_ROOT; };
@@ -163,6 +166,7 @@
 				BA0E47051D5FA3E700217021 /* WaveletCreation.swift */,
 				BA5886D31D61B3E400584ECA /* FIRFilter.swift */,
 				BAE2D7AF1DAE6E3F00F4B618 /* DaubechiesWavelets.swift */,
+				BA647B251DBA41C300EEE63C /* ComplexWavelets.swift */,
 			);
 			name = Wavelets;
 			sourceTree = "<group>";
@@ -175,6 +179,7 @@
 				BA5285D81DA8F1BD0025146B /* DB4VanishingMoments.playground */,
 				BA5285D91DA981E50025146B /* DB6VanishingMoments.playground */,
 				BA5285DA1DA98F0F0025146B /* DB2VanishingMoments.playground */,
+				BA647B271DBB9CC400EEE63C /* ComplexWavelets.playground */,
 			);
 			name = WaveletPlaygrounds;
 			sourceTree = "<group>";
@@ -425,6 +430,7 @@
 				BA9C0BEF1CD54F7500FDF14A /* DataSetLoading.swift in Sources */,
 				BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */,
 				BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */,
+				BA647B261DBA41C300EEE63C /* ComplexWavelets.swift in Sources */,
 				BA9C0BF31CDA611600FDF14A /* Optimization.swift in Sources */,
 				BAE2D7B01DAE6E3F00F4B618 /* DaubechiesWavelets.swift in Sources */,
 				BA4E2A2B1D16AE12006008BB /* ParametricFunctions.swift in Sources */,

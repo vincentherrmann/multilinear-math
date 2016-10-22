@@ -8,6 +8,8 @@
 
 import Foundation
 
+public let i = ComplexNumber(real: 0, imaginary: 1)
+
 public struct ComplexNumber: Equatable {
     public var values: [Float] = [0, 0]
     public var real: Float {
@@ -43,10 +45,6 @@ public struct ComplexNumber: Equatable {
         values = [real, imaginary]
     }
     
-//    public init(integerLiteral value: Self.IntegerLiteralType) {
-//        values = [Float(value), 0]
-//    }
-    
     static public func ==(lhs: ComplexNumber, rhs: ComplexNumber) -> Bool {
         if (lhs.real == rhs.real && lhs.imaginary == rhs.imaginary) {
             return true
@@ -54,14 +52,6 @@ public struct ComplexNumber: Equatable {
             return false
         }
     }
-    
-//    static public func <(lhs: ComplexNumber, rhs: ComplexNumber) -> Bool {
-//        if (lhs.absoluteValue < rhs.absoluteValue) {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
     
     static public func abs(_ x: ComplexNumber) -> ComplexNumber {
         return ComplexNumber(real: x.absoluteValue, imaginary: 0)

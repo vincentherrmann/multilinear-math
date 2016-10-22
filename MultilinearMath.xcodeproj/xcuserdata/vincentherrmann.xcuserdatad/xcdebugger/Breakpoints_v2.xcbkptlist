@@ -1243,27 +1243,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/DaubechiesWavelets.swift"
-            timestampString = "498510607.315075"
+            timestampString = "498645547.137897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "calculateDaubechiesCoefficients(vanishingMoments:)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/DaubechiesWavelets.swift"
-            timestampString = "498518866.636655"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "calculateDaubechiesCoefficients(vanishingMoments:)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1275,11 +1259,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/DaubechiesWavelets.swift"
-            timestampString = "498518866.636655"
+            timestampString = "498645547.137897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "calculateDaubechiesCoefficients(vanishingMoments:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sources/DaubechiesWavelets.swift"
+            timestampString = "498645547.137897"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "expandProduct(factor1:factor2:)"
             landmarkType = "9">
          </BreakpointContent>
@@ -1291,13 +1291,76 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Sources/DaubechiesWavelets.swift"
-            timestampString = "498518866.636655"
+            timestampString = "498645547.137897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
             landmarkName = "calculateDaubechiesCoefficients(vanishingMoments:)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MultilinearMathTests/WaveletTests.swift"
+            timestampString = "498647895.484339"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "testDaubechiesCoefficients()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.testDaubechiesCoefficients () -&gt; ()"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "498648000.886237"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72"
+                  offsetFromSymbolStart = "1338">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.(testDaubechiesCoefficients () -&gt; ()).(implicit closure #1)"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "498648000.888773"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72"
+                  offsetFromSymbolStart = "55">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MultilinearMathTests.WaveletTests.(testDaubechiesCoefficients () -&gt; ()).(implicit closure #2)"
+                  moduleName = "MultilinearMathTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vincentherrmann/Documents/Software/SwiftPackages/multilinear-math/MultilinearMathTests/WaveletTests.swift"
+                  timestampString = "498648000.891289"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

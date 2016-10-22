@@ -422,10 +422,10 @@ extension NSBezierPath {
         //transform.translateX(by: translateX, yBy:translateY)
         //transform.scaleX(by: scaleX, yBy: scaleY)
         transform.scale(x: scaleX, y: scaleY)
-        print("translateY: \(translateY)")
-        print("transform: \(transform.description)")
+//        print("translateY: \(translateY)")
+//        print("transform: \(transform.description)")
         self.transform(using: transform)
-        print("path bounds after transform: \(bounds)")
+//        print("path bounds after transform: \(bounds)")
     }
     
 }
