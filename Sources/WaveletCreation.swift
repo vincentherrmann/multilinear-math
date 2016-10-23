@@ -8,12 +8,29 @@
 
 import Foundation
 
-public func createWaveletFromCoefficients(_ coefficients: [Float], levels: Int) -> [Float] {
+public func scalingFunction(from coefficients: [Float], levels: Int) -> [Float] {
     var wavelet = calculateIntegerWaveletValues(coefficients)
     for _ in 0..<levels {
         wavelet = newWaveletApproximation(wavelet, coefficients: coefficients)
     }
     return wavelet
+}
+
+public func waveletFunction(scalingFunction: [Float], coefficients: [Float]) -> [Float] {
+    let distance = (scalingFunction.count-1) / (coefficients.count - 1)
+    var waveletFunction = [Float](repeating: 0, count: scalingFunction.count)
+    
+    for t in 0..<waveletFunction.count {
+        var currentValue: Float = 0
+        for k in 0..<coefficients.count {
+            let index = 2*t - k*distance
+            if(index < 0 || index >= scalingFunction.count) {continue}
+            currentValue += scalingFunction[index] * coefficients[k]
+        }
+        waveletFunction[t] = currentValue
+    }
+    
+    return waveletFunction
 }
 
 /// calculate the values of the wavelet function on the integer position from the filter coefficients. This is done by solving a system of linear equations constructed from the dilation equation

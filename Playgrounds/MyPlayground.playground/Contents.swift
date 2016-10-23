@@ -8,10 +8,10 @@ let db4: [Float] = [0.6830127, 1.1830127, 0.3169873, -0.1830127]
 let db6: [Float] = [0.3326705529509569, 0.8068915093133388, 0.4598775021193313, -0.13501102001039084, -0.08544127388224149, 0.035226291882100656].map({$0 * pow(2, 0.5)})
 let db8: [Float] = [0.23037781330885523, 0.7148465705525415, 0.6308807679295904, -0.02798376941698385, -0.18703481171888114, 0.030841381835986965, 0.032883011666982945, -0.010597401784997278].map({$0 * pow(2, 0.5)})
 
-let db6Wavelet = createWaveletFromCoefficients(db6, levels: 6)
+let db6Wavelet = scalingFunction(from: db6, levels: 6)
 QuickArrayPlot(array: db6Wavelet)
 
-let db6reverse = createWaveletFromCoefficients(db6.reversed(), levels: 6)
+let db6reverse = scalingFunction(from: db6.reversed(), levels: 6)
 QuickArrayPlot(array: db6reverse)
 
 let o = db6Wavelet.count / 5

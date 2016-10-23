@@ -29,7 +29,7 @@ class WaveletTests: XCTestCase {
     func testDB4() {
         let db4: [Float] = [0.48296291314469025, 0.836516303737469, 0.22414386804185735, -0.12940952255092145].map({$0 * pow(2, 0.5)})
         //let db4: [Float] = [0.6830127, 1.1830127, 0.3169873, -0.1830127]
-        let db4Wavelet = createWaveletFromCoefficients(db4, levels: 0)
+        let db4Wavelet = scalingFunction(from: db4, levels: 0)
         print("db4: \(db4Wavelet)")
     }
     
@@ -39,7 +39,7 @@ class WaveletTests: XCTestCase {
         
 
         //let db6: [Float] = [0.47046721, 1.14111692, 0.650365, -0.19093442, -0.12083221, 0.0498175]
-        let db6Wavelet = createWaveletFromCoefficients(db6, levels: 0)
+        let db6Wavelet = scalingFunction(from: db6, levels: 0)
         print("db6: \(db6Wavelet)")
     }
     
@@ -49,7 +49,7 @@ class WaveletTests: XCTestCase {
         
 
         //let db8: [Float] = [1, 0, -2, 3, 4, 1, 1, -3]
-        let db8Wavelet = createWaveletFromCoefficients(db8, levels: 0)
+        let db8Wavelet = scalingFunction(from: db8, levels: 0)
         print("db8: \(db8Wavelet)")
     }
     

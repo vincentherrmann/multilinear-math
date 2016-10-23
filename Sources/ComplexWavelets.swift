@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoefficients: Int) -> [ComplexNumber] {
+public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoefficients: Int, rootsOutsideUnitCircle: [Int] = []) -> [ComplexNumber] {
     
     //create S polynomial
     var sPolynomial: [PolynomialTerm] = [(1 + 0*i, 0)]
@@ -55,7 +55,7 @@ public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoef
     let newton = ComplexNewtonApproximator(polynomial: qPolynomial)
     var roots: [ComplexNumber] = []
     
-    for s in 0..<100 {
+    for s in 0..<(10*vanishingMoments) {
         let start = cos(2.6 * Float(s)) + sin(2.6 * Float(s))*i
         if let root = newton.findRoot(from: start) {
             if roots.contains(where: {($0 - root).absoluteValue < 0.001}) {
@@ -67,10 +67,17 @@ public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoef
             }
         }
         
-        if roots.count >= vanishingMoments-1 {
+        if roots.count >= vanishingMoments + delayCoefficients - 2 {
             break
         }
     }
+    
+    roots.sort(by: {$0.0.absoluteValue < $0.1.absoluteValue})
+    for r in rootsOutsideUnitCircle {
+        if r >= roots.count {continue}
+        roots[r] = 1 / roots[r]
+    }
+    
     
     print("roots: \(roots)")
     
@@ -95,7 +102,9 @@ public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoef
     
     print("h0_3: \(h0)")
     
-    let complexCoefficients = zip(h0, g0).map({$0.0.coefficient.real + $0.1.coefficient.real * i})
+    let factor = sqrt(2 / h0.map({$0.coefficient}).reduce(0, {$0 + $1.real*$1.real}))
+    
+    let complexCoefficients = zip(h0, g0).map({factor * ($0.0.coefficient.real + $0.1.coefficient.real * i)})
     
     return complexCoefficients
 }

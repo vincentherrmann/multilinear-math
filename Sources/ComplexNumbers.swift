@@ -40,6 +40,12 @@ public struct ComplexNumber: Equatable {
             return a
         }
     }
+    public var argument: Float {
+        get {
+            let a =  atan2f(imaginary, real)
+            return a
+        }
+    }
     
     public init(real: Float, imaginary: Float) {
         values = [real, imaginary]

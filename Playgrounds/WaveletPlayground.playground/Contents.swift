@@ -10,11 +10,11 @@ let db6: [Float] = [0.3326705529509569, 0.8068915093133388, 0.4598775021193313, 
 let db8: [Float] = [0.23037781330885523, 0.7148465705525415, 0.6308807679295904, -0.02798376941698385, -0.18703481171888114, 0.030841381835986965, 0.032883011666982945, -0.010597401784997278].map({$0 * pow(2, 0.5)})
 
 //QuickArrayPlot(array: db2)
-let db2Wavelet = createWaveletFromCoefficients(db2, levels: 6)
+let db2Wavelet = scalingFunction(from: db2, levels: 6)
 QuickArrayPlot(array: db2Wavelet)
 
 QuickArrayPlot(array: db4)
-let db4Wavelet = createWaveletFromCoefficients(db4, levels: 6)
+let db4Wavelet = scalingFunction(from: db4, levels: 6)
 //let db4WaveletP = QuickArrayPlot(array: db4Wavelet)
 let db4WaveletY = Array(0..<db4Wavelet.count).map({Float($0)/64})
 let db4WaveletP = QuickLinesPlot(x: db4WaveletY, y: db4Wavelet, bounds: CGRect(x: 0, y: -2, width: 4, height: 4))
@@ -22,7 +22,7 @@ let db4WaveletP = QuickLinesPlot(x: db4WaveletY, y: db4Wavelet, bounds: CGRect(x
 //let q = QuickLinesPlot(x: Array(0..<db4Wavelet.count).map({Float($0)*4/Float(db4Wavelet.count)}), y: db4Wavelet, bounds: CGRect(x: 0, y: -1, width: 4, height: 2))
 //q
 
-//let db4WaveletW = createWaveletFromCoefficients(db4w, levels: 6)
+//let db4WaveletW = scalingFunction(from: db4w, levels: 6)
 ////let db4WaveletP = QuickArrayPlot(array: db4Wavelet)
 //let db4WaveletWP = QuickLinesPlot(x: db4WaveletY, y: db4WaveletW, bounds: CGRect(x: 0, y: -2, width: 4, height: 4))
 //db4WaveletWP.plotView.writeAsPdfTo("/Users/vincentherrmann/Documents/Projekte/Wavelets/db4WaveletFunction.pdf")
@@ -91,7 +91,7 @@ let s3p = QuickLinesPlot(x: xArray, y: s3, bounds: CGRect(x: 0, y: -2, width: 4,
 //QuickArrayPlot(array: impulseResponse)
 //
 //QuickArrayPlot(array: db6)
-//let db6Wavelet = createWaveletFromCoefficients(db6, levels: 6)
+//let db6Wavelet = scalingFunction(from: db6, levels: 6)
 //QuickArrayPlot(array: db6Wavelet)
 
 //test comment
