@@ -102,7 +102,8 @@ public func calculateComplexWaveletCoefficients(vanishingMoments: Int, delayCoef
     
     print("h0_3: \(h0)")
     
-    let factor = sqrt(2 / h0.map({$0.coefficient}).reduce(0, {$0 + $1.real*$1.real}))
+//    let factor = sqrt(2 / h0.map({$0.coefficient}).reduce(0, {$0 + $1.real*$1.real}))
+    let factor: Float = 1
     
     let complexCoefficients = zip(h0, g0).map({factor * ($0.0.coefficient.real + $0.1.coefficient.real * i)})
     
@@ -131,4 +132,29 @@ public func flatDelayCoefficients(count: Int, delay: Float) -> [Float] {
     d = d.map({$0 / sum})
     
     return d
+}
+
+public func fourierTransform(filter: [ComplexNumber], x: [Float], omega: Float) -> ComplexNumber {
+//    let base = cos(frequency) + i*sin(frequency)
+//    var e = 1 / base
+    var r = 0 + i*0
+    
+    for n in 0..<filter.count {
+        let e = cos(x[n]*omega) + i * sin(x[n]*omega)
+        r = r + filter[n]*e
+//        e = e * (-base)
+    }
+    
+    return r
+}
+
+public func fullSpectrumFT(filter: [ComplexNumber], x: [Float], resolution: Int = 100) -> (abs: [Float], arg: [Float], xArray: [Float]) {
+    let m = 2 * x.max()! * Float.pi
+    let omegas = (0..<resolution).map({-m + 2*m*Float($0)/Float(resolution)})
+    let ft = omegas.map({fourierTransform(filter: filter, x: x, omega: $0)})
+    
+    let abs = ft.map({$0.absoluteValue})
+    let arg = ft.map({$0.argument})
+    
+    return (abs, arg, omegas.map({$0/Float.pi}))
 }

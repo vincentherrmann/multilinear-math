@@ -8,6 +8,8 @@
 
 import Cocoa
 
+let colors: [NSColor] = [.blue, .red, .green, .orange, .magenta, .brown, .yellow, .cyan]
+
 public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
     
@@ -17,11 +19,21 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
         }
     }
     
-    public init(array: [Float]) {
+    public init(array: [Float]...) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
-        let plot = LinePlot(withValueArray: array.map({CGFloat($0)}))
-        plotView.addPlottable(plot)
-        plotView.setPlottingBounds(plot.plotBounds)
+        var bounds: CGRect? = nil
+        for i in 0..<array.count {
+            let thisArray = array[i]
+            let plot = LinePlot(withValueArray: thisArray.map({CGFloat($0)}))
+            plot.color = colors[i]
+            plotView.addPlottable(plot)
+            if bounds == nil {
+                bounds = plot.plotBounds
+            } else {
+                bounds = bounds!.join(with: plot.plotBounds)
+            }
+        }
+        plotView.setPlottingBounds(bounds!)
         let xAxis = PlotAxis(direction: .x)
         let yAxis = PlotAxis(direction: .y)
         plotView.addPlottable(xAxis)
@@ -43,11 +55,21 @@ public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
         }
     }
     
-    public init(x: [Float], y: [Float], bounds: CGRect? = nil) {
+    public init(x: [Float], y: [Float]..., bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
-        let plot = LinePlot(withPoints: zip(x, y).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
-        plotView.addPlottable(plot)
-        let theseBounds = bounds != nil ? bounds! : plot.plotBounds
+        var dBounds: CGRect? = nil
+        for i in 0..<y.count {
+            let thisY = y[i]
+            let plot = LinePlot(withPoints: zip(x, thisY).map({CGPoint(x: CGFloat($0.0), y: CGFloat($0.1))}))
+            plot.color = colors[i]
+            plotView.addPlottable(plot)
+            if dBounds == nil {
+                dBounds = plot.plotBounds
+            } else {
+                dBounds = dBounds!.join(with: plot.plotBounds)
+            }
+        }
+        let theseBounds = bounds != nil ? bounds! : dBounds!
         plotView.setPlottingBounds(theseBounds)
         let xAxis = PlotAxis(direction: .x)
         let yAxis = PlotAxis(direction: .y)

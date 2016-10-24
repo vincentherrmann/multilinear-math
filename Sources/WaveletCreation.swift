@@ -17,7 +17,9 @@ public func scalingFunction(from coefficients: [Float], levels: Int) -> [Float] 
 }
 
 public func waveletFunction(scalingFunction: [Float], coefficients: [Float]) -> [Float] {
+    print("calculate wavelet function with \(scalingFunction.count) values")
     let distance = (scalingFunction.count-1) / (coefficients.count - 1)
+    print("distance: \(distance)")
     var waveletFunction = [Float](repeating: 0, count: scalingFunction.count)
     
     for t in 0..<waveletFunction.count {

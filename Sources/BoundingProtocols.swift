@@ -8,6 +8,27 @@
 
 import Foundation
 
+public protocol Joinable {
+    func join(with: Self...) -> Self
+    
+    static func join(_ j: [Self]) -> Self
+}
+
+extension CGRect: Joinable {
+    public func join(with: CGRect...) -> CGRect {
+        let j = [self] + with
+        return CGRect.join(j)
+    }
+    
+    public static func join(_ j: [CGRect]) -> CGRect {
+        let minX = j.map({$0.minX}).min()!
+        let minY = j.map({$0.minY}).min()!
+        let maxX = j.map({$0.maxX}).max()!
+        let maxY = j.map({$0.maxY}).max()!
+        return CGRect(x: minX, y: minY, width: maxX-minX, height: maxY-minY)
+    }
+}
+
 public protocol Bounded2D {
     var boundingRect: NSRect {get}
 }

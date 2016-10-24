@@ -115,7 +115,7 @@ public func binomialCoefficient(_ a: Int, choose b: Int) -> Int {
 
 public struct ComplexNewtonApproximator {
     public var polynomial: ComplexPolynomial
-    public var threshold: Float = 0.000001
+    public var threshold: Float = 0.000000001
     public var maxIterations: Int = 30
     
     public init(polynomial: ComplexPolynomial) {
