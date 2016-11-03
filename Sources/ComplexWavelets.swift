@@ -140,7 +140,7 @@ public func fourierTransform(filter: [ComplexNumber], x: [Float], omega: Float) 
     var r = 0 + i*0
     
     for n in 0..<filter.count {
-        let e = cos(x[n]*omega) + i * sin(x[n]*omega)
+        let e = cos(-x[n]*omega) + i * sin(-x[n]*omega)
         r = r + filter[n]*e
 //        e = e * (-base)
     }
@@ -149,12 +149,16 @@ public func fourierTransform(filter: [ComplexNumber], x: [Float], omega: Float) 
 }
 
 public func fullSpectrumFT(filter: [ComplexNumber], x: [Float], resolution: Int = 100) -> (abs: [Float], arg: [Float], xArray: [Float]) {
+//    let xDist = Float(x.max()! - x.min()!)
+//    let count = Float(filter.count - 1)
+//    let m = 0.5*log2(count / xDist) * Float.pi
     let m = 2 * x.max()! * Float.pi
+//    print("fourier m: \(m)")
     let omegas = (0..<resolution).map({-m + 2*m*Float($0)/Float(resolution)})
     let ft = omegas.map({fourierTransform(filter: filter, x: x, omega: $0)})
     
     let abs = ft.map({$0.absoluteValue})
     let arg = ft.map({$0.argument})
     
-    return (abs, arg, omegas.map({$0/Float.pi}))
+    return (abs, arg, omegas.map({0.5*$0/Float.pi}))
 }

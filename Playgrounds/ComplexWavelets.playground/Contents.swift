@@ -13,6 +13,16 @@ let cImag = Array(cA4L2.map({$0.imaginary}))
 cImag
 let cImagW = Array(zip(cImag, Array(0..<cReal.count)).map({$0 * pow(-1, Float($1))}).reversed())
 
+let filterX = (0..<cReal.count).map({Float($0)})
+let cRealSFT = fullSpectrumFT(filter: cReal.map({$0 + 0*i}), x: filterX)
+let cImagSFT = fullSpectrumFT(filter: cImag.map({$0 + 0*i}), x: filterX)
+let cRealWFT = fullSpectrumFT(filter: cRealW.map({$0 + 0*i}), x: filterX)
+let cImagWFT = fullSpectrumFT(filter: cImagW.map({$0 + 0*i}), x: filterX)
+
+QuickLinesPlot(x: cRealSFT.xArray, y: cRealSFT.abs, cImagSFT.abs)
+QuickLinesPlot(x: cImagSFT.xArray, y: cRealWFT.abs, cImagWFT.abs)
+
+
 let crSum = cReal.reduce(0, {$0 + $1*$1})
 crSum
 let ciSum = cImag.reduce(0, {$0 + $1*$1})

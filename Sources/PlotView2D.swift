@@ -117,7 +117,7 @@ public class PlotView2D: NSView, Plotting2D {
     
     public var plots: [PlottableIn2D] = []
     public var plottingBounds: NSRect = NSRect(x: 0, y: -2, width: 5, height: 4)
-    public var borderSize: CGSize = CGSize(width: 10, height: 10)
+    public var borderSize: CGSize = CGSize(width: 25, height: 25)
     public var screenBounds: CGRect {
         get {
             let rect = CGRect(x: borderSize.width,
@@ -133,6 +133,8 @@ public class PlotView2D: NSView, Plotting2D {
         
         let thisContext = NSGraphicsContext.current()
         thisContext?.shouldAntialias = true
+        thisContext?.cgContext.setShouldSmoothFonts(true)
+        
         
         for thisPlot in plots {
             thisPlot.draw()
@@ -158,12 +160,19 @@ public class PlotAxis: PlottableIn2D {
         case auto
         case fixed(CGFloat)
     }
+    public struct PlotLabel {
+        var text: NSMutableAttributedString
+        var position: CGPoint
+        var size: Float
+    }
     public var direction: PlotAxisDirection
     public var tickSize: TickSize
     public var path: NSBezierPath = NSBezierPath()
+    public var labels: [PlotLabel] = []
     ///The maximum distance in pixels between automatic ticks
-    public var maxPointsBetweenTicks: CGFloat = 50
+    public var maxPointsBetweenTicks: CGFloat = 80
     public var tickLength: CGFloat = 5
+    public var labelAttributes = [ NSFontAttributeName: NSFont(name: "Times New Roman", size: 12.0)! ]
     var color = NSColor.black
     var lineWidth: CGFloat {
         get {
@@ -186,6 +195,10 @@ public class PlotAxis: PlottableIn2D {
     public func draw() {
         color.setStroke()
         path.stroke()
+        
+        for label in labels {
+            label.text.draw(at: label.position)
+        }
     }
     
     public func createAxis(plotView: Plotting2D) {
@@ -232,15 +245,32 @@ public class PlotAxis: PlottableIn2D {
         //ticks
         let distanceToZero = startPoint.value(dim: axisDim) - zeroPoint.value(dim: axisDim)
         let tickModulo = distanceToZero.truncatingRemainder(dividingBy: tickDistance) //distanceToZero % tickDistance
+        let zeroLine = zeroPoint.value(dim: otherDim)
         var currentTickPosition = startPoint.value(dim: axisDim) + (tickDistance - tickModulo)
         while currentTickPosition < endPoint.value(dim: axisDim) {
-            path.move(to: CGPoint(a: currentTickPosition, b: zeroPoint.value(dim: otherDim) - tickLength, aDimension: axisDim))
-            path.line(to: CGPoint(a: currentTickPosition, b: zeroPoint.value(dim: otherDim), aDimension: axisDim))
+            path.move(to: CGPoint(a: currentTickPosition, b: zeroLine - tickLength, aDimension: axisDim))
+            path.line(to: CGPoint(a: currentTickPosition, b: zeroLine, aDimension: axisDim))
+
+            let value = plotView.convertFromScreenToPlot(CGPoint(a: currentTickPosition, b: 0, aDimension: axisDim)).value(dim: axisDim)
+            let string = String(format: numberFormattingString, value)
+            let size: Float = 10
+            let s = NSMutableAttributedString(string: string, attributes: labelAttributes)
+            let position: CGPoint
+            if axisDim == .x {
+                position = CGPoint(a: currentTickPosition - 0.5*s.size().width, b: zeroLine - s.size().height - 5, aDimension: axisDim)
+            } else {
+                position = CGPoint(a: currentTickPosition - 0.5*s.size().height, b: zeroLine - s.size().width - 8, aDimension: axisDim)
+            }
+
+            labels.append(PlotLabel(text: s, position: position, size: size))
+            
             currentTickPosition += tickDistance
         }
         
         
     }
+    
+    var numberFormattingString: String = "%.0f"
 
     func findAutomaticTickSize(maximumSize: CGFloat, possibleSteps: [CGFloat] = [1.0, 2.0, 5.0]) -> CGFloat {
         let scale = floor(log10(maximumSize))
@@ -256,6 +286,14 @@ public class PlotAxis: PlottableIn2D {
             }
         }
         //print("step size: \(stepSize)")
+        
+        if scale < 0 {
+            let s = Int(-scale)
+            numberFormattingString = "%.\(s)f"
+        } else {
+            numberFormattingString = "%.0f"
+        }
+        
         return stepSize
     }
 }

@@ -83,8 +83,18 @@ class WaveletTests: XCTestCase {
     }
     
     func testComplexWavelet() {
-        let c = calculateComplexWaveletCoefficients(vanishingMoments: 4, delayCoefficients: 2)
-        print("c: \(c)")
+        let cA4L2 = calculateComplexWaveletCoefficients(vanishingMoments: 4, delayCoefficients: 3, rootsOutsideUnitCircle: [1, 2])
+        let real = cA4L2.map({$0.real})
+        let imag = cA4L2.map({$0.imaginary})
+        
+        print("cA4L2midPhase real: \(real)")
+        print("cA4L2midPhase imaginary: \(imag)")
+        
+        let scaling = scalingFunction(from: real, levels: 6)
+        let reconstructedReal = coefficientsFromScalingFunction(values: scaling, count: 12)
+        print("reconstructed real: \(reconstructedReal)")
+        
+        
     }
 
 }

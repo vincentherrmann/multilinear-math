@@ -16,6 +16,14 @@ public func scalingFunction(from coefficients: [Float], levels: Int) -> [Float] 
     return wavelet
 }
 
+public func cascadingScalingApproximation(coefficients: [Float], levels: Int) -> [Float] {
+    var approx: [Float] = [1, -1]
+    for _ in 0..<levels {
+        approx = newFilterApproximation(approx, coefficients: coefficients)
+    }
+    return approx
+}
+
 public func waveletFunction(scalingFunction: [Float], coefficients: [Float]) -> [Float] {
     print("calculate wavelet function with \(scalingFunction.count) values")
     let distance = (scalingFunction.count-1) / (coefficients.count - 1)
@@ -70,6 +78,26 @@ public func calculateIntegerWaveletValues(_ coefficients: [Float]) -> [Float] {
     return solution
 }
 
+public func coefficientsFromScalingFunction(values: [Float], count: Int) -> [Float] {
+    let halfT = ((values.count-1) / (count-1)) / 2
+    
+    var factorMatrix = Tensor<Float>(modeSizes: [count, count], repeatedValue: 0)
+    var results = [Float](repeating: 0, count: count)
+    for r in 0..<count {
+        let resultPosition = (count/2 + r) * halfT
+        results[r] = values[resultPosition]
+        for c in 0..<count {
+            let index = resultPosition * 2 - 2*halfT*c
+            if(index < 0 || index >= values.count) {continue}
+            factorMatrix[r, c] = values[index]
+        }
+    }
+    
+    let solution = solveLinearEquationSystem(factorMatrix.values, factorMatrixSize: MatrixSize(rows: count, columns: count), results: results, resultsSize: MatrixSize(rows: count, columns: 1))
+    
+    return solution
+}
+
 public func newWaveletApproximation(_ currentApproximation: [Float], coefficients: [Float]) -> [Float] {
     let newLevel = 2 * (currentApproximation.count-1) / (coefficients.count-1)
     var newApproximation = [Float](repeating: 0, count: (coefficients.count-1) * newLevel + 1)
@@ -92,6 +120,7 @@ public func newWaveletApproximation(_ currentApproximation: [Float], coefficient
     return newApproximation
 }
 
+///apprimate filter using the cascading algorithm
 public func newFilterApproximation(_ currentApproximation: [Float], coefficients: [Float]) -> [Float] {
     let newValueCount = 2*currentApproximation.count + coefficients.count - 2
     var newApproximation = [Float](repeating: 0, count: newValueCount)

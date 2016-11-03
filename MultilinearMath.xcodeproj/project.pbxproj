@@ -92,6 +92,7 @@
 		BA5E8B331DB3CAFD00042DFA /* ComplexNumbers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComplexNumbers.swift; path = Sources/ComplexNumbers.swift; sourceTree = SOURCE_ROOT; };
 		BA647B251DBA41C300EEE63C /* ComplexWavelets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComplexWavelets.swift; path = Sources/ComplexWavelets.swift; sourceTree = SOURCE_ROOT; };
 		BA647B271DBB9CC400EEE63C /* ComplexWavelets.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ComplexWavelets.playground; path = Playgrounds/ComplexWavelets.playground; sourceTree = "<group>"; };
+		BA64945C1DC22BC200E2D0AB /* WaveletReassignment.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = WaveletReassignment.playground; path = Playgrounds/WaveletReassignment.playground; sourceTree = "<group>"; };
 		BA67AE651CA86D4F009906F2 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE671CA86D9B009906F2 /* MultidimensionalData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultidimensionalData.swift; path = Sources/MultidimensionalData.swift; sourceTree = SOURCE_ROOT; };
 		BA67AE691CA86DDB009906F2 /* AccelerateFunctionsFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerateFunctionsFloat.swift; path = Sources/AccelerateFunctionsFloat.swift; sourceTree = SOURCE_ROOT; };
@@ -180,6 +181,7 @@
 				BA5285D91DA981E50025146B /* DB6VanishingMoments.playground */,
 				BA5285DA1DA98F0F0025146B /* DB2VanishingMoments.playground */,
 				BA647B271DBB9CC400EEE63C /* ComplexWavelets.playground */,
+				BA64945C1DC22BC200E2D0AB /* WaveletReassignment.playground */,
 			);
 			name = WaveletPlaygrounds;
 			sourceTree = "<group>";
