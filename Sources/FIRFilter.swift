@@ -18,21 +18,27 @@ public struct FIRFilter {
         self.coefficients = coefficients
     }
     
-    public func zTransform(_ z: (Float, Float)) -> (r: Float, i: Float) {
-        print("z transform at: \(z)")
-        var x: (Float, Float) = (0, 0)
+    public func zTransform(_ z: ComplexNumber) -> ComplexNumber {
+//        print("z transform at: \(z)")
+        var x: ComplexNumber = 0 + i*0
         for n in 0..<order {
-            let zn = powComplex(z, n: -n)
-            print("zn: \(zn)")
-            let p = (coefficients[n] * zn.r, coefficients[n] * zn.i)
-            x = (x.0 + p.0, x.1 + p.1)
+            let zn = pow(z, n: -n)
+//            print("zn: \(zn)")
+            let p = coefficients[n] * zn
+            x = x + p
         }
-        print("x: \(x)")
+//        print("x: \(x)")
         return x
     }
     
-    public func frequencyResponse(_ omega: Float) -> (r: Float, i: Float) {
-        return zTransform((cos(omega), sin(omega)))
+    public func fourierTransform(_ omega: Float) -> ComplexNumber {
+        return zTransform(cos(omega) + (i*sin(omega)))
+    }
+    
+    public func frequencyResponse(resolution: Int = 100) -> (response: [ComplexNumber], frequencies: [Float]) {
+        let xArray = Array(0..<resolution).map({2 * Float.pi * Float($0) / Float(resolution)})
+        let fr = xArray.map({fourierTransform($0)})
+        return (fr, xArray)
     }
     
 }

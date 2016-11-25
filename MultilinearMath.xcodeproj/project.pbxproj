@@ -34,6 +34,7 @@
 		BA9C0BEF1CD54F7500FDF14A /* DataSetLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */; };
 		BA9C0BF11CD5587C00FDF14A /* NeuralNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BF01CD5587C00FDF14A /* NeuralNetwork.swift */; };
 		BA9C0BF31CDA611600FDF14A /* Optimization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C0BF21CDA611500FDF14A /* Optimization.swift */; };
+		BAA3891A1DCE3DD800BA4DCB /* FastWaveletTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA389191DCE3DD800BA4DCB /* FastWaveletTransform.swift */; };
 		BAA6767C1CF63C050071526C /* MultilinearDataUnfolding.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */; };
 		BAB53F271CB96E5A00C5F418 /* MultidimensionalDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */; };
 		BAC1DFA71D3F7A14003528DB /* TensorOperationNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC1DFA61D3F7A14003528DB /* TensorOperationNodes.swift */; };
@@ -56,6 +57,7 @@
 		BAE2D7B01DAE6E3F00F4B618 /* DaubechiesWavelets.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE2D7AF1DAE6E3F00F4B618 /* DaubechiesWavelets.swift */; };
 		BAE3DCB91D54C91900FFF5D6 /* FourierTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */; };
 		BAEAF2D11D1EDFC30059C97D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = BAEAF2CF1D1EDFC30059C97D /* README.md */; };
+		BAF1D7221DD0DEA400223AC5 /* WaveletPlots.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF1D7211DD0DEA400223AC5 /* WaveletPlots.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +84,7 @@
 		BA2E8ACA1CE9F0690062B59D /* ExampleTextFile.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = ExampleTextFile.rtf; path = Resources/ExampleTextFile.rtf; sourceTree = "<group>"; };
 		BA2E8ACC1CE9F0980062B59D /* BackpropGraph.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = BackpropGraph.jpg; path = Resources/BackpropGraph.jpg; sourceTree = "<group>"; };
 		BA3EFBCF1CAB15A800F723D4 /* ExampleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
+		BA40946C1DD7207600B2242F /* WaveletPacketTransform.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = WaveletPacketTransform.playground; path = Playgrounds/WaveletPacketTransform.playground; sourceTree = "<group>"; };
 		BA4E2A281D16AB28006008BB /* ActivationFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActivationFunctions.swift; path = Sources/ActivationFunctions.swift; sourceTree = SOURCE_ROOT; };
 		BA4E2A2A1D16AE12006008BB /* ParametricFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParametricFunctions.swift; path = Sources/ParametricFunctions.swift; sourceTree = SOURCE_ROOT; };
 		BA5285D81DA8F1BD0025146B /* DB4VanishingMoments.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = DB4VanishingMoments.playground; path = Playgrounds/DB4VanishingMoments.playground; sourceTree = "<group>"; };
@@ -113,6 +116,7 @@
 		BA9C0BEE1CD54F7500FDF14A /* DataSetLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetLoading.swift; path = Sources/DataSetLoading.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BF01CD5587C00FDF14A /* NeuralNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NeuralNetwork.swift; path = Sources/NeuralNetwork.swift; sourceTree = SOURCE_ROOT; };
 		BA9C0BF21CDA611500FDF14A /* Optimization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Optimization.swift; path = Sources/Optimization.swift; sourceTree = SOURCE_ROOT; };
+		BAA389191DCE3DD800BA4DCB /* FastWaveletTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FastWaveletTransform.swift; path = Sources/FastWaveletTransform.swift; sourceTree = SOURCE_ROOT; };
 		BAA6767B1CF63C050071526C /* MultilinearDataUnfolding.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = MultilinearDataUnfolding.jpg; path = Resources/MultilinearDataUnfolding.jpg; sourceTree = "<group>"; };
 		BAB53F261CB96E5900C5F418 /* MultidimensionalDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultidimensionalDataTests.swift; sourceTree = "<group>"; };
 		BAC1DFA61D3F7A14003528DB /* TensorOperationNodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TensorOperationNodes.swift; path = Sources/TensorOperationNodes.swift; sourceTree = SOURCE_ROOT; };
@@ -131,6 +135,8 @@
 		BAE3DCB81D54C91900FFF5D6 /* FourierTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FourierTransformTests.swift; sourceTree = "<group>"; };
 		BAEAF2CF1D1EDFC30059C97D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BAEC46971D1EE60500B2696E /* TestPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = TestPlayground.playground; path = Playgrounds/TestPlayground.playground; sourceTree = "<group>"; };
+		BAF1D7211DD0DEA400223AC5 /* WaveletPlots.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaveletPlots.swift; path = Sources/WaveletPlots.swift; sourceTree = SOURCE_ROOT; };
+		BAF1D7241DD2719800223AC5 /* FastWaveletTransform.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = FastWaveletTransform.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +163,7 @@
 			children = (
 				BA0BCA011D5E202D00C05075 /* BoundingProtocols.swift */,
 				BA0BC9FD1D5D0BB300C05075 /* PlotView2D.swift */,
+				BAF1D7211DD0DEA400223AC5 /* WaveletPlots.swift */,
 			);
 			name = Plotting;
 			sourceTree = "<group>";
@@ -168,6 +175,7 @@
 				BA5886D31D61B3E400584ECA /* FIRFilter.swift */,
 				BAE2D7AF1DAE6E3F00F4B618 /* DaubechiesWavelets.swift */,
 				BA647B251DBA41C300EEE63C /* ComplexWavelets.swift */,
+				BAA389191DCE3DD800BA4DCB /* FastWaveletTransform.swift */,
 			);
 			name = Wavelets;
 			sourceTree = "<group>";
@@ -182,6 +190,8 @@
 				BA5285DA1DA98F0F0025146B /* DB2VanishingMoments.playground */,
 				BA647B271DBB9CC400EEE63C /* ComplexWavelets.playground */,
 				BA64945C1DC22BC200E2D0AB /* WaveletReassignment.playground */,
+				BAF1D7241DD2719800223AC5 /* FastWaveletTransform.playground */,
+				BA40946C1DD7207600B2242F /* WaveletPacketTransform.playground */,
 			);
 			name = WaveletPlaygrounds;
 			sourceTree = "<group>";
@@ -416,6 +426,7 @@
 				BA0BC9FE1D5D0BB300C05075 /* PlotView2D.swift in Sources */,
 				BA5E8B341DB3CAFE00042DFA /* ComplexNumbers.swift in Sources */,
 				BAC1DFA71D3F7A14003528DB /* TensorOperationNodes.swift in Sources */,
+				BAF1D7221DD0DEA400223AC5 /* WaveletPlots.swift in Sources */,
 				BAC83E4C1CAAD68D00290119 /* MPCA.swift in Sources */,
 				BAC83E4D1CAAD68D00290119 /* UMPCA.swift in Sources */,
 				BAC83E4F1CAAD68D00290119 /* Utilities.swift in Sources */,
@@ -429,6 +440,7 @@
 				BA9C0BEA1CCE6CD600FDF14A /* LinearRegression.swift in Sources */,
 				BAC83E521CAAD68D00290119 /* SlicingSubscripts.swift in Sources */,
 				BAC83E531CAAD68D00290119 /* Tensors.swift in Sources */,
+				BAA3891A1DCE3DD800BA4DCB /* FastWaveletTransform.swift in Sources */,
 				BA9C0BEF1CD54F7500FDF14A /* DataSetLoading.swift in Sources */,
 				BAC83E541CAAD68D00290119 /* TensorMultiplication.swift in Sources */,
 				BA9C0BEC1CD160BD00FDF14A /* LogisticRegression.swift in Sources */,

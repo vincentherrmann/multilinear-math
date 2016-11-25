@@ -17,7 +17,7 @@ public func scalingFunction(from coefficients: [Float], levels: Int) -> [Float] 
 }
 
 public func cascadingScalingApproximation(coefficients: [Float], levels: Int) -> [Float] {
-    var approx: [Float] = [1, -1]
+    var approx: [Float] = [1]
     for _ in 0..<levels {
         approx = newFilterApproximation(approx, coefficients: coefficients)
     }

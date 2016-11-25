@@ -53,14 +53,14 @@ class WaveletTests: XCTestCase {
         print("db8: \(db8Wavelet)")
     }
     
-    func testFrequencyResponse() {
-        let db4: [Float] = [0.48296291314469025, 0.836516303737469, 0.22414386804185735, -0.12940952255092145].map({$0 * pow(2, 0.5)})
-        let spectrum = FIRFilter(coefficients: db4)
-        let v = Array(0..<99).map({(Float($0)/100)})
-        let fr = v.map({spectrum.frequencyResponse(6.28*$0 - 3.14)})
-        let impulseResponse = fr.map({$0.r * $0.i})
-        print("ir: \(impulseResponse)")
-    }
+//    func testFrequencyResponse() {
+//        let db4: [Float] = [0.48296291314469025, 0.836516303737469, 0.22414386804185735, -0.12940952255092145].map({$0 * pow(2, 0.5)})
+//        let spectrum = FIRFilter(coefficients: db4)
+//        let v = Array(0..<99).map({(Float($0)/100)})
+//        let fr = v.map({spectrum.frequencyResponse(6.28*$0 - 3.14)})
+//        let impulseResponse = fr.map({$0.r * $0.i})
+//        print("ir: \(impulseResponse)")
+//    }
     
     func testDaubechiesCoefficients() {
         let db6 = calculateDaubechiesCoefficients(vanishingMoments: 3)
@@ -94,6 +94,66 @@ class WaveletTests: XCTestCase {
         let reconstructedReal = coefficientsFromScalingFunction(values: scaling, count: 12)
         print("reconstructed real: \(reconstructedReal)")
         
+        
+    }
+    
+    func testForwardFWT() {
+        let db4 = DaubechiesWavelet(vanishingMoments: 2)
+        let signal = Array(0..<128).map({Float($0)/10}).map({sin(3*$0)})
+        var currentSignal = signal
+        var analysis: [[Float]] = []
+        
+        var a: (r0: [Float], r1: [Float]) = ([], [])
+        for _ in 0..<4 {
+            a = waveletTransformForwardStep(signal: currentSignal, h0: db4.h0, h1: db4.h1)
+            currentSignal = a.r0
+            
+            analysis.append(a.r1)
+        }
+        
+        analysis.append(a.r0)
+    }
+    
+    func testPacketCode() {
+        var c = WaveletPacket(values: [1, 2, 3, 4, 5, 6, 7], levels: [.scaling, .scaling, .wavelet])
+        print("code: \(c.code), levels: \(c.levels), level: \(c.level), length: \(c.length)")
+        
+        c.addLevel(.scaling)
+        print("code: \(c.code), levels: \(c.levels), level: \(c.level), length: \(c.length)")
+        
+        c.addLevel(.wavelet)
+        print("code: \(c.code), levels: \(c.levels), level: \(c.level), length: \(c.length)")
+        
+    }
+    
+    func testPacketPlot() {
+        let p1 = WaveletPacket(values: [0, 1, 2, 1], levels: [.wavelet])
+        let p2 = WaveletPacket(values: [2, 0], levels: [.scaling, .wavelet])
+        let p3 = WaveletPacket(values: [0, 1], levels: [.scaling, .scaling])
+        
+        let plot = FastWaveletPlot(packets: [p1, p2, p3])
+        
+    }
+    
+    func testPacketTransform() {
+        let h0: [Float] = [0.6830127, 1.1830127, 0.3169873, -0.1830127]
+        let w = Wavelet(h0: h0, f0: h0.reversed())
+        
+        let count: Int = 1024
+        let length: Float = 30
+        let xArray = Array(0..<count).map({Float($0) * length / Float(count)})
+        
+        let signal = xArray.map({sin(9*$0)})
+        
+        let packets = waveletPacketTransform(signal: signal, wavelet: w, innerCodes: [8])
+        
+    }
+    
+    func testFrequencyResponse2() {
+        let cReal: [Float] = [-0.00252085552, 0.0188991688, 0.0510309711, -0.0490589067, 0.0589671507, 0.79271543, 1.0953089, 0.32142213, -0.227000564, -0.0872127786, 0.0242141522, 0.0032346386]
+        
+        let filter = FIRFilter(coefficients: cReal)
+        let ft1 = filter.frequencyResponse()
         
     }
 

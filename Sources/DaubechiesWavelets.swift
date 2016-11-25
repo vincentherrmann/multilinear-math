@@ -8,6 +8,13 @@
 
 import Foundation
 
+public class DaubechiesWavelet: Wavelet {
+    public init(vanishingMoments: Int) {
+        let c = calculateDaubechiesCoefficients(vanishingMoments: vanishingMoments)
+        super.init(h0: c, f0: c.reversed())
+    }
+}
+
 public func calculateDaubechiesCoefficients(vanishingMoments: Int) -> [Float] {
 
     //create Q polynomial
@@ -115,8 +122,8 @@ public func binomialCoefficient(_ a: Int, choose b: Int) -> Int {
 
 public struct ComplexNewtonApproximator {
     public var polynomial: ComplexPolynomial
-    public var threshold: Float = 0.000000001
-    public var maxIterations: Int = 30
+    public var threshold: Float = 0.00000001
+    public var maxIterations: Int = 50
     
     public init(polynomial: ComplexPolynomial) {
         self.polynomial = polynomial

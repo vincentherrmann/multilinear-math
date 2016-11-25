@@ -112,6 +112,23 @@ public func /(lhs: Float, rhs: ComplexNumber) -> ComplexNumber {
     return ComplexNumber(real: lhs, imaginary: 0) / rhs
 }
 
+public func pow(_ z: ComplexNumber, n: Int) -> ComplexNumber {
+    var r = 1 + i*0
+    if n == 0 {
+        return r
+    } else if n > 0 {
+        for _ in 0..<n {
+            r = r*z
+        }
+        return r
+    } else {
+        for  _ in 0..<(-n) {
+            r = r/z
+        }
+        return r
+    }
+}
+
 public struct ComplexPolynomial {
     public var coefficients: [ComplexNumber]
     public var degree: Int {

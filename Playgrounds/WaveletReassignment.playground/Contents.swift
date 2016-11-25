@@ -26,11 +26,6 @@ let xArray = (0..<crScaling.count).map({Float($0) / res})
 QuickLinesPlot(x: xArray, y: crScaling, ciScaling)
 QuickLinesPlot(x: xArray, y: crWavelet, ciWavelet)
 
-let freq: Float = 0.7 // 0.5 * pow(2, 0.5)
-let phase: Float = 0.5
-let signal = xArray.map({sin(phase + freq * 2 * Float.pi * $0)})
-QuickLinesPlot(x: xArray, y: signal)
-
 //let complexWavelet = zip(crWavelet, ciWavelet).map({$0.0 + i*$0.1})
 //let ft = fullSpectrumFT(filter: complexWavelet, x: xArray, resolution: 1000)
 //QuickLinesPlot(x: ft.xArray, y: ft.abs, bounds: CGRect(x: 0, y: 0, width: 1, height: 150))
@@ -46,21 +41,57 @@ QuickLinesPlot(x: xArray, y: crScalingDer, ciScalingDer)
 
 QuickLinesPlot(x: xArray, y: crWaveletDer, ciWaveletDer)
 
-let aReal = zip(signal, crWavelet).reduce(0, {$0 + $1.0*$1.1}) / res
-aReal
-let aImag = zip(signal, ciWavelet).reduce(0, {$0 + $1.0*$1.1}) / res
-aImag
-let amplitude = (aReal + i*aImag).absoluteValue
+var estAmplitudes: [Float] = []
+var estPhases: [Float] = []
+var estFrequencies: [Float] = []
+var phases: [Float] = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5]
+let freq: Float = 0.55 // 0.5 * pow(2, 0.5)
 
-let dReal = zip(signal, crWaveletDer).reduce(0, {$0 + $1.0*$1.1}) / res
-dReal
-let dImag = zip(signal, ciWaveletDer).reduce(0, {$0 + $1.0*$1.1}) / res
-dImag
+for phase in phases {
+    let signal = xArray.map({sin(phase + freq * 2 * Float.pi * $0)})
+    QuickLinesPlot(x: xArray, y: signal)
+    
+    let aReal = zip(signal, crScaling).reduce(0, {$0 + $1.0*$1.1}) / res
+    aReal
+    let aImag = zip(signal, ciScaling).reduce(0, {$0 + $1.0*$1.1}) / res
+    aImag
+    let c = aReal + i*aImag
+    estAmplitudes.append(c.absoluteValue)
+    estPhases.append(c.argument)
+    
+    let dReal = zip(signal, crScalingDer).reduce(0, {$0 + $1.0*$1.1}) / res
+    dReal
+    let dImag = zip(signal, ciScalingDer).reduce(0, {$0 + $1.0*$1.1}) / res
+    dImag
+    
+    let p1 = ((dReal + i*dImag) * (aReal - i*aImag)).imaginary
+    //estimated frequency:
+    let p2 = p1 / (2 * Float.pi * pow((aReal + i*aImag).absoluteValue, 2))
+    estFrequencies.append(p2)
+}
 
-let p1 = ((dReal + i*dImag) * (aReal - i*aImag)).imaginary
-//estimated frequency:
-let p2 = p1 / (2 * Float.pi * pow((aReal + i*aImag).absoluteValue, 2))
+QuickArrayPlot(array: estAmplitudes)
+QuickArrayPlot(array: estPhases)
+QuickArrayPlot(array: estFrequencies)
 
+var packetWaveletReal: [Float] = [1]
+var packetWaveletImag: [Float] = [1]
+//for _ in 0..<3 {
+//    packetWaveletReal = newFilterApproximation(packetWaveletReal, coefficients: cRealW)
+//    packetWaveletImag = newFilterApproximation(packetWaveletImag, coefficients: cImagW)
+//}
+for _ in 0..<4 {
+    packetWaveletReal = newFilterApproximation(packetWaveletReal, coefficients: cReal)
+    packetWaveletImag = newFilterApproximation(packetWaveletImag, coefficients: cImag)
+}
+for _ in 0..<1 {
+    packetWaveletReal = newFilterApproximation(packetWaveletReal, coefficients: cReal.dropLast() + [0])
+    packetWaveletImag = newFilterApproximation(packetWaveletImag, coefficients: cReal.dropFirst() + [0])
+}
+QuickLinesPlot(x: xArray, y: packetWaveletReal, packetWaveletImag)
+
+
+///////////////////////////////////////
 //time ramps
 let crScalingRamp = zip(crScaling, xArray).map({$0.0 * $0.1})
 let ciScalingRamp = zip(ciScaling, xArray).map({$0.0 * $0.1})
