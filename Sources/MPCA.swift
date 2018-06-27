@@ -19,13 +19,13 @@ import Foundation
 /// `projectedData`: <br> The data projected to a subspace with the given mode sizes. <br>
 /// `projectionMatrices`: <br> One matrix for each sample mode
 public func multilinearPCA(_ inputData: Tensor<Float>, projectionModeSizes: [Int]) -> (projectedData: Tensor<Float>, projectionMatrices: [Tensor<Float>]) {
-    
+
     //Initialization
     let data = inputData.uniquelyIndexed()
     let sampleModeCount = data.modeCount - 1
     let maxLoops = sampleModeCount == 1 ? 1 : 20 //the simple PCA (sampleModeCount = 1) has a closed form solution
     let projectionDifferenceThreshold: Float = 0.001
-    
+
     var projectionMatrices: [Tensor<Float>] = [] // U_n
     let projectionModeIndices = TensorIndex.uniqueIndexArray(sampleModeCount, excludedIndices: data.indices) //unique indices for projection matrices
     for n in 0..<sampleModeCount {
@@ -34,57 +34,57 @@ public func multilinearPCA(_ inputData: Tensor<Float>, projectionModeSizes: [Int
         var thisProjectionMatrix = Tensor<Float>(diagonalWithModeSizes: modeSizes, repeatedValue: 1.0)
         thisProjectionMatrix.indices = [projectionModeIndices[n], data.indices[n+1]]
         projectionMatrices.append(thisProjectionMatrix)
-        
+
     }
     var projectedData: Tensor<Float> = multilinearPCAProjection(data: data, projectionMatrices: projectionMatrices)
     var projectionScatter: Float = 0
     var newScatter = (projectedData * projectedData).values[0]
     print("multilinearPCA")
     print("initial projectionScatter: \(newScatter)")
-    
+
     //Local Optimization
     for _ in 0..<maxLoops {
         projectionScatter = newScatter
-        
+
         projectionMatrices = constructNewProjectionMatrices(data: data, oldProjectionMatrices: projectionMatrices)
         projectedData = multilinearPCAProjection(data: data, projectionMatrices: projectionMatrices)
-        
+
         newScatter = (projectedData * projectedData).values[0]
-        
+
         if((newScatter - projectionScatter) / projectionScatter < projectionDifferenceThreshold) {
             break
         }
     }
     print("final projectionScatter: \(newScatter)")
     print("")
-    
+
     return (projectedData, projectionMatrices)
 }
 
 private func constructNewProjectionMatrices(data: Tensor<Float>, oldProjectionMatrices: [Tensor<Float>]) -> [Tensor<Float>] {
-    
+
     var newProjectionMatrices: [Tensor<Float>] = []
-    
+
     //construct a new projectionMatrix for each mode
     for n in 0..<data.modeCount-1 {
-        
+
         let projectionWithoutModeN = multilinearPCAProjection(data: data, projectionMatrices: oldProjectionMatrices, doNotProjectModes: [n])
         let sampleCovariance = multiply(a: projectionWithoutModeN, remainingModesA: [n+1], b: projectionWithoutModeN, remainingModesB: [n+1])
-        
+
         let thisModeSize = data.modeSizes[n+1]
         let (eigenvalues, eigenvectors) = eigendecomposition(sampleCovariance.values, size: MatrixSize(rows: thisModeSize, columns: thisModeSize))
-        
+
         let evSum = eigenvalues.reduce(0, {$0 + $1})
         let capturedSum = eigenvalues[0..<oldProjectionMatrices[n].modeSizes[0]].reduce(0, {$0 + $1})
         let energyPercentage = capturedSum / evSum
         print("Energy captured in mode \(n): \(energyPercentage*100)%")
-        
+
         //create the projection matrix for mode n from the first eigenvectors
         let newValues = Array(eigenvectors[0..<oldProjectionMatrices[n].elementCount])
         let thisProjectionMatrix = Tensor<Float>(withPropertiesOf: oldProjectionMatrices[n], values: newValues)
         newProjectionMatrices.append(thisProjectionMatrix)
     }
-    
+
     return newProjectionMatrices
 }
 
@@ -96,7 +96,7 @@ private func constructNewProjectionMatrices(data: Tensor<Float>, oldProjectionMa
 ///
 /// - Returns: The data projected with the given projection matrices.
 public func multilinearPCAProjection(data: Tensor<Float>, projectionMatrices: [Tensor<Float>], doNotProjectModes: [Int] = []) -> Tensor<Float> {
-    
+
     var currentData = data
     for n in 0..<data.modeCount-1 {
         if(doNotProjectModes.contains(n) == false) {
@@ -105,14 +105,14 @@ public func multilinearPCAProjection(data: Tensor<Float>, projectionMatrices: [T
             //n=0:  [m, d0, d1, d2] * [p0, d0] = [m, d1, d2, p0]
             //n=1:  [m, d1, d2, p0] * [p1, d1] = [m, d2, p0, p1]
             //n=2:  [m, d2, p0, p1] * [p2, d2] = [m, p0, p1, p2]
-            
+
             currentData = currentData * projectionMatrices[n]
         } else {
             //do not project mode n, just reorder the data (as if the projectionMatrix was the identity matrix)
             currentData = currentData.reorderModes([0] + Array(2..<data.modeCount) + [1])
         }
     }
-    
+
     return currentData
 }
 

@@ -48,56 +48,56 @@ public func *(lhs: Float, rhs: Tensor<Float>) -> Tensor<Float> {
 
 // MARK: - Tensor-Tensor functions
 public func +(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
+
     let commonIndices = lhs.commonIndicesWith(rhs)
     let commonModesLhs = commonIndices.map({$0.modeA})
     let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
     let commonModesRhs = commonIndices.map({$0.modeB})
     let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
+
     let sum = add(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
+
     return sum
 }
 
 public func -(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
+
     let commonIndices = lhs.commonIndicesWith(rhs)
     let commonModesLhs = commonIndices.map({$0.modeA})
     let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
     let commonModesRhs = commonIndices.map({$0.modeB})
     let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
+
     let difference = substract(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
+
     return difference
 }
 
 infix operator °*
 public func °*(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
+
     let commonIndices = lhs.commonIndicesWith(rhs)
     let commonModesLhs = commonIndices.map({$0.modeA})
     let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
     let commonModesRhs = commonIndices.map({$0.modeB})
     let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
+
     let product = multiplyElementwise(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
+
     return product
 }
 
 infix operator °/
 public func °/(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
+
     let commonIndices = lhs.commonIndicesWith(rhs)
     let commonModesLhs = commonIndices.map({$0.modeA})
     let outerModesLhs = lhs.modeArray.removeValues(commonModesLhs)
     let commonModesRhs = commonIndices.map({$0.modeB})
     let outerModesRhs = rhs.modeArray.removeValues(commonModesRhs)
-    
+
     let quotient = divide(a: lhs, commonModesA: commonModesLhs, outerModesA: outerModesLhs, b: rhs, commonModesB: commonModesRhs, outerModesB: outerModesRhs)
-    
+
     return quotient
 }
 

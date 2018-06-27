@@ -36,11 +36,11 @@ public struct Sigmoid: ActivationFunction {
 
 public struct ReLU: ActivationFunction {
     public var secondarySlope: Float
-    
+
     public init(secondarySlope: Float) {
         self.secondarySlope = secondarySlope
     }
-    
+
     public func output(_ input: Tensor<Float>) -> Tensor<Float> {
         return Tensor<Float>(withPropertiesOf: input, values: input.values.map({max(secondarySlope*$0, $0)}))
     }

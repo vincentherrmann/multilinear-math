@@ -75,7 +75,7 @@ for n in 0..<oReal.count {
     let oI = oImag[n] / sampleFrequency
     let dR = dReal[n] / sampleFrequency
     let dI = dImag[n] / sampleFrequency
-    
+
     let p1 = ((dR + i*dI) * (oR - i*oI)).imaginary
     let p2 = p1 / (2 * Float.pi * pow((oR + i*oI).absoluteValue, 2))
     estimatedFrequencies.append(p2*sampleFrequency)

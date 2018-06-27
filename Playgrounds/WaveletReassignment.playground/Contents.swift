@@ -50,7 +50,7 @@ let freq: Float = 0.55 // 0.5 * pow(2, 0.5)
 for phase in phases {
     let signal = xArray.map({sin(phase + freq * 2 * Float.pi * $0)})
     QuickLinesPlot(x: xArray, y: signal)
-    
+
     let aReal = zip(signal, crScaling).reduce(0, {$0 + $1.0*$1.1}) / res
     aReal
     let aImag = zip(signal, ciScaling).reduce(0, {$0 + $1.0*$1.1}) / res
@@ -58,12 +58,12 @@ for phase in phases {
     let c = aReal + i*aImag
     estAmplitudes.append(c.absoluteValue)
     estPhases.append(c.argument)
-    
+
     let dReal = zip(signal, crScalingDer).reduce(0, {$0 + $1.0*$1.1}) / res
     dReal
     let dImag = zip(signal, ciScalingDer).reduce(0, {$0 + $1.0*$1.1}) / res
     dImag
-    
+
     let p1 = ((dReal + i*dImag) * (aReal - i*aImag)).imaginary
     //estimated frequency:
     let p2 = p1 / (2 * Float.pi * pow((aReal + i*aImag).absoluteValue, 2))

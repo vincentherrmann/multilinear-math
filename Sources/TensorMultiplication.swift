@@ -10,20 +10,20 @@ import Foundation
 
 /// - Returns: The product of the two tensors, summed over modes with the same index
 public func *(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
-    
+
     //get common indices and their modes
     let commonIndices = lhs.commonIndicesWith(rhs)
-    
+
     //check if the tensors are non-cartesian
     if(lhs.isCartesian && rhs.isCartesian == false) {
         for commonIndex in commonIndices {
             assert(lhs.variances[commonIndex.modeA] != rhs.variances[commonIndex.modeB], "For non-cartesian tensor multiplication, common indices must have opposite variance")
         }
     }
-    
+
     let modesA = commonIndices.map({$0.modeA})
     let modesB = commonIndices.map({$0.modeB})
-    
+
     return multiply(a: lhs, summationModesA: modesA, b: rhs, summationModesB: modesB)
 }
 
@@ -38,11 +38,11 @@ public func *(lhs: Tensor<Float>, rhs: Tensor<Float>) -> Tensor<Float> {
 ///
 /// - Returns: The product of the two tensors. The modes of the product will have a specific order: First the remaining modes from a in the same order as in a, then the remaining modes from b, also in the same order.
 public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingModesA: [Int]? = nil, b: Tensor<Float>, summationModesB: [Int]? = nil, remainingModesB: [Int]? = nil) -> Tensor<Float> {
-    
+
     //set summation modes
     var modesA: [Int] = [] //default: no summation modes, outer tensor product
     var modesB: [Int] = []
-    
+
     if(summationModesA != nil) {
         modesA = summationModesA!
     } else if(remainingModesA != nil) {
@@ -53,24 +53,24 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
     } else if(remainingModesB != nil) {
         modesB = b.modeArray.removeValues(remainingModesB!)
     }
-    
+
     let streakSize = modesA.count
     var streakA = modesA.combineWith(Array(0..<streakSize), combineFunction: {(mode: $0, position: $1)}).sorted(by: {$0.0 < $1.0})
     var streakB = modesB.combineWith(Array(0..<streakSize), combineFunction: {(mode: $0, position: $1)}).sorted(by: {$0.0 < $1.0})
-    
-    
+
+
     //choose ideal reordering for the tensors to make them compatible with efficient matrix multiplication
     let aOptimalOrderForA = a.optimalOrderForModeStreak(streakA.map({$0.mode}))
     let aOptimalOrderForB = b.optimalOrderForModeStreak(streakA.map({modesB[$0.position]}))
     let aOptimalOrderComplexity = a.reorderComplexity(aOptimalOrderForA.newToOld) + b.reorderComplexity(aOptimalOrderForB.newToOld)
-    
+
     let bOptimalOrderForA = a.optimalOrderForModeStreak(streakB.map({modesA[$0.position]}))
     let bOptimalOrderForB = b.optimalOrderForModeStreak(streakB.map({$0.mode}))
     let bOptimalOrderComplexity = a.reorderComplexity(bOptimalOrderForA.newToOld) + b.reorderComplexity(bOptimalOrderForB.newToOld)
-    
+
     var optimalOrderForA: (newToOld: [Int], oldToNew: [Int], streakRange: CountableRange<Int>)
     var optimalOrderForB: (newToOld: [Int], oldToNew: [Int], streakRange: CountableRange<Int>)
-    
+
     if(aOptimalOrderComplexity <= bOptimalOrderComplexity) {
         //use aOptimalOrder
         optimalOrderForA = aOptimalOrderForA
@@ -80,11 +80,11 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
         optimalOrderForA = bOptimalOrderForA
         optimalOrderForB = bOptimalOrderForB
     }
-    
+
     var tensorA = a.reorderModes(optimalOrderForA.newToOld)
     var tensorB = b.reorderModes(optimalOrderForB.newToOld)
-    
-    
+
+
     /// properties of a matrix constructed out of a tensor for efficient multiplication
     struct MatrixProperties {
         var rowModes: [Int]
@@ -94,7 +94,7 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
         var size: MatrixSize
         var transpose: Bool
         var isLhs: Bool
-        
+
         ///modes that will be summed over in the matrix multiplication
         var summationModes: [Int] {
             get {
@@ -108,15 +108,15 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
             }
         }
     }
-    
+
     /// - Returns: The properties of a matrix for matrix multiplication constructed with the given index order
     func computeMatrixProperties(_ streakModes: CountableRange<Int>, isLhs: Bool) -> MatrixProperties {
-        
+
         var matrixProps = MatrixProperties(rowModes: [], columnModes: [], remainingModes: [], size: MatrixSize(rows: 0, columns: 0), transpose: false, isLhs: true)
         let streakStart = streakModes.lowerBound
         let streakLength = streakModes.count
         let modeCount = (isLhs ? a : b).modeCount
-        
+
         if(streakModes.upperBound < modeCount) { //the streak and the modes after the streak can be seen as rows and columns of a matrix, the modes before the streak (if there are any) are the remaining modes
             matrixProps.rowModes = Array(streakStart..<streakStart+streakLength)
             matrixProps.columnModes = Array(streakStart+streakLength..<modeCount)
@@ -128,7 +128,7 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
             matrixProps.remainingModes = []
             matrixProps.transpose = isLhs ? false : true
         }
-        
+
         if(isLhs) {
             let rows = matrixProps.rowModes.map({tensorA.modeSizes[$0]}).reduce(1, {$0*$1})
             let columns = matrixProps.columnModes.map({tensorA.modeSizes[$0]}).reduce(1, {$0*$1})
@@ -139,26 +139,26 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
             matrixProps.size = MatrixSize(rows: rows, columns: columns)
             matrixProps.isLhs = false
         }
-        
+
         return matrixProps
     }
-    
+
     let matrixA = computeMatrixProperties(optimalOrderForA.streakRange, isLhs: true)
     let matrixB = computeMatrixProperties(optimalOrderForB.streakRange, isLhs: false)
-    
+
     /// number of elements in the result of the matrix multiplication
     let productMatrixElements = (matrixA.transpose ? matrixA.size.columns : matrixA.size.rows) * (matrixB.transpose ? matrixB.size.rows : matrixB.size.columns)
-    
+
     var productTensor = [Tensor<Float>(combinationOfTensorA: tensorA, tensorB: tensorB, outerModesA: matrixA.remainingModes, outerModesB: matrixB.remainingModes, innerModesA: matrixA.productModes, innerModesB: matrixB.productModes, repeatedValue: 0)]
-    
+
     let modesFromA = a.modeArray.removeValues(matrixA.summationModes)
     let modesFromB = b.modeArray.removeValues(matrixB.summationModes)
     let oldToNewRemaining = matrixA.remainingModes.map({modesFromA.index(of: $0)!}) + matrixB.remainingModes.map({modesFromB.index(of: $0)! + modesFromA.count})
     let oldToNewFromMatrix = matrixA.productModes.map({modesFromA.index(of: $0)!}) + matrixB.productModes.map({modesFromB.index(of: $0)! + modesFromA.count})
     let productOldToNew = oldToNewRemaining + oldToNewFromMatrix
-    
+
     let productSliceSizes = matrixA.productModes.map({tensorA.modeSizes[$0]}) + matrixB.productModes.map({tensorB.modeSizes[$0]})
-    
+
     combine(tensorA, forOuterModes: matrixA.remainingModes, with: tensorB, forOuterModes: matrixB.remainingModes, outputData: &productTensor,
             calculate: ({ (indexA, indexB, outerIndex, sourceA, sourceB) -> [Tensor<Float>] in
                 let sliceA = sourceA[slice: indexA]
@@ -169,7 +169,7 @@ public func multiply(a: Tensor<Float>, summationModesA: [Int]? = nil, remainingM
             writeOutput: ({ (indexA, indexB, outerIndex, inputData, outputData) in
                 outputData[0][slice: outerIndex] = inputData[0]
     }))
-    
+
     return productTensor[0].reorderModes(productOldToNew)
 }
 
