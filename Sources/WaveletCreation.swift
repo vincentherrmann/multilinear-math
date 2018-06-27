@@ -29,7 +29,7 @@ public func waveletFunction(scalingFunction: [Float], coefficients: [Float]) -> 
     let distance = (scalingFunction.count-1) / (coefficients.count - 1)
     print("distance: \(distance)")
     var waveletFunction = [Float](repeating: 0, count: scalingFunction.count)
-    
+
     for t in 0..<waveletFunction.count {
         var currentValue: Float = 0
         for k in 0..<coefficients.count {
@@ -39,14 +39,14 @@ public func waveletFunction(scalingFunction: [Float], coefficients: [Float]) -> 
         }
         waveletFunction[t] = currentValue
     }
-    
+
     return waveletFunction
 }
 
 /// calculate the values of the wavelet function on the integer position from the filter coefficients. This is done by solving a system of linear equations constructed from the dilation equation
 public func calculateIntegerWaveletValues(_ coefficients: [Float]) -> [Float] {
     let count = coefficients.count
-    
+
     //calculate factor matrix (left side of the equation system)
     //example: db4 coeffients a0, a1, a2, a3
     // a0-1  0    0    0   =  0
@@ -66,21 +66,21 @@ public func calculateIntegerWaveletValues(_ coefficients: [Float]) -> [Float] {
     }
     factorMatrix = factorMatrix + 1
     let results = [Float](repeating: 1, count: count-1) + [1]
-    
+
     print("count: \(count)")
     print("factor matrix: \(factorMatrix.values)")
     print("results: \(results)")
     let solution = solveLinearEquationSystem(factorMatrix.values, factorMatrixSize: MatrixSize(rows: count, columns: count), results: results, resultsSize: MatrixSize(rows: count, columns: 1))
-    
+
     let testResults = matrixMultiplication(matrixA: factorMatrix.values, sizeA: MatrixSize(rows: count, columns: count), matrixB: solution, sizeB: MatrixSize(rows: count, columns: 1))
     print("test result: \(testResults)")
-    
+
     return solution
 }
 
 public func coefficientsFromScalingFunction(values: [Float], count: Int) -> [Float] {
     let halfT = ((values.count-1) / (count-1)) / 2
-    
+
     var factorMatrix = Tensor<Float>(modeSizes: [count, count], repeatedValue: 0)
     var results = [Float](repeating: 0, count: count)
     for r in 0..<count {
@@ -92,9 +92,9 @@ public func coefficientsFromScalingFunction(values: [Float], count: Int) -> [Flo
             factorMatrix[r, c] = values[index]
         }
     }
-    
+
     let solution = solveLinearEquationSystem(factorMatrix.values, factorMatrixSize: MatrixSize(rows: count, columns: count), results: results, resultsSize: MatrixSize(rows: count, columns: 1))
-    
+
     return solution
 }
 
@@ -103,11 +103,11 @@ public func newWaveletApproximation(_ currentApproximation: [Float], coefficient
     var newApproximation = [Float](repeating: 0, count: (coefficients.count-1) * newLevel + 1)
     let newValueCount = (coefficients.count-1) * (newLevel/2)
     print("new level: \(newLevel), value count: \(newApproximation.count), new values: \(newValueCount)")
-    
+
     for t in 0..<currentApproximation.count {
         newApproximation[2*t] = currentApproximation[t]
     }
-    
+
     for n in 0..<newValueCount {
         var value: Float = 0
         for c in 0..<coefficients.count {
@@ -124,7 +124,7 @@ public func newWaveletApproximation(_ currentApproximation: [Float], coefficient
 public func newFilterApproximation(_ currentApproximation: [Float], coefficients: [Float]) -> [Float] {
     let newValueCount = 2*currentApproximation.count + coefficients.count - 2
     var newApproximation = [Float](repeating: 0, count: newValueCount)
-    
+
     for j in 0..<newValueCount {
         var currentValue: Float = 0
         for k in 0..<coefficients.count {
@@ -133,11 +133,11 @@ public func newFilterApproximation(_ currentApproximation: [Float], coefficients
                 if(index >= 0 && index < currentApproximation.count) {
                     currentValue += coefficients[k] * currentApproximation[index]
                 }
-                
+
             }
         }
         newApproximation[j] = currentValue
     }
-    
+
     return newApproximation
 }

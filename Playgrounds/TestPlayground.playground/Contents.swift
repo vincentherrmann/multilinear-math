@@ -20,7 +20,7 @@ for n in 0..<sampleModeCount {
 }
 
 public func multilinearPCAProjectionP(data data: Tensor<Float>, projectionMatrices: [Tensor<Float>], doNotProjectModes: [Int] = []) -> Tensor<Float> {
-    
+
     var currentData = data
     for n in 0..<data.modeCount-1 {
         if(doNotProjectModes.contains(n) == false) {
@@ -30,7 +30,7 @@ public func multilinearPCAProjectionP(data data: Tensor<Float>, projectionMatric
             currentData = currentData.reorderModes([0] + Array(2..<data.modeCount) + [1])
         }
     }
-    
+
     return currentData
 }
 
@@ -41,6 +41,6 @@ var newScatter = (projectedData * projectedData).values[0]
 //Local Optimization
 for _ in 0..<1 {
     projectionScatter = newScatter
-    
-    
+
+
 }

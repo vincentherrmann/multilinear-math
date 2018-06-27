@@ -13,7 +13,7 @@ public protocol Number: Comparable {
     init(_ value: Int)
     init(_ value: Float)
     init(_ value: Double)
-    
+
     static func + (lhs: Self, rhs: Self) -> Self
     static func - (lhs: Self, rhs: Self) -> Self
     static func * (lhs: Self, rhs: Self) -> Self
@@ -40,14 +40,14 @@ extension Int: IntegerType {
 /// A CollectionType that can perfom functions on its Unsafe(Mutable)BufferPointer
 public protocol UnsafeBuffer: RandomAccessCollection {
     typealias IndexDistance = Int
-    
+
     /// Perform the a function with a UnsafeBufferPointer to this collection
     func performWithUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Self.Iterator.Element>) throws -> R) -> R?
 }
 
 public protocol UnsafeMutableBuffer: UnsafeBuffer, RandomAccessCollection {
     typealias IndexDistance = Int
-    
+
     /// Perform the a function with a UnsafeMutableBufferPointer to this collection
     mutating func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Self.Iterator.Element>) throws -> R) -> R?
 }
@@ -58,7 +58,7 @@ extension Array : UnsafeMutableBuffer {
         let value = try? withUnsafeBufferPointer(body)
         return value
     }
-    
+
     mutating public func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R) -> R? {
 
         let value = try? withUnsafeMutableBufferPointer(body)
@@ -70,7 +70,7 @@ extension ArraySlice : UnsafeMutableBuffer {
         let value = try? withUnsafeBufferPointer(body)
         return value
     }
-    
+
     mutating public func performWithUnsafeMutableBufferPointer<R>(_ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R) -> R? {
         let value = try? withUnsafeMutableBufferPointer(body)
         return value
@@ -109,7 +109,7 @@ extension MutableCollection where IndexDistance == Int, Index == Int {
     mutating func shuffleInPlace() {
         // empty and single-element collections don't shuffle
         if count < 2 { return }
-        
+
         for i in 0..<count - 1 {
             let j = Int(arc4random_uniform(UInt32(count - i))) + i
             guard i != j else { continue }
@@ -133,7 +133,7 @@ public extension Array {
     func combineWith<E, R>(_ array: [E], combineFunction: (_ t: Element, _ e: E) -> R) -> [R] {
         return arrayCombine(self, arrayB: array, combineFunction: combineFunction)
     }
-    
+
     /// Safe access to array elements
     subscript (safe index: Int) -> Element? {
         return indices.contains(index) ? self[index] : nil
@@ -147,7 +147,7 @@ public extension UnsafeBuffer where Iterator.Element: Equatable, Index == Int {
         for value in values {
             if let index = returnArray.index(of: value) {
                 returnArray.remove(at: index)
-                
+
             }
         }
         return returnArray
@@ -175,18 +175,18 @@ public func printArrayAddress<T>(_ array: inout [T]) {
 
 
 public extension String {
-    
+
     /// `Int8` value of the first character
     var charValue: Int8 {
         get {
             return (self.cString(using: String.Encoding.utf8)?[0])!
         }
     }
-    
+
     subscript (i: Int) -> Character {
         return self[self.characters.index(self.startIndex, offsetBy: i)]
     }
-    
+
 //    subscript (r: CountableRange<Int>) -> String {
 //        let start = characters.index(startIndex, offsetBy: r.lowerBound)
 //        let end = <#T##String.CharacterView corresponding to `start`##String.CharacterView#>.index(start, offsetBy: r.upperBound - r.lowerBound)
@@ -197,7 +197,7 @@ public extension String {
 
 public extension CountableRange {
     init(start: Element, distance: Element.Stride) {
-        
+
         let end = start.advanced(by: distance)
         self.init(start..<end)
     }

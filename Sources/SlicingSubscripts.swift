@@ -80,7 +80,7 @@ public func copySliceFrom<T: MultidimensionalData>(_ from: T,
                              targetPointer: UnsafeMutableBufferPointer<T.Element>,
                              subscripts: [DataSliceSubscript],
                              copyFromSlice: Bool) {
-    
+
     //cast all subscripts as Int arrays
     var arraySubscripts: [DataSliceSubscript] = []
     for thisSubscript in subscripts {
@@ -90,11 +90,11 @@ public func copySliceFrom<T: MultidimensionalData>(_ from: T,
             arraySubscripts.append(range.sliceIndices())
         }
     }
-    
+
     //get flat indices
     let modeSizes = (copyFromSlice ? target : from).modeSizes
     let indicesToCopy = copyIndices(arraySubscripts, modeSizes: modeSizes)
-    
+
     //copy
     if(copyFromSlice) { //all values from the source to the defined indices in the target
         for i in 0..<indicesToCopy.count {
@@ -112,7 +112,7 @@ private func copyIndices(_ subscripts: [DataSliceSubscript], modeSizes: [Int]) -
     if(subscripts.count == 0) {
         return [0]
     }
-    
+
     ///cycle lenghts of the modes in the value array of the embedding data object
     var cycleLengths: [Int] = [Int](repeating: 0, count: subscripts.count)
     ///cycle lengths of the modes in the value array of the slice
@@ -125,9 +125,9 @@ private func copyIndices(_ subscripts: [DataSliceSubscript], modeSizes: [Int]) -
         cycleLengths[i] = currentCycleLength
         sliceCycleLengths[i] = currentSliceCycleLength
     }
-    
+
     let indices: [Int] = (subscripts.last! as! Array<Int>).sliceIndices()
-    
+
     func indexRecurse(_ indices: [Int], mode: Int) -> [Int] {
         var newIndices: [Int] = []
         newIndices.reserveCapacity(sliceCycleLengths[mode])
@@ -137,21 +137,21 @@ private func copyIndices(_ subscripts: [DataSliceSubscript], modeSizes: [Int]) -
         for i in 0..<subscripts[mode].sliceSize {
             newIndices.append(contentsOf: indices.map({$0 + sliceIndices[i]*offset}))
         }
-        
+
         if(mode > 0) {
             return indexRecurse(newIndices, mode: mode-1)
         } else {
             return newIndices
         }
     }
-    
+
     let copyIndices: [Int]
     if(subscripts.count > 1) {
         copyIndices = indexRecurse(indices, mode: subscripts.count - 2)
     } else {
         copyIndices = indices
     }
-    
+
     return copyIndices
 }
 
@@ -165,9 +165,9 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
                           sliceMode: Int,
                           sliceIndex: [Int],
                           copyFromSlice: Bool) {
-    
+
     //print("write to address: \(targetPointer), in thread: \(NSThread.currentThread())")
-    
+
     if(subscriptMode < subscripts.count - 1) {
         var indices: [Int] = []
         if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
@@ -175,12 +175,12 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
         } else if let rangeSubscript = subscripts[subscriptMode] as? CountableRange<Int> {
             indices = rangeSubscript.sliceIndices()
         }
-        
+
         if(indices.count == 1) { //only one index, the slice will not have this mode
             for i in indices.indices {
                 var newSubscriptIndex = subscriptIndex
                 newSubscriptIndex[subscriptMode] = indices[i]
-                
+
                 recurseCopy(target: target,
                             targetPointer: targetPointer,
                             from: from,
@@ -197,7 +197,7 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
                 newSubscriptIndex[subscriptMode] = indices[i]
                 var newSliceIndex = sliceIndex
                 newSliceIndex[sliceMode] = i
-                
+
                 recurseCopy(target: target,
                             targetPointer: targetPointer,
                             from: from,
@@ -221,14 +221,14 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
         if let arraySubscript = subscripts[subscriptMode] as? Array<Int> {
             var currentSubscriptIndex = subscriptIndex
             var currentSliceIndex = sliceIndex
-            
+
             if(copyFromSlice) {
                 for i in arraySubscript.indices {
                     currentSubscriptIndex[subscriptMode] = arraySubscript[i]
                     currentSliceIndex[sliceMode] = i
                     let targetIndex = target.flatIndex(currentSubscriptIndex)
                     let fromIndex = from.flatIndex(currentSliceIndex)
-                    
+
                     targetPointer[targetIndex] = from.values[fromIndex]
                 }
             } else { //copy to slice
@@ -237,21 +237,21 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
                     currentSliceIndex[sliceMode] = i
                     let targetIndex = target.flatIndex(currentSliceIndex)
                     let fromIndex = from.flatIndex(currentSubscriptIndex)
-                    
+
                     targetPointer[targetIndex] = from.values[fromIndex]
                 }
             }
-            
+
         } else if let rangeSubscript = subscripts[subscriptMode] as? CountableRange<Int> {
             var currentSubscriptIndex = subscriptIndex
             currentSubscriptIndex[subscriptMode] = rangeSubscript.startIndex
-            
+
             let length = Int(rangeSubscript.count)
-            
+
             if(copyFromSlice) {
                 let flatSubscriptIndex = target.flatIndex(currentSubscriptIndex)
                 let flatSliceIndex = from.flatIndex(sliceIndex)
-                
+
                 from.values.performWithUnsafeBufferPointer({ (fromBuffer) -> () in
                     let targetAddress = targetPointer.baseAddress!.advanced(by: flatSubscriptIndex)
                     var fromAddress = fromBuffer.index(after: flatSliceIndex)
@@ -261,7 +261,7 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
             } else { //copy to slice
                 let flatSliceIndex = target.flatIndex(sliceIndex)
                 let flatSubscriptIndex = from.flatIndex(currentSubscriptIndex)
-                
+
                 from.values.performWithUnsafeBufferPointer({ (fromBuffer) -> () in
                     let targetAddress = targetPointer.baseAddress!.advanced(by: flatSliceIndex)
                     var fromAddress = fromBuffer.index(after: flatSubscriptIndex)
@@ -275,22 +275,22 @@ internal func recurseCopy<T: MultidimensionalData>(target: T,
 
 public func getSlice<T: MultidimensionalData>(from: T, modeSubscripts: [DataSliceSubscript]) -> T {
     let subscripts = from.completeDataSliceSubscripts(modeSubscripts)
-    
+
     let modesWithSubscripts = zip(from.modeArray, subscripts).filter({$0.1.sliceSize > 1})
     let onlyModes = modesWithSubscripts.map({$0.0})
     let newSizes = modesWithSubscripts.map({$0.1.sliceSize})
-    
+
     var newData = T(withPropertiesOf: from, onlyModes: onlyModes, newModeSizes: newSizes, repeatedValue: from.values[0], values: nil)
     //var newData = T(modeSizes: newSizes, repeatedValue: from.values[0])
-    
+
     let subscriptIndex = [Int](repeating: 0, count: from.modeCount)
     let sliceIndex = [Int](repeating: 0, count: newData.modeCount)
-    
+
     newData.values.performWithUnsafeMutableBufferPointer { (slice) -> () in
 //        newData.printMemoryAdresses(printTitle: "--get slice--", printThread: true)
 //        recurseCopy(target: newData, targetPointer: slice, from: from, subscripts: subscripts, subscriptMode: 0, subscriptIndex: subscriptIndex, sliceMode: 0, sliceIndex: sliceIndex, copyFromSlice: false)
         copySliceFrom(from, to: newData, targetPointer: slice, subscripts: subscripts, copyFromSlice: false)
     }
-    
+
     return newData
 }

@@ -14,7 +14,7 @@ import Accelerate
 /// Add a scalar to a every element of a vector
 public func vectorAddition<A: UnsafeBuffer>(vector: A, add: Float) -> [Float] where A.Iterator.Element == Float, A.Index == Int {
     var sum = [Float](repeating: 0, count: vector.count)
-    
+
     var addScalar = add
     vector.performWithUnsafeBufferPointer { (pointer: UnsafeBufferPointer<Float>) -> Void in
         vDSP_vsadd(pointer.baseAddress!, 1, &addScalar, &sum, 1, UInt(vector.count))
@@ -44,7 +44,7 @@ public func vectorSubtraction<A: UnsafeBuffer>(_ vectorA: A, vectorB: A) -> [Flo
 //            vDSP_vsub(pointerB.baseAddress, 1, pointerA.baseAddress, 1, &difference, 1, UInt(vectorA.count))
 //        }
 //    }
-    
+
     var difference = Array(vectorA)
     vectorB.performWithUnsafeBufferPointer { (pointerB: UnsafeBufferPointer<Float>) -> Void in
         cblas_saxpy(Int32(vectorA.count), -1.0, pointerB.baseAddress, 1, &difference, 1)
@@ -180,7 +180,7 @@ public struct MatrixSize {
             return rows*columns
         }
     }
-    
+
     public init(rows: Int, columns: Int) {
         self.rows = rows
         self.columns = columns
@@ -203,7 +203,7 @@ public func matrixTranspose<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [
 /// Check if the dimensions are compatible for matrix multiplication
 /// - Returns: The effective matrixSizes after transposition
 internal func matrixMultiplyDimensions(sizeA: MatrixSize, transposeA: Bool, sizeB: MatrixSize, transposeB: Bool) -> (sizeA: MatrixSize, sizeB: MatrixSize) {
-    
+
     if (transposeA && transposeB) {
         assert(sizeA.rows == sizeB.columns, "Cannot multiply matrices of size \(sizeA.columns)x\(sizeA.rows) and \(sizeB.columns)x\(sizeB.rows)")
         return (sizeA.transpose, sizeB.transpose)
@@ -244,20 +244,20 @@ public extension CBLAS_TRANSPOSE {
 /// - Parameter transposeB: `matrixB` should be transposed before the multiplication. Default: `false`
 /// - Returns: The product matrix
 public func matrixMultiplication<A: UnsafeBuffer>(matrixA: A, sizeA: MatrixSize, transposeA: Bool = false, matrixB: A, sizeB: MatrixSize, transposeB: Bool = false, useBLAS: Bool = false) -> [Float] where A.Iterator.Element == Float {
-    
+
     //vDSP seems to have better performance, at least for matrices with 10,000,000 elements or fewer.
     let (newSizeA, newSizeB) = matrixMultiplyDimensions(sizeA: sizeA, transposeA: transposeA, sizeB: sizeB, transposeB: transposeB)
     //print("matrix multiplication: (\(newSizeA.rows) x \(newSizeA.columns)) * (\(newSizeB.rows) x \(newSizeB.columns))")
-    
+
     var matrixC = [Float](repeating: 0, count: newSizeA.rows * newSizeB.columns)
-    
+
     matrixA.performWithUnsafeBufferPointer { (matrixABuffer: UnsafeBufferPointer<Float>) -> Void in
         matrixB.performWithUnsafeBufferPointer { (matrixBBuffer: UnsafeBufferPointer<Float>) -> Void in
             let matrixAPointer = matrixABuffer.baseAddress
             let matrixBPointer = matrixBBuffer.baseAddress
             if useBLAS {
                 cblas_sgemm(CblasRowMajor, CBLAS_TRANSPOSE(isTranspose: transposeA), CBLAS_TRANSPOSE(isTranspose: transposeB), Int32(newSizeA.rows), Int32(newSizeB.columns), Int32(newSizeA.columns), 1, matrixAPointer, Int32(sizeA.columns), matrixBPointer, Int32(sizeB.columns), 1, &matrixC, Int32(newSizeB.columns))
-                
+
             } else {
                 if (transposeA && transposeB) {
                     vDSP_mmul(matrixTranspose(matrixA, size: sizeA), 1, matrixTranspose(matrixB, size: sizeB), 1, &matrixC, 1, UInt(newSizeA.rows), UInt(newSizeB.columns), UInt(newSizeA.columns))
@@ -271,7 +271,7 @@ public func matrixMultiplication<A: UnsafeBuffer>(matrixA: A, sizeA: MatrixSize,
             }
         }
     }
-    
+
     return matrixC
 }
 
@@ -283,19 +283,19 @@ public func matrixMultiplication<A: UnsafeBuffer>(matrixA: A, sizeA: MatrixSize,
 /// - Parameter matrixFirst: If true, the full matrix is left and the diagonal matrix is right, else the diagonal matrix is left and the full matrix is right.
 /// - Returns: The product matrix
 public func diagonalMatrixMultiplication<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize, diagonals: A, diagonalMatrixSize: MatrixSize, matrixFirst: Bool) -> [Float] where A.Iterator.Element == Float, A.SubSequence.Iterator.Element == Float, A.Index == Int {
-    
+
     var product: [Float] = []
-    
-    
+
+
     if(matrixFirst) { // calculate M * D
         //        assert(diagonals.count <= size.columns, "Cannot multiply \(diagonals.count) diagonal values with a \(size.rows) x \(size.columns) matrix")
         let diagonalValues = Array(diagonals) + [Float](repeating: 0, count: diagonalMatrixSize.columns - diagonals.count)
-        
+
         let productSize = MatrixSize(rows: size.rows, columns: diagonalMatrixSize.columns)
         product.reserveCapacity(productSize.elementCount)
         let rangeLength = min(size.columns, diagonals.count)
         let paddingZeros = [Float](repeating: 0, count: diagonalMatrixSize.columns - rangeLength)
-        
+
         for r in 0..<size.rows {
             let thisRange = CountableRange(start: r*size.columns, distance: rangeLength)
             let slice = Array(matrix[thisRange]) + paddingZeros
@@ -305,10 +305,10 @@ public func diagonalMatrixMultiplication<A: UnsafeBuffer>(_ matrix: A, size: Mat
     } else { // calculate D * M
         //        assert(diagonals.count <= size.rows, "Cannot multiply a \(size.rows) x \(size.columns) matrix with \(diagonals.count) diagonal values")
         let diagonalValues = Array(diagonals) + [Float](repeating: 0, count: diagonalMatrixSize.rows - diagonals.count)
-        
+
         let productSize = MatrixSize(rows: diagonalMatrixSize.rows, columns: size.columns)
         product.reserveCapacity(productSize.elementCount)
-        
+
         for d in 0..<diagonalValues.count {
             let thisRange = CountableRange(start: d*size.columns, distance: size.columns)
             let slice = Array(matrix[thisRange])
@@ -316,7 +316,7 @@ public func diagonalMatrixMultiplication<A: UnsafeBuffer>(_ matrix: A, size: Mat
             product.append(contentsOf: result)
         }
     }
-    
+
     return product
 }
 
@@ -327,7 +327,7 @@ public func diagonalMatrixMultiplication<A: UnsafeBuffer>(_ matrix: A, size: Mat
 public func eigendecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> (eigenvalues: [Float], eigenvectors: [Float]) where A.Iterator.Element == Float {
     assert(size.rows == size.columns, "eigendecomposition not possible for matrix of dimension \(size.rows)x\(size.columns)")
     print("eigendecomposition of a \(size.rows) x \(size.columns) matrix")
-    
+
     var inMatrix = matrixTranspose(matrix, size: size) //LAPACK uses Fortran style column-major matrices, hence the transpose
     var jobvl = "N".charValue //options for left eigenvectors, "N" means the left eigenvectors are not computed
     var jobvr = "V".charValue //options for left eigenvectors, "V" means the left eigenvectors are computed
@@ -339,7 +339,7 @@ public func eigendecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -
     var lwork = 40*n
     var workspace = [__CLPK_real](repeating: 0, count: Int(lwork))
     var info: Int32 = 0
-    
+
     //eigendecomposition
     //documentation: http://www.netlib.org/lapack/explore-html/d3/dfb/group__real_g_eeigen.html#ga104525b749278774f7b7f57195aa6798
     sgeev_(&jobvl, &jobvr, &n, &inMatrix, &n, &wr, &wi, &vl, &n, &vr, &n, &workspace, &lwork, &info)
@@ -348,11 +348,11 @@ public func eigendecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -
     if(Int(lwork) < Int(workspace[0])) {
         print("optimal lwork argument: \(workspace[0]), given lwork: \(lwork)")
     }
-    
-    
+
+
     let newOrder = wr.combineWith(Array(0..<Int(n)), combineFunction: {($0, $1)}).sorted(by: {abs($0.0) > abs($1.0)})
     let sortedEigenvectors = newOrder.map({vr[CountableRange(start: $0.1*Int(n), distance: Int(n))]}).flatMap({Array($0)})
-    
+
     return (newOrder.map({$0.0}), sortedEigenvectors)
 }
 
@@ -362,7 +362,7 @@ public func eigendecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -
 /// `singularValues`: Vector consisting of all singular values
 /// `vMatrix`: The right singular vectors as row vectors in a matrix
 public func singularValueDecomposition<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> (uMatrix: [Float], singularValues: [Float], vMatrix: [Float]) where A.Iterator.Element == Float {
-    
+
     var inMatrix = matrixTranspose(matrix, size: size) //LAPACK uses Fortran style column-major matrices, hence the transpose
     var jobu = "A".charValue //options for left singular vectors, "A" means the full m x m matrix is returned in u
     var jobvt = "A".charValue //options for right singular vectors, "A" means the full transposed n x n matrix is returned in vt
@@ -372,40 +372,40 @@ public func singularValueDecomposition<A: UnsafeBuffer>(_ matrix: A, size: Matri
     var u = [Float](repeating: 0, count: Int(m*m)) //matrix containing the left singular vectors
     var vt = [Float](repeating: 0, count: Int(n*n)) //transposed matrix containing the left singular vectors
     var info: Int32 = 0
-    
+
     //calculate size for workspace
     let lwork1 = 3*min(m, n) + max(m, n) + 10
     let lwork2 = 5*min(m, n)-4 + 10
     var lwork = Int32(max(lwork1, lwork2))
     var workspace = [__CLPK_real](repeating: 0, count: Int(lwork))
-    
+
     //SVD
     //documentation: http://www.netlib.org/lapack/explore-html/d4/dca/group__real_g_esing.html#gaf03d06284b1bfabd3d6c0f6955960533
     //lda / leading dimension means the memory space between the vectors of the second dimension. Usually just the number of rows
     sgesvd_(&jobu, &jobvt, &m, &n, &inMatrix, &m, &s, &u, &m, &vt, &n, &workspace, &lwork, &info)
-    
+
     assert(info < 1, "\(info) superdiagonals did not converge to zero in singular value decomposition")
     assert(info == 0, "error in \(-info)th argument")
-    
+
     return (matrixTranspose(u, size: MatrixSize(rows: size.rows, columns: size.rows)), s, vt)
 }
 
 /// Inverse of a square matrix
 public func matrixInverse<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Float] where A.Iterator.Element == Float {
-    
+
     assert(size.rows == size.columns, "inverse not possible for matrix of dimension \(size.rows)x\(size.columns)")
     var inMatrix = Array(matrix)
-    
+
     var n = Int32(size.rows)
     var pivots = [Int32](repeating: 0, count: size.rows)
     var info: Int32 = 0
-    
+
     //LU factorization
     //documentation: http://www.netlib.org/lapack/explore-html/d8/ddc/group__real_g_ecomputational.html#ga8d99c11b94db3d5eac75cac46a0f2e17
     sgetrf_(&n, &n, &inMatrix, &n, &pivots, &info)
     assert(info < 1, "cannot inverse a singular matrix")
     assert(info == 0, "error in \(info)th argument")
-    
+
     var workspace: [__CLPK_real]
     var lwork : Int32
     if(n < 60) {
@@ -416,14 +416,14 @@ public func matrixInverse<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Fl
         lwork = Int32(n*128)
     }
     info = 0
-    
+
     //Inverse of a LU factorization
     //documentation: http://www.netlib.org/lapack/explore-html/d8/ddc/group__real_g_ecomputational.html#ga1af62182327d0be67b1717db399d7d83
     sgetri_(&n, &inMatrix, &n, &pivots, &workspace, &lwork, &info)
     assert(info < 1, "cannot inverse a singular matrix")
     assert(info == 0, "error in \(info)th argument")
     //print("optimal lwork argument: \(workspace[0])")
-    
+
     return inMatrix
 }
 
@@ -437,20 +437,20 @@ public func pseudoInverse<A: UnsafeBuffer>(_ matrix: A, size: MatrixSize) -> [Fl
     let (u, s, v) = singularValueDecomposition(matrix, size: size)
     let uSize = MatrixSize(rows: size.rows, columns: size.rows)
     let vSize = MatrixSize(rows: size.columns, columns: size.columns)
-    
+
     //matrixInverse = v * sInverse * u_T
     let sInverse = s.map({($0 != 0) ? 1/$0 : 0}) // n x m
     let vsInverseProduct = diagonalMatrixMultiplication(v, size: vSize, diagonals: sInverse, diagonalMatrixSize: size.transpose, matrixFirst: true) // n x m
     let inverse = matrixMultiplication(matrixA: vsInverseProduct, sizeA: size.transpose, matrixB: u, sizeB: uSize, transposeB: true)
-    
+
     return inverse
 }
 
 public func solveLinearEquationSystem<A: UnsafeBuffer>(_ factorMatrix: A, factorMatrixSize: MatrixSize, results: A, resultsSize: MatrixSize) -> [Float] where A.Iterator.Element == Float {
-    
+
     assert(factorMatrixSize.columns == factorMatrixSize.rows, "factor matrix is not square: \(factorMatrixSize)")
     assert(factorMatrixSize.columns == resultsSize.rows, "resultsSize \(resultsSize.rows) is not compatible with factor matrix size \(factorMatrixSize.columns)")
-    
+
     var a = matrixTranspose(factorMatrix, size: factorMatrixSize)
     var b = matrixTranspose(results, size: resultsSize)
     var n = Int32(factorMatrixSize.columns)
@@ -459,9 +459,9 @@ public func solveLinearEquationSystem<A: UnsafeBuffer>(_ factorMatrix: A, factor
     var nrhs = Int32(resultsSize.columns)
     var ipiv = [Int32](repeating: 0, count: Int(n))
     var info: Int32 = 0
-    
+
     let r = sgesv_(&n, &nrhs, &a, &lda, &ipiv, &b, &ldb, &info)
-    
+
     return b
 }
 

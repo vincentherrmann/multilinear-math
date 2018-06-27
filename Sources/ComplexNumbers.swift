@@ -46,11 +46,11 @@ public struct ComplexNumber: Equatable {
             return a
         }
     }
-    
+
     public init(real: Float, imaginary: Float) {
         values = [real, imaginary]
     }
-    
+
     static public func ==(lhs: ComplexNumber, rhs: ComplexNumber) -> Bool {
         if (lhs.real == rhs.real && lhs.imaginary == rhs.imaginary) {
             return true
@@ -58,7 +58,7 @@ public struct ComplexNumber: Equatable {
             return false
         }
     }
-    
+
     static public func abs(_ x: ComplexNumber) -> ComplexNumber {
         return ComplexNumber(real: x.absoluteValue, imaginary: 0)
     }
@@ -143,17 +143,17 @@ public struct ComplexPolynomial {
         }
         return ComplexPolynomial(coefficients: newCoefficients)
     }
-    
+
     public func valueFor(z: ComplexNumber) -> ComplexNumber {
         var currentZ: ComplexNumber = ComplexNumber(real: 1, imaginary: 0)
         var currentResult: ComplexNumber = ComplexNumber(real: 0, imaginary: 0)
-        
+
         for c in coefficients {
             let s = c * currentZ
             currentResult = currentResult + s
             currentZ = currentZ * z
         }
-        
+
         return currentResult
     }
 }

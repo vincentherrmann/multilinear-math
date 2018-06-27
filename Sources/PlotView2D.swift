@@ -12,13 +12,13 @@ let colors: [NSColor] = [.blue, .red, .green, .orange, .magenta, .brown, .yellow
 
 public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
-    
+
     public var customPlaygroundQuickLook: PlaygroundQuickLook {
         get {
             return PlaygroundQuickLook.view(plotView)
         }
     }
-    
+
     public init(array: [Float]...) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
         var bounds: CGRect? = nil
@@ -40,7 +40,7 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
         plotView.addPlottable(yAxis)
         plotView.updatePlotting()
     }
-    
+
 //    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
 //        return PlaygroundQuickLook.view(plotView)
 //    }
@@ -48,13 +48,13 @@ public struct QuickArrayPlot: CustomPlaygroundQuickLookable {
 
 public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
-    
+
     public var customPlaygroundQuickLook: PlaygroundQuickLook {
         get {
             return PlaygroundQuickLook.view(plotView)
         }
     }
-    
+
     public init(x: [Float], y: [Float]..., bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
         var dBounds: CGRect? = nil
@@ -77,7 +77,7 @@ public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
         plotView.addPlottable(yAxis)
         plotView.updatePlotting()
     }
-    
+
 //    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
 //        return PlaygroundQuickLook.view(plotView)
 //    }
@@ -85,13 +85,13 @@ public struct QuickLinesPlot: CustomPlaygroundQuickLookable {
 
 public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
     public var plotView: PlotView2D
-    
+
     public var customPlaygroundQuickLook: PlaygroundQuickLook {
         get {
             return PlaygroundQuickLook.view(plotView)
         }
     }
-    
+
     public init(x: [Float], y1: [Float], y2: [Float], bounds: CGRect? = nil) {
         plotView = PlotView2D(frame: NSRect(x: 0, y: 0, width: 300, height: 200))
         let xPositions = x + x.reversed()
@@ -106,7 +106,7 @@ public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
         plotView.addPlottable(yAxis)
         plotView.updatePlotting()
     }
-    
+
 //    public func customPlaygroundQuickLook() -> PlaygroundQuickLook {
 //        return PlaygroundQuickLook.view(plotView)
 //    }
@@ -114,7 +114,7 @@ public struct QuickDifferencePlot: CustomPlaygroundQuickLookable {
 
 
 public class PlotView2D: NSView, Plotting2D {
-    
+
     public var plots: [PlottableIn2D] = []
     public var plottingBounds: NSRect = NSRect(x: 0, y: -2, width: 5, height: 4)
     public var borderSize: CGSize = CGSize(width: 25, height: 25)
@@ -127,20 +127,20 @@ public class PlotView2D: NSView, Plotting2D {
             return rect
         }
     }
-    
+
     override public func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        
+
         let thisContext = NSGraphicsContext.current()
         thisContext?.shouldAntialias = true
         thisContext?.cgContext.setShouldSmoothFonts(true)
-        
-        
+
+
         for thisPlot in plots {
             thisPlot.draw()
         }
     }
-    
+
     public func writeAsPdfTo(path: String) {
         let pdfData = self.dataWithPDF(inside: bounds)
         do {
@@ -182,28 +182,28 @@ public class PlotAxis: PlottableIn2D {
             path.lineWidth = newWidth
         }
     }
-    
+
     public init(direction: PlotAxisDirection, tickSize: TickSize = .auto) {
         self.direction = direction
         self.tickSize = tickSize
     }
-    
+
     public func fitTo(_ plotting: Plotting2D) {
         createAxis(plotView: plotting)
     }
-    
+
     public func draw() {
         color.setStroke()
         path.stroke()
-        
+
         for label in labels {
             label.text.draw(at: label.position)
         }
     }
-    
+
     public func createAxis(plotView: Plotting2D) {
         path = NSBezierPath()
-        
+
         let axisDim, otherDim: CGPoint.Dimension
         switch direction {
         case .y:
@@ -220,10 +220,10 @@ public class PlotAxis: PlottableIn2D {
         let farEdge = CGPoint(x: plotView.plottingBounds.maxX, y: plotView.plottingBounds.maxY)
         let endPoint: CGPoint = plotView.convertFromPlotToScreen(CGPoint(a: farEdge.value(dim: axisDim), b: 0, aDimension: axisDim))
         let zeroPoint: CGPoint = plotView.convertFromPlotToScreen(CGPoint(x: 0, y: 0))
-        
+
         print("axis start position: \(startPoint)")
         print("axis end position: \(endPoint)")
-        
+
         //find tick distance
         let tickDistance: CGFloat
         switch tickSize {
@@ -233,7 +233,7 @@ public class PlotAxis: PlottableIn2D {
             let maxPlotTick = maxPointsBetweenTicks / scaleToScreenFactor
             tickDistance = findAutomaticTickSize(maximumSize: maxPlotTick) * scaleToScreenFactor
         }
-        
+
         //axis
         path.move(to: startPoint)
         path.line(to: endPoint)
@@ -241,7 +241,7 @@ public class PlotAxis: PlottableIn2D {
         path.move(to: CGPoint(a: endPoint.value(dim: axisDim) - 5, b: endPoint.value(dim: otherDim) - 5, aDimension: axisDim))
         path.line(to: endPoint)
         path.line(to: CGPoint(a: endPoint.value(dim: axisDim) - 5, b: endPoint.value(dim: otherDim) + 5, aDimension: axisDim))
-        
+
         //ticks
         let distanceToZero = startPoint.value(dim: axisDim) - zeroPoint.value(dim: axisDim)
         let tickModulo = distanceToZero.truncatingRemainder(dividingBy: tickDistance) //distanceToZero % tickDistance
@@ -263,13 +263,13 @@ public class PlotAxis: PlottableIn2D {
             }
 
             labels.append(PlotLabel(text: s, position: position, size: size))
-            
+
             currentTickPosition += tickDistance
         }
-        
-        
+
+
     }
-    
+
     var numberFormattingString: String = "%.0f"
 
     func findAutomaticTickSize(maximumSize: CGFloat, possibleSteps: [CGFloat] = [1.0, 2.0, 5.0]) -> CGFloat {
@@ -286,24 +286,24 @@ public class PlotAxis: PlottableIn2D {
             }
         }
         //print("step size: \(stepSize)")
-        
+
         if scale < 0 {
             let s = Int(-scale)
             numberFormattingString = "%.\(s)f"
         } else {
             numberFormattingString = "%.0f"
         }
-        
+
         return stepSize
     }
 }
 
 public class LinePlot: PlottableIn2D {
     var points: [CGPoint] = []
-    
+
     var path: NSBezierPath = NSBezierPath()
     var color = NSColor.black
-    
+
     var lineWidth: CGFloat {
         get {
             return path.lineWidth
@@ -327,14 +327,14 @@ public class LinePlot: PlottableIn2D {
     public var plotBounds: CGRect {
         get {return CGRect(x: xMin, y: yMin, width: xMax-xMin, height: yMax-yMin)}
     }
-    
+
     public init(withPoints: [CGPoint]) {
         self.points = withPoints
     }
     public init(withValueArray: [CGFloat], xStepSize: CGFloat = 1) {
         pointsFromValueArray(values: withValueArray, xStep: xStepSize)
     }
-    
+
     // create graph from value array
     func pointsFromValueArray(values: [CGFloat], xStep: CGFloat) {
         var xPosition: CGFloat = 0.0
@@ -344,34 +344,34 @@ public class LinePlot: PlottableIn2D {
             xPosition += xStep
         }
     }
-    
+
     func createGraph() {
         path = NSBezierPath()
-        
+
         let pointCount = points.count
         path.move(to: points[0])
         for i in 1..<pointCount {
             path.line(to: points[i])
         }
     }
-    
+
     public func draw() {
         color.setStroke()
         path.stroke()
     }
-    
+
     public func fitTo(_ plotting: Plotting2D) {
         //first, create the path to get the original scaling
         createGraph()
-        
+
         let t = plotting.transformFromPlotToScreen
         path.transform(scaleX: t.scaleX, scaleY: t.scaleY, translateX: t.translateX, translateY: t.translateY)
     }
-    
+
 //    public func createTransformedVersion(scaleX: CGFloat, scaleY: CGFloat, translateX: CGFloat, translateY: CGFloat) {
 //        //first, create the path to get the original scaling
 //        createGraph()
-//        
+//
 //        //transform it
 //        print("transform path with scale: \(scaleX), scaleY: \(scaleY), transX: \(translateX), transY: \(translateY)")
 //        path.transform(scaleX: scaleX, scaleY: scaleY, translateX: translateX, translateY: translateY)
@@ -384,7 +384,7 @@ public class StepPlot: LinePlot {
         super.init(withValueArray: [], xStepSize: 1)
         pointsFromValueArray(values: withValueArray, xStep: xStepSize)
     }
-    
+
     override public init(withPoints: [CGPoint]) {
         super.init(withPoints: [])
         //create additional step points
@@ -417,18 +417,18 @@ public class ClosedLinePlot: LinePlot {
 public class CubicPlot: LinePlot {
     override public func createGraph() {
         path = NSBezierPath()
-        
+
         //Cubic interpolation with two control points between all regular point
         let pointCount = points.count
         if(pointCount < 2) {
             return
         }
-        
+
         path.move(to: points[0])
         var slopeX: CGFloat = 0.0
         var slopeY: CGFloat = 0.0
         var cp1 = points[0]
-        
+
         for i in 1..<pointCount-1 {
             //the control points are calculated from the slope between the neighbouring points
             slopeX = (points[i+1].x - points[i-1].x) * 0.5
@@ -447,7 +447,7 @@ extension CGPoint {
         case x
         case y
     }
-    
+
     init(a: CGFloat, b: CGFloat, aDimension: Dimension) {
         switch aDimension {
         case .y:
@@ -458,11 +458,11 @@ extension CGPoint {
             y = b
         }
     }
-    
+
     func reverse() -> CGPoint {
         return CGPoint(x: y, y: x)
     }
-    
+
     func value(dim: Dimension) -> CGFloat {
         switch dim {
         case .y:
@@ -476,7 +476,7 @@ extension CGPoint {
 extension NSBezierPath {
     func transform(scaleX: CGFloat, scaleY: CGFloat, translateX: CGFloat, translateY: CGFloat) {
         //translates and scales path (in this order)
-        
+
         var transform = AffineTransform() //NSAffineTransform()
         transform.translate(x: translateX, y: translateY)
         //transform.translateX(by: translateX, yBy:translateY)
@@ -487,5 +487,5 @@ extension NSBezierPath {
         self.transform(using: transform)
 //        print("path bounds after transform: \(bounds)")
     }
-    
+
 }
